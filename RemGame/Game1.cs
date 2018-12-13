@@ -7,11 +7,12 @@ using FarseerPhysics.Factories;
 
 namespace RemGame
 {
-    enum Move
+    enum Movement
     {
         Jump,
         Left,
-        Right
+        Right,
+        Stop
     }
 
     public class Game1 : Game
@@ -21,6 +22,8 @@ namespace RemGame
 
         World world;
         Kid player;
+        Floor floor;
+        private KeyboardState prevKeyboardState = Keyboard.GetState();
 
         public Game1()
         {
@@ -46,8 +49,19 @@ namespace RemGame
 
             world = new World(new Vector2(0, 9.8f));
 
-            player = new Kid(world, new Vector2(58.0f, 62.0f), Content.Load<Texture2D>("player"));
-            player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 62);
+            player = new Kid(world,
+                Content.Load<Texture2D>("Player"),
+                Content.Load<Texture2D>("Player"),
+                new Vector2(58, 62),
+                100,
+                new Vector2(430, 0));
+           // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
+
+            floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width,60));
+            floor.Position = new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height - 25);
+
+
+
 
 
         }
@@ -59,10 +73,32 @@ namespace RemGame
 
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState keyboardState = Keyboard.GetState();
+            
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                player.Move(Movement.Left);
+            }
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                player.Move(Movement.Right);
+            }
+            else
+            {
+                player.Move(Movement.Stop);
+            }
+            //if statment should changed
+            if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+{
+                player.Jump();
+            }
+            prevKeyboardState = keyboardState;
+
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -74,6 +110,7 @@ namespace RemGame
             spriteBatch.Begin();
 
             player.Draw(spriteBatch);
+            floor.Draw(spriteBatch);
 
             spriteBatch.End();
 
