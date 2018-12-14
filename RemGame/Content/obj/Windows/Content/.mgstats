@@ -1,3 +1,6 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Ben/source/repos/RemGame/RemGame/Content/Buttons/Button.png","C:/Users/Ben/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Buttons/Button.xnb","TextureProcessor","Texture2DContent",279,15085,0.1369019
 "C:/Users/Ben/source/repos/RemGame/RemGame/Content/cave_walk.png","C:/Users/Ben/source/repos/RemGame/RemGame/Content/bin/Windows/Content/cave_walk.xnb","TextureProcessor","Texture2DContent",712,122965,0.1399305
+"C:/Users/Ben/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont","C:/Users/Ben/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0.207861
+"C:/Users/Ben/source/repos/RemGame/RemGame/Content/HUD.png","C:/Users/Ben/source/repos/RemGame/RemGame/Content/bin/Windows/Content/HUD.xnb","TextureProcessor","Texture2DContent",420,82005,0.1349399
 "C:/Users/Ben/source/repos/RemGame/RemGame/Content/player.png","C:/Users/Ben/source/repos/RemGame/RemGame/Content/bin/Windows/Content/player.xnb","TextureProcessor","Texture2DContent",624,14469,0.1390647

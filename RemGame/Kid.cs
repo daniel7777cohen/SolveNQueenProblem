@@ -22,7 +22,7 @@ namespace RemGame
         private PhysicsObject torso;
         private PhysicsObject wheel;
         private RevoluteJoint axis;
-        private float speed = 3.0f;
+        private float speed = 2.0f;
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 1.0f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -2); // applied force when jumping

@@ -41,6 +41,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Button.cs" />
+    <Compile Include="Component.cs" />
     <Compile Include="CoordinateHelper.cs" />
     <Compile Include="Floor.cs" />
     <Compile Include="Game1.cs" />
@@ -62,6 +64,8 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <None Include="Content\Buttons\Button.xnb" />
+    <None Include="Content\Fonts\Font.xnb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Farseer\Farseer.csproj">

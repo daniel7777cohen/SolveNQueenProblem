@@ -4,10 +4,16 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/Buttons/Button.png</File>
     <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/cave_walk.png</File>
+    <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
+    <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/HUD.png</File>
     <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/player.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
