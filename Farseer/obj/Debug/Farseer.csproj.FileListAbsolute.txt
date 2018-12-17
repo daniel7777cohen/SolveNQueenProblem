@@ -36,3 +36,4 @@ C:\Users\Ben\source\repos\RemGame\Farseer\obj\Debug\Farseer.csproj.CoreCompileIn
 C:\Users\Ben\source\repos\RemGame\Farseer\obj\Debug\Farseer.csproj.CopyComplete
 C:\Users\Ben\source\repos\RemGame\Farseer\obj\Debug\Farseer.dll
 C:\Users\Ben\source\repos\RemGame\Farseer\obj\Debug\Farseer.pdb
+C:\Users\Ben\source\repos\RemGame\Farseer\obj\Debug\Farseer.csprojAssemblyReference.cache

@@ -22,9 +22,9 @@ namespace RemGame
         private PhysicsObject torso;
         private PhysicsObject wheel;
         private RevoluteJoint axis;
-        private float speed = 2.0f;
+        private float speed = 1.3f;
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
-        private const float jumpInterval = 1.0f;        // in seconds
+        private const float jumpInterval = 0.7f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -2); // applied force when jumping
         private bool isMoving;
         //private Movement direction = Move.Right;
@@ -33,14 +33,14 @@ namespace RemGame
         {
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
-            float wheelSize = size.X;
+            float wheelSize = size.X ;
 
             // Create the torso
             torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
 
             // Create the feet of the body
-            wheel = new PhysicsObject(world, wheelTexture, wheelSize, mass / 2.0f);
+            wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
             wheel.Position = torso.Position + new Vector2(0, torsoSize.Y / 2.0f);
 
             wheel.Body.Friction = 10.0f;

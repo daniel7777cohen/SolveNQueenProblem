@@ -51,7 +51,7 @@ namespace RemGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
 
@@ -96,7 +96,7 @@ namespace RemGame
             player = new Kid(world,
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player"),
-                new Vector2(58, 62),
+                new Vector2(58, 31),
                 100,
                 new Vector2(430, 0));
            // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);

@@ -9,8 +9,12 @@
     <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
     <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/HUD.png</File>
     <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/player.png</File>
+    <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/Player/playerLeft.png</File>
+    <File>C:/Users/Ben/source/repos/RemGame/RemGame/Content/Player/playerRight.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
