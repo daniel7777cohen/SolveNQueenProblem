@@ -37,6 +37,7 @@ namespace RemGame
         Kid player;
         Floor floor;
         KeyboardState prevKeyboardState = Keyboard.GetState();
+        MouseState currentMouseState;
         /// <summary>
         /// ///////////////////
         /// </summary>
@@ -51,7 +52,7 @@ namespace RemGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
 
@@ -85,20 +86,17 @@ namespace RemGame
 
             quitButton.Click += QuitButton_Click;
 
-            _gameComponents = new List<Component>()
-            {
-                randomButton,
-                quitButton
-            };
+            
 
             world = new World(new Vector2(0, 9.8f));
 
             player = new Kid(world,
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player"),
+                Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(58, 31),
                 100,
-                new Vector2(430, 0));
+                new Vector2(400, 0));
            // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
 
             floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width,60));
@@ -111,9 +109,15 @@ namespace RemGame
                 plat[3-i].Position = new Vector2(500 + 80 * i, 630 - 45 * i);
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
+            plat[3].Body.BodyType = BodyType.Dynamic;
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+            _gameComponents = new List<Component>()
+            {
+                randomButton,
+                quitButton,
+                player
+            };
         }
 
         private void QuitButton_Click(object sender, EventArgs e)
@@ -135,33 +139,30 @@ namespace RemGame
 
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            
+            currentMouseState = Mouse.GetState();
+
             //after componnet list is set THIS can be deleted
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (currentMouseState.RightButton == ButtonState.Pressed)
+            {
+                foreach (PhysicsObject obj in plat)
+                {
+                    Console.WriteLine(CoordinateHelper.pixelToUnit * currentMouseState.Position.ToVector2());
+                    Console.WriteLine(obj.Body.Position);
+                    if ((CoordinateHelper.pixelToUnit * currentMouseState.Position.X >= obj.Body.Position.X) && (CoordinateHelper.pixelToUnit * currentMouseState.Position.X <= obj.Body.Position.X+obj.Size.X))
+                    {
+                        player.Kinesis(obj);
+                        
+                    }
+                }
+            }
+
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
 
-            if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                player.Move(Movement.Left);
-            }
-            else if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                player.Move(Movement.Right);
-            }
-            else
-            {
-                player.Move(Movement.Stop);
-            }
-            //if statment should changed
-            if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
-{
-                player.Jump();
-            }
-            prevKeyboardState = keyboardState;
+
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -177,8 +178,8 @@ namespace RemGame
             foreach (var component in _gameComponents)
                 component.Draw(gameTime,spriteBatch);
 
-
-                player.Draw(spriteBatch);
+            
+            player.Draw(gameTime,spriteBatch);
             floor.Draw(spriteBatch);
             //////////////////////////////////////////////
             foreach(PhysicsObject p in plat)

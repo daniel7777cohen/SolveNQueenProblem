@@ -14,22 +14,35 @@ using FarseerPhysics.Dynamics.Joints;
 
 namespace RemGame
 {
-    class Kid
+    class Kid:Component
     {
         //private Body body;
         //private Texture2D texture;
         //private Vector2 size;
         private PhysicsObject torso;
         private PhysicsObject wheel;
+        /// <tmp>
+        private PhysicsObject mele;
+        /// <tmp>
+        private bool isAttacking = false;
         private RevoluteJoint axis;
         private float speed = 1.3f;
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 0.7f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -2); // applied force when jumping
         private bool isMoving;
+
+        KeyboardState keyboardState;
+        KeyboardState prevKeyboardState = Keyboard.GetState();
+
+        MouseState currentMouseState;
+        MouseState previousMouseState = Mouse.GetState();
+
+        public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
+
         //private Movement direction = Move.Right;
 
-        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture, Vector2 size, float mass, Vector2 startPosition)
+        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition)
         {
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
@@ -55,6 +68,9 @@ namespace RemGame
             axis.MotorEnabled = true;
             axis.MotorSpeed = 0;
             axis.MaxMotorTorque = 10;
+
+            mele = new PhysicsObject(world, bullet, 30, 200);
+            
         }
 
         //public Body Body { get => body; set => body = value; }
@@ -93,6 +109,7 @@ namespace RemGame
             switch (movement)
             {
                 case Movement.Left:
+                    if(!keyboardState.IsKeyDown(Keys.LeftShift))
                     axis.MotorSpeed = -MathHelper.TwoPi * speed;
                     break;
 
@@ -106,20 +123,102 @@ namespace RemGame
             }
         }
 
+        public void meleAttack()
+        {
+            IsAttacking = true;
+            mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+            mele.Body.ApplyLinearImpulse(new Vector2(1, 0));
+            //mele.Body.FixtureList[0].OnCollision = dispose;
+           // IsAttacking = false;
+        }
+
+        private bool dispose()
+        {
+            isAttacking = false;
+            return true;
+        }
+
         public void Jump()
+
         {
             if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
             {
-                torso.Body.ApplyLinearImpulse(ref jumpForce);
+                torso.Body.ApplyLinearImpulse(jumpForce);
                 previousJump = DateTime.Now;
             }
         }
+        //should create variables for funciton
+        public void Slide(Movement dir)
+        {
+            if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
+            {
+                Movement direction = dir;
+                if (dir == Movement.Right) 
+                    torso.Body.ApplyLinearImpulse(new Vector2(2,0));
+                else 
+                    torso.Body.ApplyLinearImpulse(new Vector2(-2, 0));
+
+                previousJump = DateTime.Now;
+
+            }
+        }
+
+        public void Kinesis(PhysicsObject obj)
+        {
+            obj.Body.BodyType = BodyType.Dynamic;
+            obj.Body.ApplyLinearImpulse(new Vector2(0, 100f));
+        }
+
 
         //needs to be changed
-        public void Draw(SpriteBatch spriteBatch)
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             torso.Draw(spriteBatch);
+            if(isAttacking)
+            mele.Draw(spriteBatch);
             //wheel.Draw(spriteBatch);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            keyboardState = Keyboard.GetState();
+            currentMouseState = Mouse.GetState();
+
+       
+
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                Move(Movement.Left);
+            }
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                Move(Movement.Right);
+            }
+            else
+            {
+                Move(Movement.Stop);
+            }
+            //if statment should changed
+            if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+            {
+                Jump();
+            }
+
+           if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
+            {
+                if (keyboardState.IsKeyDown(Keys.Right))
+                    Slide(Movement.Right);
+                else if (keyboardState.IsKeyDown(Keys.Left))
+                    Slide(Movement.Left);
+
+            }
+
+            if (currentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                meleAttack();
+            }
+            prevKeyboardState = keyboardState;
         }
     }
 }
