@@ -166,7 +166,7 @@ namespace RemGame
         public void Kinesis(PhysicsObject obj)
         {
             obj.Body.BodyType = BodyType.Dynamic;
-            obj.Body.ApplyLinearImpulse(new Vector2(0, 100f));
+            obj.Body.ApplyForce (new Vector2(0, -20f));
         }
 
 

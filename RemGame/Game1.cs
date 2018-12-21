@@ -109,7 +109,6 @@ namespace RemGame
                 plat[3-i].Position = new Vector2(500 + 80 * i, 630 - 45 * i);
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
-            plat[3].Body.BodyType = BodyType.Dynamic;
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             _gameComponents = new List<Component>()
