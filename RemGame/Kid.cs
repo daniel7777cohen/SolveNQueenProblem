@@ -30,7 +30,13 @@ namespace RemGame
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 0.7f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -2); // applied force when jumping
-        private bool isMoving;
+        private bool isMoving = false;
+
+        private Movement direction = Movement.Right;
+
+        private AnimatedSprite anim;
+        private AnimatedSprite[] animations = new AnimatedSprite[2];
+
 
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
@@ -38,11 +44,15 @@ namespace RemGame
         MouseState currentMouseState;
         MouseState previousMouseState = Mouse.GetState();
 
+
         public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
+        public AnimatedSprite Anim { get => anim; set => anim = value; }
+        public AnimatedSprite[] Animations { get => animations; set => animations = value; }
+        internal Movement Direction { get => direction; set => direction = value; }
 
         //private Movement direction = Move.Right;
 
-        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition)
+        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,Game game)
         {
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
@@ -152,7 +162,7 @@ namespace RemGame
         {
             if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
             {
-                Movement direction = dir;
+                
                 if (dir == Movement.Right) 
                     torso.Body.ApplyLinearImpulse(new Vector2(2,0));
                 else 
@@ -166,46 +176,53 @@ namespace RemGame
         public void Kinesis(PhysicsObject obj)
         {
             obj.Body.BodyType = BodyType.Dynamic;
-            obj.Body.ApplyForce (new Vector2(0, -10f));
+            obj.Body.ApplyForce (new Vector2(0, -5f));
         }
 
-
-        //needs to be changed
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            torso.Draw(spriteBatch);
-            if(isAttacking)
-            mele.Draw(spriteBatch);
-            //wheel.Draw(spriteBatch);
-        }
 
         public override void Update(GameTime gameTime)
         {
             keyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-       
+            anim = animations[(int)direction];
+
+            if (isMoving) // apply animation
+                Anim.Update(gameTime);
+            else //player will appear as standing with frame [1] from the atlas.
+                Anim.CurrentFrame = 1;
+
+            isMoving = false;
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
                 Move(Movement.Left);
+                isMoving = true;
+                direction = Movement.Left;
+
             }
             else if (keyboardState.IsKeyDown(Keys.Right))
             {
                 Move(Movement.Right);
+                isMoving = true;
+                direction = Movement.Right;
+
             }
             else
             {
                 Move(Movement.Stop);
+                isMoving = false;
+
             }
+
             //if statment should changed
             if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
             {
+                isMoving = true;
                 Jump();
             }
 
-           if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
+            if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
             {
                 if (keyboardState.IsKeyDown(Keys.Right))
                     Slide(Movement.Right);
@@ -219,6 +236,21 @@ namespace RemGame
                 meleAttack();
             }
             prevKeyboardState = keyboardState;
+
+            
         }
+
+        //needs to be changed
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            //torso.Draw(spriteBatch);
+            if(isAttacking)
+            mele.Draw(spriteBatch);
+            anim.Draw(spriteBatch, wheel.Position,new Vector2(torso.Size.X,torso.Size.Y));
+            //wheel.Draw(spriteBatch);
+        }
+
+        
     }
 }

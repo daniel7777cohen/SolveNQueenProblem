@@ -11,9 +11,9 @@ namespace RemGame
 {
     enum Movement
     {
-        Jump,
         Left,
         Right,
+        Jump,
         Stop
     }
 
@@ -38,6 +38,14 @@ namespace RemGame
         Floor floor;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
+
+        Texture2D playerLeft;
+        Texture2D playerRight;
+
+
+
+
+
         /// <summary>
         /// ///////////////////
         /// </summary>
@@ -52,9 +60,10 @@ namespace RemGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+
 
         }
 
@@ -90,14 +99,22 @@ namespace RemGame
 
             world = new World(new Vector2(0, 9.8f));
 
+
+
             player = new Kid(world,
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(58, 31),
                 100,
-                new Vector2(400, 0));
-           // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
+                new Vector2(400, 0),this);
+
+            playerLeft = Content.Load<Texture2D>("Player/playerLeft");
+            playerRight = Content.Load<Texture2D>("Player/playerRight");
+            // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
+
+            player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
+            player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
 
             floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width,60));
             floor.Position = new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height - 25);
