@@ -80,6 +80,7 @@ namespace RemGame
             axis.MaxMotorTorque = 10;
 
             mele = new PhysicsObject(world, bullet, 30, 200);
+            mele.Body.Mass = 1;
             
         }
 
@@ -245,9 +246,10 @@ namespace RemGame
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //torso.Draw(spriteBatch);
-            if(isAttacking)
+            anim.Draw(spriteBatch, torso.Position, new Vector2(torso.Size.X, torso.Size.Y-10));
+            if (isAttacking)
             mele.Draw(spriteBatch);
-            anim.Draw(spriteBatch, wheel.Position,new Vector2(torso.Size.X,torso.Size.Y));
+            
             //wheel.Draw(spriteBatch);
         }
 
