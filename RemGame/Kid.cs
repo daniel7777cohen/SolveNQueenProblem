@@ -80,7 +80,7 @@ namespace RemGame
             axis.MaxMotorTorque = 10;
 
             mele = new PhysicsObject(world, bullet, 30, 200);
-            mele.Body.Mass = 1;
+            mele.Body.Mass = 0.5f;
             
         }
 
@@ -180,6 +180,11 @@ namespace RemGame
             obj.Body.ApplyForce (new Vector2(0, -5f));
         }
 
+        //public void bent()
+        //{
+          //  torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
+        //}
+
 
         public override void Update(GameTime gameTime)
         {
@@ -232,7 +237,7 @@ namespace RemGame
 
             }
 
-            if (currentMouseState.LeftButton == ButtonState.Pressed)
+            if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
             {
                 meleAttack();
             }

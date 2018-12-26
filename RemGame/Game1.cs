@@ -60,7 +60,7 @@ namespace RemGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
 
@@ -165,8 +165,7 @@ namespace RemGame
             {
                 foreach (PhysicsObject obj in plat)
                 {
-                    Console.WriteLine(CoordinateHelper.pixelToUnit * currentMouseState.Position.ToVector2());
-                    Console.WriteLine(obj.Body.Position);
+                    
                     if ((CoordinateHelper.pixelToUnit * currentMouseState.Position.X >= obj.Body.Position.X) && (CoordinateHelper.pixelToUnit * currentMouseState.Position.X <= obj.Body.Position.X+obj.Size.X))
                     {
                         player.Kinesis(obj);
