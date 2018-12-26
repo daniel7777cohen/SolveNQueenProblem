@@ -28,7 +28,7 @@ namespace RemGame
             totalFrames = Rows * Columns;
             speed = 0.15D;
             timer = speed;
-
+            
         }
 
         public void Update(GameTime gameTime)
@@ -49,7 +49,8 @@ namespace RemGame
             int height = Texture.Height / Rows;
             int row = (int)((float)CurrentFrame / (float)Columns);
             int column = CurrentFrame % Columns;
-
+            Console.WriteLine(width);
+            Console.WriteLine(height);
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)location.X-(int)size.X, (int)location.Y-(int)size.Y, width, height);
 

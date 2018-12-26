@@ -199,7 +199,7 @@ namespace RemGame
             //////////////////////////////////////////////
             foreach(PhysicsObject p in plat)
             {
-                p.Draw(spriteBatch);
+                p.Draw(gameTime,spriteBatch);
             }
             ///////////////////////////////////////////////
 
