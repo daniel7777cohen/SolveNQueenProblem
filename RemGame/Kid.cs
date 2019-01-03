@@ -20,12 +20,11 @@ namespace RemGame
         private Texture2D texture;
         private Vector2 size;
         private float mass;
-        private Vector2 bentPosition;
+        private Vector2 position;
 
         private PhysicsObject torso;
-        private PhysicsObject bentTorso;
+
         private PhysicsObject wheel;
-        private PhysicsObject bentWheel;
 
         /// <tmp>
         private PhysicsObject mele;
@@ -33,22 +32,21 @@ namespace RemGame
         /// 
         private bool isAttacking = false;
         private RevoluteJoint axis1;
-        private RevoluteJoint axis2;
+    
 
-        private float speed = 1.3f;
+        private float speed = 1.4f;
         private bool isMoving = false;
-        private bool isStanding = true;
         private Movement direction = Movement.Right;
 
 
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 0.7f;        // in seconds
-        private Vector2 jumpForce = new Vector2(0, -2); // applied force when jumping
+        private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 0.1f;        // in seconds
-        private Vector2 slideForce = new Vector2(2, 0); // applied force when jumping
+        private Vector2 slideForce = new Vector2(4, 0); // applied force when jumping
 
 
 
@@ -67,61 +65,44 @@ namespace RemGame
         public AnimatedSprite Anim { get => anim; set => anim = value; }
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
         internal Movement Direction { get => direction; set => direction = value; }
+        public Vector2 Position { get => torso.Position; }
 
-        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,Game game)
+        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,Game game)
         {
             this.world = world;
             this.size = size;
             this.texture = torsoTexture;
             this.mass = mass / 2.0f;
+            
 
             isMoving = false;
-            Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
-            float wheelSize = torsoSize.X ;
-
-            Vector2 bentTorsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
-            float bentWeheelSize = torsoSize.X;
+            Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
+            float wheelSize = size.X ;
 
             // Create the torso
             torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
-
-            bentTorso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
-            bentTorso.Position = startPosition;
+            position = torso.Position;
 
             // Create the feet of the body
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
-            wheel.Position = torso.Position + new Vector2(0, torsoSize.Y / 2.0f);
+            wheel.Position = torso.Position + new Vector2(0, torsoSize.X/2);
 
-            bentWheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
-            bentWheel.Position = torso.Position + new Vector2(0, torsoSize.Y / 2.0f);
+            wheel.Body.Friction = 16.0f;
 
-            wheel.Body.Friction = 10.0f;
-            bentWheel.Body.Friction = 10.0f;
             // Create a joint to keep the torso upright
             JointFactory.CreateAngleJoint(world, torso.Body,new Body(world));
-            JointFactory.CreateAngleJoint(world, bentTorso.Body, new Body(world));
+
 
             // Connect the feet to the torso
             axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, wheel.Body, Vector2.Zero);
-            axis2 = JointFactory.CreateRevoluteJoint(world, bentTorso.Body, bentWheel.Body, Vector2.Zero);
-
             axis1.CollideConnected = false;
-            axis2.CollideConnected = false;
-
-
             axis1.MotorEnabled = true;
-            axis2.MotorEnabled = true;
-
             axis1.MotorSpeed = 0;
-            axis2.MotorSpeed = 0;
-
             axis1.MaxMotorTorque = 10;
-            axis2.MaxMotorTorque = 10;
-            
 
-            mele = new PhysicsObject(world, bullet, 30, 200);
-            mele.Body.Mass = 0.5f;
+            mele = new PhysicsObject(world, bullet, 30, 1);
+            mele.Body.Mass = 1.5f;
             
         }
 
@@ -149,7 +130,9 @@ namespace RemGame
             //isAttacking = false;
           //  return true;
         //}
-
+/// <summary>
+/// /////////////////////////////////////////////////////////Abillities////////////////////////////////////////////////////////
+/// </summary>
         public void Jump()
 
         {
@@ -164,7 +147,6 @@ namespace RemGame
         {
             if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
             {
-
                 if (dir == Movement.Right)
                     torso.Body.ApplyLinearImpulse(slideForce);
                 else
@@ -183,7 +165,7 @@ namespace RemGame
         {
             IsAttacking = true;
             mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-            mele.Body.ApplyLinearImpulse(new Vector2(1, 0));
+            mele.Body.ApplyLinearImpulse(new Vector2(2, 0));
             //mele.Body.FixtureList[0].OnCollision = dispose;
             // IsAttacking = false;
         }
@@ -193,29 +175,19 @@ namespace RemGame
             obj.Body.BodyType = BodyType.Dynamic;
             obj.Body.ApplyForce (new Vector2(0, -5f));
         }
-        /*
-        public void bent(Vector2 position)
-        {
-            //torso.Size = new Vector2(torso.Size.X, torso.Size.Y - 15f);
-            AdjustBodeis()
-
-        }
-
-        public void standUp(Vector2 position)
-        {
-            //torso.Size = new Vector2(torso.Size.X, torso.Size.Y + 15f);
-        }
-        */
-        //1 to adjust body to normal , -1 to maek body smaller
         
-
+        public void bent()
+        {
+            torso.Body.IgnoreCollisionWith(wheel.Body);
+            torso.Position = wheel.Position;
+        }
 
         public override void Update(GameTime gameTime)
         {
             keyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-            bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
+            //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
             
 
             anim = animations[(int)direction];
@@ -257,31 +229,37 @@ namespace RemGame
 
             if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
             {
+                
                 if (keyboardState.IsKeyDown(Keys.Right))
                     Slide(Movement.Right);
+                
                 else if (keyboardState.IsKeyDown(Keys.Left))
                     Slide(Movement.Left);
-
-            }
-
-            if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
-            {
-                isStanding = false;
-            }
-
-            if (keyboardState.IsKeyUp(Keys.LeftControl) && (prevKeyboardState.IsKeyDown(Keys.LeftControl)))
-            {
-                isStanding = true;
+                
             }
 
 
             if ((currentMouseState.LeftButton == ButtonState.Pressed) && !(previousMouseState.LeftButton == ButtonState.Pressed))
             {
                 meleAttack();
+                
             }
+            
+
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                bent();
+            }
+            /*
+            if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
+            {
+                //torso.Body.Enabled = true;
+
+            }
+            */
+            previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
-            
         }
 
         //needs to be changed
@@ -289,15 +267,17 @@ namespace RemGame
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {   
 
-            //torso.Draw(spriteBatch);
-            //if (isStanding)
-                anim.Draw(spriteBatch, torso.Position, new Vector2(torso.Size.X, torso.Size.Y - 10));
-            //else
-                anim.Draw(spriteBatch, bentTorso.Position, new Vector2(bentTorso.Size.X, bentTorso.Size.Y - 10));
+            //torso.Draw(gameTime,spriteBatch);
+            Rectangle dest = torso.physicsObjRecToDraw();
+            //dest.Height = dest.Height+(int)wheel.Size.Y/2;
+            //dest.Y = dest.Y + (int)wheel.Size.Y/2;
+
+            anim.Draw(spriteBatch, dest, torso.Body);
+            
             if (isAttacking)
             mele.Draw(gameTime, spriteBatch);
             
-            //wheel.Draw(spriteBatch);
+            //wheel.Draw(gameTime,spriteBatch);
         }
 
         

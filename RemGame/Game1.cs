@@ -35,7 +35,10 @@ namespace RemGame
 
         World world;
         Kid player;
+        Kid playerBent;
         Floor floor;
+        Floor plat1;
+        KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
 
@@ -43,7 +46,7 @@ namespace RemGame
         Texture2D playerRight;
 
 
-
+        SpriteFont font;
 
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace RemGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
 
@@ -78,6 +81,8 @@ namespace RemGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            font = Content.Load<SpriteFont>("Fonts/Font");
 
             var randomButton = new Button(Content.Load<Texture2D>("Buttons/Button"), Content.Load<SpriteFont>("Fonts/Font"))
             {
@@ -105,9 +110,12 @@ namespace RemGame
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player/bullet"),
-                new Vector2(58, 31),
+                new Vector2(96, 96),
                 100,
-                new Vector2(400, 0),this);
+                new Vector2(0, 0),false,this);
+            
+
+
 
             playerLeft = Content.Load<Texture2D>("Player/playerLeft");
             playerRight = Content.Load<Texture2D>("Player/playerRight");
@@ -116,14 +124,16 @@ namespace RemGame
             player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
             player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
 
-            floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width,60));
-            floor.Position = new Vector2(GraphicsDevice.Viewport.Width / 2.0f, GraphicsDevice.Viewport.Height - 25);
+
+            floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width*2, 60));
+            floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height-60);
+
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             plat = new PhysicsObject[maxPlat];
             for (int i = 0; i < maxPlat; i++)
             {
-                plat[3-i] = new PhysicsObject(world, Content.Load<Texture2D>("HUD"), 70, 100);
-                plat[3-i].Position = new Vector2(500 + 80 * i, 630 - 45 * i);
+                plat[3-i] = new PhysicsObject(world, Content.Load<Texture2D>("HUD"), 70, 10);
+                plat[3-i].Position = new Vector2(500 + 200 * i, 600 - 45 * i);
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,7 +142,7 @@ namespace RemGame
             {
                 randomButton,
                 quitButton,
-                player
+                player,
             };
         }
 
@@ -166,10 +176,10 @@ namespace RemGame
                 foreach (PhysicsObject obj in plat)
                 {
                     
-                    if ((CoordinateHelper.pixelToUnit * currentMouseState.Position.X >= obj.Body.Position.X) && (CoordinateHelper.pixelToUnit * currentMouseState.Position.X <= obj.Body.Position.X+obj.Size.X))
+                    if ((currentMouseState.Position.X >= obj.Position.X-35) && (currentMouseState.Position.X <= obj.Position.X+35)&&
+                        (currentMouseState.Position.Y >= obj.Position.Y) && (currentMouseState.Position.Y <= obj.Position.Y +70))
                     {
                         player.Kinesis(obj);
-                        
                     }
                 }
             }
@@ -177,8 +187,7 @@ namespace RemGame
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
 
-
-
+            
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
@@ -186,22 +195,38 @@ namespace RemGame
 
         protected override void Draw(GameTime gameTime)
         {
+
+           
+
             GraphicsDevice.Clear(_backgroundColor);
 
             spriteBatch.Begin();
+
+            spriteBatch.DrawString(font, "Mouse Position"+currentMouseState.Position.X+" ,"+currentMouseState.Position.Y, new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
 
             foreach (var component in _gameComponents)
                 component.Draw(gameTime,spriteBatch);
 
             
-            player.Draw(gameTime,spriteBatch);
             floor.Draw(spriteBatch);
+            spriteBatch.DrawString(font, "*", new Vector2(floor.Position.X+100, floor.Position.Y), Color.White);
+
             //////////////////////////////////////////////
-            foreach(PhysicsObject p in plat)
+            foreach (PhysicsObject p in plat)
             {
                 p.Draw(gameTime,spriteBatch);
+                spriteBatch.DrawString(font, "*", new Vector2(p.Position.X,p.Position.Y), Color.White);
+                spriteBatch.DrawString(font, "*" , new Vector2(p.Position.X, (p.Position.Y + 70)), Color.White);
+                spriteBatch.DrawString(font, "*", new Vector2(p.Position.X-35, p.Position.Y+35), Color.White);
+                spriteBatch.DrawString(font, "*", new Vector2(p.Position.X+35, p.Position.Y+35), Color.White);
+
             }
             ///////////////////////////////////////////////
+            //spriteBatch.DrawString(font, "Player Position" + player.Position.X + " ," + player.Position.Y, new Vector2(player.Position.X, player.Position.Y), Color.White);
+           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X, player.Position.Y), Color.White);
+           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X, (player.Position.Y+96)), Color.White);
+           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X-48, player.Position.Y+48), Color.White);
+           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X+48, player.Position.Y+48), Color.White);
 
             spriteBatch.End();
 

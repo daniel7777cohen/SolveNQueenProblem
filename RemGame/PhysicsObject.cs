@@ -13,22 +13,24 @@ using FarseerPhysics.Factories;
 
 namespace RemGame
 {
-    public class PhysicsObject:Component
+    public class PhysicsObject
     {
 
         private Body body;
         private Texture2D texture;
         private Vector2 size;
         private float diameter;
+        private float radius;
         private World world;
 
         public PhysicsObject(World world, Texture2D texture, float diameter, float mass)
         {
-            size = new Vector2(diameter, diameter);
-            body = BodyFactory.CreateCircle(world, (diameter / 2.0f) * CoordinateHelper.pixelToUnit, 1);
+            radius = diameter / 2.0f;
+            size = new Vector2(diameter,diameter);
+            body = BodyFactory.CreateCircle(world, (radius) * CoordinateHelper.pixelToUnit, 1);
             body.BodyType = BodyType.Dynamic;
-
-            //this.size = size;
+            
+            
             this.texture = texture;
             this.diameter = diameter;
             this.world = world;
@@ -40,24 +42,31 @@ namespace RemGame
         public Vector2 Size { get => size; set => size = value; }
         public Vector2 Position { get => body.Position * CoordinateHelper.unitToPixel; set => body.Position = value * CoordinateHelper.pixelToUnit; }
 
-        public override void Draw(GameTime gameTime,SpriteBatch spriteBatch)
+        public Rectangle physicsObjRecToDraw()
+        {
+            Rectangle destination = new Rectangle
+            (
+                (int)Position.X - (int)radius,
+                (int)Position.Y,
+                (int)Size.X,
+                (int)Size.Y
+            );
+            return destination;
+        }
+
+        public void Draw(GameTime gameTime,SpriteBatch spriteBatch)
         {
 
              Rectangle destination = new Rectangle
             (
                 (int)Position.X,
-                (int)Position.Y,
+                (int)Position.Y+(int)Size.Y/2,
                 (int)Size.X,
                 (int)Size.Y
             );
-
-            spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), SpriteEffects.None, 0);
+            //spriteBatch.Draw(texture, destination, null, Color.White);
+            spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width/2, texture.Height/2), SpriteEffects.None, 0);
             
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            return;
         }
     }
 }

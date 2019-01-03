@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Dynamics;
 
 namespace RemGame
 {
@@ -43,17 +44,20 @@ namespace RemGame
                 CurrentFrame = 0;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location,Vector2 size)
+        public void Draw(SpriteBatch spriteBatch, Rectangle destination,Body body)
         {
             int width = Texture.Width / Columns;
             int height = Texture.Height / Rows;
             int row = (int)((float)CurrentFrame / (float)Columns);
             int column = CurrentFrame % Columns;
-            Console.WriteLine(width);
-            Console.WriteLine(height);
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            Rectangle destinationRectangle = new Rectangle((int)location.X-(int)size.X, (int)location.Y-(int)size.Y, width, height);
 
+
+            ///// adjust measures is neccesery!/////////////////////////////////////////
+            Rectangle destinationRectangle = new Rectangle (destination.X-30,destination.Y-30,destination.Width+72,destination.Height+96);
+
+            //spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), SpriteEffects.None, 0);
+            //spriteBatch.Draw(Texture, destination, sourceRectangle, Color.White, body.Rotation, new Vector2(width / 2.0f, height / 3.0f), SpriteEffects.None, 0);
 
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
 

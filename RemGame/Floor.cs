@@ -22,8 +22,7 @@ namespace RemGame
         public Floor(World world, Texture2D texture, Vector2 size)
         {
             body = BodyFactory.CreateRectangle(world, size.X * CoordinateHelper.pixelToUnit, size.Y * CoordinateHelper.pixelToUnit, 1);
-
-            this.Size = size;
+            this.size = size;
             this.texture = texture;
         }
 
@@ -36,7 +35,7 @@ namespace RemGame
 
         public Vector2 Size
         {
-            get { return size * CoordinateHelper.unitToPixel; }
+            get { return size; }
             set { size = value * CoordinateHelper.pixelToUnit; }
         }
 
@@ -44,8 +43,9 @@ namespace RemGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 scale = new Vector2(Size.X / (float)texture.Width, Size.Y / (float)texture.Height);
-            spriteBatch.Draw(texture, Position, null, Color.White, body.Rotation, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), scale, SpriteEffects.None, 0);
+            
+            Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
+            spriteBatch.Draw(texture, destinationRectangle, null, Color.White);
         }
     }
 }
