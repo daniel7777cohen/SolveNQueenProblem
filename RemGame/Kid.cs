@@ -28,6 +28,11 @@ namespace RemGame
 
         /// <tmp>
         private PhysicsObject mele;
+        private PhysicsObject shoot;
+
+        Vector2 shootBase;
+        Vector2 shootDirection;
+        Texture2D shootTexture;
         /// <tmp>
         /// 
         private bool isAttacking = false;
@@ -73,7 +78,7 @@ namespace RemGame
             this.size = size;
             this.texture = torsoTexture;
             this.mass = mass / 2.0f;
-            
+            shootTexture = bullet;
 
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
@@ -103,7 +108,9 @@ namespace RemGame
 
             mele = new PhysicsObject(world, bullet, 30, 1);
             mele.Body.Mass = 1.5f;
-            
+
+            shoot = new PhysicsObject(world, shootTexture, 30, 1);
+
         }
 
         public void Move(Movement movement)
@@ -165,15 +172,46 @@ namespace RemGame
         {
             IsAttacking = true;
             mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-            mele.Body.ApplyLinearImpulse(new Vector2(2, 0));
+            mele.Body.ApplyLinearImpulse(new Vector2(4, 0));
             //mele.Body.FixtureList[0].OnCollision = dispose;
             // IsAttacking = false;
         }
 
-        public void Kinesis(PhysicsObject obj)
+        public void Kinesis(PhysicsObject obj,MouseState currentMouseState)
         {
-            obj.Body.BodyType = BodyType.Dynamic;
-            obj.Body.ApplyForce (new Vector2(0, -5f));
+            obj.KinesisOn = true;
+
+            if (obj.Position.Y > 0 )
+            {
+                if (currentMouseState.RightButton == ButtonState.Pressed)
+                {
+                    obj.Body.BodyType = BodyType.Dynamic;
+                    //obj.Body.Mass = 0.0f;
+                    obj.Body.GravityScale = 0;
+                    obj.Body.ApplyForce(new Vector2(0, -4.0f));
+                }
+                else
+                {
+
+                    //obj.Body.Mass = 0;
+                    //obj.Body.ResetDynamics();
+                    //obj.Body.BodyType = BodyType.Static;
+                }
+            }
+            else
+            {
+                obj.Body.ResetDynamics();
+                obj.Body.GravityScale = 1;
+                //obj.Body.Mass = 0.0f;
+                //obj.Body.Mass = 9.8f;
+                if (currentMouseState.RightButton == ButtonState.Pressed)
+                {
+                    //obj.Body.BodyType = BodyType.Static;
+                    //obj.Body.ApplyForce(new Vector2(4.0f, 0));
+                    //obj.Body.BodyType = BodyType.Static;
+                }
+            }
+            obj.KinesisOn = false;
         }
         
         public void bent()
@@ -239,12 +277,29 @@ namespace RemGame
             }
 
 
-            if ((currentMouseState.LeftButton == ButtonState.Pressed) && !(previousMouseState.LeftButton == ButtonState.Pressed))
+            if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
+            {
+                shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+ 
+            }
+            if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
+            {
+                //IsAttacking = true;
+                shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+                Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X)/4,(shootDirection.Y - shootBase.Y)/4);
+                shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                shoot.Body.ApplyForce(shootForce);
+
+            }
+
+            if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
             {
                 meleAttack();
-                
+
             }
-            
+
 
             if (keyboardState.IsKeyDown(Keys.Down))
             {
@@ -257,6 +312,7 @@ namespace RemGame
 
             }
             */
+            //mele.Update(gameTime);
             previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
@@ -273,9 +329,14 @@ namespace RemGame
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
 
             anim.Draw(spriteBatch, dest, torso.Body);
-            
+
             if (isAttacking)
-            mele.Draw(gameTime, spriteBatch);
+                mele.Draw(gameTime, spriteBatch);
+
+            shoot.Draw(gameTime, spriteBatch);
+            
+
+            
             
             //wheel.Draw(gameTime,spriteBatch);
         }

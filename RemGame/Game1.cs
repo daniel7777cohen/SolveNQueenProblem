@@ -179,7 +179,7 @@ namespace RemGame
                     if ((currentMouseState.Position.X >= obj.Position.X-35) && (currentMouseState.Position.X <= obj.Position.X+35)&&
                         (currentMouseState.Position.Y >= obj.Position.Y) && (currentMouseState.Position.Y <= obj.Position.Y +70))
                     {
-                        player.Kinesis(obj);
+                        player.Kinesis(obj, currentMouseState);
                     }
                 }
             }

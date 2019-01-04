@@ -13,7 +13,7 @@ using FarseerPhysics.Factories;
 
 namespace RemGame
 {
-    public class PhysicsObject
+    public class PhysicsObject:Component
     {
 
         private Body body;
@@ -22,6 +22,8 @@ namespace RemGame
         private float diameter;
         private float radius;
         private World world;
+        private bool kinesisOn = false;
+        private bool inAir = false;
 
         public PhysicsObject(World world, Texture2D texture, float diameter, float mass)
         {
@@ -41,6 +43,8 @@ namespace RemGame
         public Texture2D Texture { get => texture; set => texture = value; }
         public Vector2 Size { get => size; set => size = value; }
         public Vector2 Position { get => body.Position * CoordinateHelper.unitToPixel; set => body.Position = value * CoordinateHelper.pixelToUnit; }
+        public bool KinesisOn { get => kinesisOn; set => kinesisOn = value; }
+        public bool InAir { get => inAir; set => inAir = value; }
 
         public Rectangle physicsObjRecToDraw()
         {
@@ -54,7 +58,20 @@ namespace RemGame
             return destination;
         }
 
-        public void Draw(GameTime gameTime,SpriteBatch spriteBatch)
+        public override void Update(GameTime gameTime)
+        {
+           if(this.Position.Y < 0)
+            {
+                //Console.WriteLine(this.Position.Y);
+                //this.Body.BodyType = BodyType.Static;
+                this.Body.Enabled = false; 
+                
+               //this.Body.GravityScale = 1;
+
+            }
+        }
+
+        public override void Draw(GameTime gameTime,SpriteBatch spriteBatch)
         {
 
              Rectangle destination = new Rectangle
