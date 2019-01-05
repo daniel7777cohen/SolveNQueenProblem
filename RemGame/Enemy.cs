@@ -14,8 +14,12 @@ using FarseerPhysics.Dynamics.Joints;
 
 namespace RemGame
 {
-    class Kid:Component
+    class Enemy : Component
     {
+        /// <summary>
+        bool pingPong = false;
+        bool Ghost = false;
+        /// </summary>
         private World world;
         private Texture2D texture;
         private Vector2 size;
@@ -25,21 +29,22 @@ namespace RemGame
         private PhysicsObject torso;
 
         private PhysicsObject wheel;
+        /*
+                /// <tmp>
+                private PhysicsObject mele;
+                private PhysicsObject shoot;
 
-        /// <tmp>
-        private PhysicsObject mele;
-        private PhysicsObject shoot;
-
-        Vector2 shootBase;
-        Vector2 shootDirection;
-        Texture2D shootTexture;
-        /// <tmp>
-        /// 
+                Vector2 shootBase;
+                Vector2 shootDirection;
+                Texture2D shootTexture;
+                /// <tmp>
+                /// 
+       */
         private bool isAttacking = false;
         private RevoluteJoint axis1;
-    
 
-        private float speed = 1.4f;
+
+        private float speed = 0.4f;
         private bool isMoving = false;
         private Movement direction = Movement.Right;
 
@@ -72,17 +77,17 @@ namespace RemGame
         internal Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
 
-        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,Game game)
+        public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, Game game)
         {
             this.world = world;
             this.size = size;
             this.texture = torsoTexture;
             this.mass = mass / 2.0f;
-            shootTexture = bullet;
+            //shootTexture = bullet;
 
             isMoving = false;
-            Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
-            float wheelSize = size.X ;
+            Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
+            float wheelSize = size.X;
 
             // Create the torso
             torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
@@ -91,12 +96,12 @@ namespace RemGame
 
             // Create the feet of the body
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
-            wheel.Position = torso.Position + new Vector2(0, torsoSize.X/2);
+            wheel.Position = torso.Position + new Vector2(0, torsoSize.X / 2);
 
             wheel.Body.Friction = 16.0f;
-            
+
             // Create a joint to keep the torso upright
-            JointFactory.CreateAngleJoint(world, torso.Body,new Body(world));
+            JointFactory.CreateAngleJoint(world, torso.Body, new Body(world));
 
 
             // Connect the feet to the torso
@@ -106,20 +111,20 @@ namespace RemGame
             axis1.MotorSpeed = 0;
             axis1.MaxMotorTorque = 10;
 
-            mele = new PhysicsObject(world, bullet, 30, 1);
-            mele.Body.Mass = 1.5f;
+            //mele = new PhysicsObject(world, bullet, 30, 1);
+           //mele.Body.Mass = 1.5f;
 
-            shoot = new PhysicsObject(world, shootTexture, 30, 1);
+            //shoot = new PhysicsObject(world, shootTexture, 30, 1);
 
         }
-
+        
         public void Move(Movement movement)
         {
             switch (movement)
             {
                 case Movement.Left:
-                    if(!keyboardState.IsKeyDown(Keys.LeftShift))
-                    axis1.MotorSpeed = -MathHelper.TwoPi * speed;
+                    if (!keyboardState.IsKeyDown(Keys.LeftShift))
+                        axis1.MotorSpeed = -MathHelper.TwoPi * speed;
                     break;
 
                 case Movement.Right:
@@ -131,15 +136,15 @@ namespace RemGame
                     break;
             }
         }
-
+        
         //private bool dispose()
         //{
-            //isAttacking = false;
-          //  return true;
+        //isAttacking = false;
+        //  return true;
         //}
-/// <summary>
-/// /////////////////////////////////////////////////////////Abillities////////////////////////////////////////////////////////
-/// </summary>
+        /// <summary>
+        /// /////////////////////////////////////////////////////////Abillities////////////////////////////////////////////////////////
+        /// </summary>
         public void Jump()
 
         {
@@ -158,7 +163,7 @@ namespace RemGame
                     torso.Body.ApplyLinearImpulse(slideForce);
                 else
                 {
-                    slideForce.X = slideForce.X * -1; 
+                    slideForce.X = slideForce.X * -1;
                     torso.Body.ApplyLinearImpulse(slideForce);
                     slideForce.X = slideForce.X * -1;
                 }
@@ -171,17 +176,17 @@ namespace RemGame
         public void meleAttack()
         {
             IsAttacking = true;
-            mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-            mele.Body.ApplyLinearImpulse(new Vector2(4, 0));
+           // mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+            //mele.Body.ApplyLinearImpulse(new Vector2(4, 0));
             //mele.Body.FixtureList[0].OnCollision = dispose;
             // IsAttacking = false;
         }
 
-        public void Kinesis(Obstacle obj,MouseState currentMouseState)
+        public void Kinesis(Obstacle obj, MouseState currentMouseState)
         {
             obj.KinesisOn = true;
 
-            if (obj.Position.Y > 0 )
+            if (obj.Position.Y > 0)
             {
                 if (currentMouseState.RightButton == ButtonState.Pressed)
                 {
@@ -213,7 +218,7 @@ namespace RemGame
             }
             obj.KinesisOn = false;
         }
-        
+
         public void bent()
         {
             torso.Body.IgnoreCollisionWith(wheel.Body);
@@ -222,89 +227,148 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+
             keyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
             //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
-            
 
-            anim = animations[(int)direction];
+                                   anim = animations[(int)direction];
 
-            if (isMoving) // apply animation
-                Anim.Update(gameTime);
-            else //player will appear as standing with frame [1] from the atlas.
-                Anim.CurrentFrame = 1;
+                                    if (isMoving) // apply animation
+                                        Anim.Update(gameTime);
+                                    else //player will appear as standing with frame [1] from the atlas.
+                                        Anim.CurrentFrame = 1;
 
-            isMoving = false;
-
-            if (keyboardState.IsKeyDown(Keys.Left))
+                                    isMoving = false;
+            if(keyboardState.IsKeyDown( Keys.Q))
             {
-                Move(Movement.Left);
-                isMoving = true;
-                direction = Movement.Left;
+                if (!Ghost)
+                {
+                    torso.Body.Enabled = false;
+                    wheel.Body.Enabled = false;
+                    Ghost = true;
+                }
+                else
+                {
+
+                    torso.Body.Enabled = true;
+                    wheel.Body.Enabled = true;
+                    Ghost = false;
+                }
 
             }
-            else if (keyboardState.IsKeyDown(Keys.Right))
+           
+
+
+            if (!(pingPong) && Position.X < 450 - size.X / 2)
             {
                 Move(Movement.Right);
                 isMoving = true;
                 direction = Movement.Right;
-
+                
+                /*
+                Move(Movement.Left);
+                isMoving = true;
+                direction = Movement.Left;
+                */
             }
+
+            else 
+            {
+                pingPong = true;
+                if (pingPong && Position.X -size.X/2> 0)
+                {
+                    Move(Movement.Left);
+                    isMoving = true;
+                    direction = Movement.Left;
+                }
+                else
+                    pingPong = false;
+                /*
+                Move(Movement.Right);
+                isMoving = true;
+                direction = Movement.Right;
+*/
+            }
+            /*
             else
             {
                 Move(Movement.Stop);
                 isMoving = false;
 
             }
+            */
+            /* 
+                                    if (keyboardState.IsKeyDown(Keys.Left))
+                                    {
+                                        Move(Movement.Left);
+                                        isMoving = true;
+                                        direction = Movement.Left;
 
-            //if statment should changed
-            if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
-            {
-                isMoving = true;
-                Jump();
-            }
+                                    }
+                                    else if (keyboardState.IsKeyDown(Keys.Right))
+                                    {
+                                        Move(Movement.Right);
+                                        isMoving = true;
+                                        direction = Movement.Right;
 
-            if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
-            {
-                
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    Slide(Movement.Right);
-                
-                else if (keyboardState.IsKeyDown(Keys.Left))
-                    Slide(Movement.Left);
-                
-            }
+                                    }
+                                    else
+                                    {
+                                        Move(Movement.Stop);
+                                        isMoving = false;
 
+                                    }
 
-            if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
-            {
-                shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
- 
-            }
-            if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
-            {
-                //IsAttacking = true;
-                shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-                Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X)/4,(shootDirection.Y - shootBase.Y)/4);
-                shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-                shoot.Body.ApplyForce(shootForce);
+                                    //if statment should changed
+                                    if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+                                    {
+                                        isMoving = true;
+                                        Jump();
+                                    }
 
-            }
+                                    if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
+                                    {
 
-            if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
-            {
-                meleAttack();
+                                        if (keyboardState.IsKeyDown(Keys.Right))
+                                            Slide(Movement.Right);
 
-            }
+                                        else if (keyboardState.IsKeyDown(Keys.Left))
+                                            Slide(Movement.Left);
+
+                                    }
 
 
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                bent();
-            }
+                                    if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
+                                    {
+                                        shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                                        Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+
+                                    }
+                                    if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
+                                    {
+                                        //IsAttacking = true;
+                                        shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                                        Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+                                        Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X) / 4, (shootDirection.Y - shootBase.Y) / 4);
+                                        shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                                        shoot.Body.ApplyForce(shootForce);
+
+                                    }
+
+                                    if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
+                                    {
+                                        meleAttack();
+
+                                    }
+
+
+                                    if (keyboardState.IsKeyDown(Keys.Down))
+                                    {
+                                        bent();
+                                    }
+           */
             /*
             if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
             {
@@ -313,6 +377,7 @@ namespace RemGame
             }
             */
             //mele.Update(gameTime);
+
             previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
@@ -321,7 +386,7 @@ namespace RemGame
         //needs to be changed
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {   
+        {
 
             //torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsObjRecToDraw();
@@ -329,18 +394,18 @@ namespace RemGame
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
 
             anim.Draw(spriteBatch, dest, torso.Body);
-
+/*
             if (isAttacking)
                 mele.Draw(gameTime, spriteBatch);
 
-            shoot.Draw(gameTime, spriteBatch);
-            
+                shoot.Draw(gameTime, spriteBatch);
+*/
 
-            
-            
+
+
             //wheel.Draw(gameTime,spriteBatch);
         }
 
-        
+
     }
 }

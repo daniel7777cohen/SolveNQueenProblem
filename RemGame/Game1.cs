@@ -35,9 +35,8 @@ namespace RemGame
 
         World world;
         Kid player;
-        Kid playerBent;
+        Enemy DemoEnemy;
         Floor floor;
-        Floor plat1;
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
@@ -52,7 +51,8 @@ namespace RemGame
         /// <summary>
         /// ///////////////////
         /// </summary>
-        PhysicsObject[] plat;
+        //PhysicsObject[] plat;
+        Obstacle[] plat;
         const int maxPlat = 4;
         /// <summary>
         /// ///////////////////
@@ -113,7 +113,14 @@ namespace RemGame
                 new Vector2(96, 96),
                 100,
                 new Vector2(0, 0),false,this);
-            
+
+            DemoEnemy = new Enemy(world,
+                Content.Load<Texture2D>("Player"),
+                Content.Load<Texture2D>("Player"),
+                Content.Load<Texture2D>("Player/bullet"),
+                new Vector2(96, 96),
+                100,
+                new Vector2(100, 0), false, this);
 
 
 
@@ -124,15 +131,18 @@ namespace RemGame
             player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
             player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
 
+            DemoEnemy.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
+            DemoEnemy.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
+
 
             floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width*2, 60));
             floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height-60);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            plat = new PhysicsObject[maxPlat];
+            plat = new Obstacle[maxPlat];
             for (int i = 0; i < maxPlat; i++)
             {
-                plat[3-i] = new PhysicsObject(world, Content.Load<Texture2D>("HUD"), 70, 10);
+                plat[3-i] = new Obstacle(world, Content.Load<Texture2D>("HUD"), new Vector2(70,70));
                 plat[3-i].Position = new Vector2(500 + 200 * i, 600 - 45 * i);
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
@@ -143,6 +153,8 @@ namespace RemGame
                 randomButton,
                 quitButton,
                 player,
+                DemoEnemy,
+
             };
         }
 
@@ -173,7 +185,7 @@ namespace RemGame
 
             if (currentMouseState.RightButton == ButtonState.Pressed)
             {
-                foreach (PhysicsObject obj in plat)
+                foreach (Obstacle obj in plat)
                 {
                     
                     if ((currentMouseState.Position.X >= obj.Position.X-35) && (currentMouseState.Position.X <= obj.Position.X+35)&&
@@ -212,7 +224,7 @@ namespace RemGame
             spriteBatch.DrawString(font, "*", new Vector2(floor.Position.X+100, floor.Position.Y), Color.White);
 
             //////////////////////////////////////////////
-            foreach (PhysicsObject p in plat)
+            foreach (Obstacle p in plat)
             {
                 p.Draw(gameTime,spriteBatch);
                 spriteBatch.DrawString(font, "*", new Vector2(p.Position.X,p.Position.Y), Color.White);
