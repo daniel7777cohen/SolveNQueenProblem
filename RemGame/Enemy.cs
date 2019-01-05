@@ -247,6 +247,7 @@ namespace RemGame
                 {
                     torso.Body.Enabled = false;
                     wheel.Body.Enabled = false;
+                    isMoving=false;
                     Ghost = true;
                 }
                 else
@@ -261,7 +262,7 @@ namespace RemGame
            
 
 
-            if (!(pingPong) && Position.X < 450 - size.X / 2)
+            if (!(pingPong) && Position.X < 450 - size.X / 2&&!(Ghost))
             {
                 Move(Movement.Right);
                 isMoving = true;
@@ -274,7 +275,7 @@ namespace RemGame
                 */
             }
 
-            else 
+            else if(!(Ghost))
             {
                 pingPong = true;
                 if (pingPong && Position.X -size.X/2> 0)
