@@ -73,8 +73,9 @@ namespace RemGame
 
         public override void Draw(GameTime gameTime,SpriteBatch spriteBatch)
         {
+            
 
-             Rectangle destination = new Rectangle
+            Rectangle destination = new Rectangle
             (
                 (int)Position.X,
                 (int)Position.Y+(int)Size.Y/2,

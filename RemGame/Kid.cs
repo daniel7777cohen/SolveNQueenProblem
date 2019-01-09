@@ -22,6 +22,12 @@ namespace RemGame
         private float mass;
         private Vector2 position;
 
+        private SpriteFont f;
+
+        PhysicsView pv1;
+        PhysicsView pv2;
+
+
         private PhysicsObject torso;
 
         private PhysicsObject wheel;
@@ -47,7 +53,7 @@ namespace RemGame
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 0.7f;        // in seconds
-        private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
+        private Vector2 jumpForce = new Vector2(0, -6); // applied force when jumping
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 0.1f;        // in seconds
@@ -72,7 +78,7 @@ namespace RemGame
         internal Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
 
-        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,Game game)
+        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
             this.world = world;
             this.size = size;
@@ -84,15 +90,19 @@ namespace RemGame
             Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
             float wheelSize = size.X ;
 
+            wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
+            wheel.Position = startPosition;
+
             // Create the torso
             torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
-            torso.Position = startPosition;
-            position = torso.Position;
+            torso.Position = wheel.Position+new Vector2(0,-48);
+            //position = torso.Position;
 
             // Create the feet of the body
+            /*
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
-            wheel.Position = torso.Position + new Vector2(0, torsoSize.X/2);
-
+            wheel.Position = torso.Position + new Vector2(0, 48);
+            */
             wheel.Body.Friction = 16.0f;
             
             // Create a joint to keep the torso upright
@@ -111,6 +121,8 @@ namespace RemGame
 
             shoot = new PhysicsObject(world, shootTexture, 30, 1);
 
+            pv1 = new PhysicsView(torso.Body,torso.Position,torso.Size, f);
+            pv2 = new PhysicsView(wheel.Body,wheel.Position, wheel.Size, f);
         }
 
         public void Move(Movement movement)
@@ -280,14 +292,14 @@ namespace RemGame
             if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
             {
                 shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+                //Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
  
             }
             if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
             {
                 //IsAttacking = true;
                 shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+                //Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
                 Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X)/4,(shootDirection.Y - shootBase.Y)/4);
                 shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
                 shoot.Body.ApplyForce(shootForce);
@@ -321,7 +333,8 @@ namespace RemGame
         //needs to be changed
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {   
+        {
+            
 
             //torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsObjRecToDraw();
@@ -334,13 +347,14 @@ namespace RemGame
                 mele.Draw(gameTime, spriteBatch);
 
             shoot.Draw(gameTime, spriteBatch);
-            
 
-            
-            
+            pv1.Draw(gameTime, spriteBatch);
+            pv2.Draw(gameTime, spriteBatch);
+
+
             //wheel.Draw(gameTime,spriteBatch);
         }
 
-        
+
     }
 }

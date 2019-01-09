@@ -40,6 +40,10 @@ namespace RemGame
                 /// <tmp>
                 /// 
        */
+
+        private PhysicsView pv1;
+        private PhysicsView pv2;
+
         private bool isAttacking = false;
         private RevoluteJoint axis1;
 
@@ -77,7 +81,7 @@ namespace RemGame
         internal Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
 
-        public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, Game game)
+        public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f)
         {
             this.world = world;
             this.size = size;
@@ -112,10 +116,11 @@ namespace RemGame
             axis1.MaxMotorTorque = 10;
 
             //mele = new PhysicsObject(world, bullet, 30, 1);
-           //mele.Body.Mass = 1.5f;
+            //mele.Body.Mass = 1.5f;
 
             //shoot = new PhysicsObject(world, shootTexture, 30, 1);
-
+            pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
+            pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
         }
         
         public void Move(Movement movement)
@@ -241,7 +246,7 @@ namespace RemGame
                                         Anim.CurrentFrame = 1;
 
                                     isMoving = false;
-            if(keyboardState.IsKeyDown( Keys.Q))
+            if(keyboardState.IsKeyDown( Keys.Q)&&!(prevKeyboardState.IsKeyDown(Keys.Q)))
             {
                 if (!Ghost)
                 {
@@ -395,12 +400,14 @@ namespace RemGame
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
 
             anim.Draw(spriteBatch, dest, torso.Body);
-/*
-            if (isAttacking)
-                mele.Draw(gameTime, spriteBatch);
+            pv1.Draw(gameTime, spriteBatch);
+            pv2.Draw(gameTime, spriteBatch);
+            /*
+                        if (isAttacking)
+                            mele.Draw(gameTime, spriteBatch);
 
-                shoot.Draw(gameTime, spriteBatch);
-*/
+                            shoot.Draw(gameTime, spriteBatch);
+            */
 
 
 

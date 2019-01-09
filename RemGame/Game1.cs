@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoGame.Extended;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace RemGame
 
         SpriteFont font;
 
-
+        Camera2D cam;
         /// <summary>
         /// ///////////////////
         /// </summary>
@@ -73,6 +74,7 @@ namespace RemGame
         protected override void Initialize()
         {
             IsMouseVisible = true;
+            cam = new Camera2D(GraphicsDevice);
 
             base.Initialize();
         }
@@ -83,6 +85,7 @@ namespace RemGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("Fonts/Font");
+
 
             var randomButton = new Button(Content.Load<Texture2D>("Buttons/Button"), Content.Load<SpriteFont>("Fonts/Font"))
             {
@@ -106,13 +109,29 @@ namespace RemGame
 
 
 
+            
+
+
+            floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width*2, 60));
+            floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height-60);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            plat = new Obstacle[maxPlat];
+            for (int i = 0; i < maxPlat; i++)
+            {
+                plat[3-i] = new Obstacle(world, Content.Load<Texture2D>("HUD"), new Vector2(70,70),font);
+                plat[3-i].Position = new Vector2(500 + 200 * i, 600 - 45 * i);
+                plat[3-i].Body.BodyType = BodyType.Static;
+            }
+
             player = new Kid(world,
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player"),
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(96, 96),
                 100,
-                new Vector2(0, 0),false,this);
+                new Vector2(0, 0), false, font);
+
 
             DemoEnemy = new Enemy(world,
                 Content.Load<Texture2D>("Player"),
@@ -120,7 +139,7 @@ namespace RemGame
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(96, 96),
                 100,
-                new Vector2(100, 0), false, this);
+                new Vector2(100, 0), false, font);
 
 
 
@@ -133,19 +152,6 @@ namespace RemGame
 
             DemoEnemy.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
             DemoEnemy.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
-
-
-            floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width*2, 60));
-            floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height-60);
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            plat = new Obstacle[maxPlat];
-            for (int i = 0; i < maxPlat; i++)
-            {
-                plat[3-i] = new Obstacle(world, Content.Load<Texture2D>("HUD"), new Vector2(70,70));
-                plat[3-i].Position = new Vector2(500 + 200 * i, 600 - 45 * i);
-                plat[3-i].Body.BodyType = BodyType.Static;
-            }
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             _gameComponents = new List<Component>()
@@ -201,45 +207,36 @@ namespace RemGame
 
             
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+            cam.LookAt(player.Position);
+            //cam.Rotate(0.001f);
+            cam.ZoomOut(0.0001f);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-
-           
-
             GraphicsDevice.Clear(_backgroundColor);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
 
             spriteBatch.DrawString(font, "Mouse Position"+currentMouseState.Position.X+" ,"+currentMouseState.Position.Y, new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
 
-            foreach (var component in _gameComponents)
-                component.Draw(gameTime,spriteBatch);
-
-            
             floor.Draw(spriteBatch);
             spriteBatch.DrawString(font, "*", new Vector2(floor.Position.X+100, floor.Position.Y), Color.White);
 
             //////////////////////////////////////////////
             foreach (Obstacle p in plat)
             {
+                
                 p.Draw(gameTime,spriteBatch);
-                spriteBatch.DrawString(font, "*", new Vector2(p.Position.X,p.Position.Y), Color.White);
-                spriteBatch.DrawString(font, "*" , new Vector2(p.Position.X, (p.Position.Y + 70)), Color.White);
-                spriteBatch.DrawString(font, "*", new Vector2(p.Position.X-35, p.Position.Y+35), Color.White);
-                spriteBatch.DrawString(font, "*", new Vector2(p.Position.X+35, p.Position.Y+35), Color.White);
 
+                
             }
-            ///////////////////////////////////////////////
-            //spriteBatch.DrawString(font, "Player Position" + player.Position.X + " ," + player.Position.Y, new Vector2(player.Position.X, player.Position.Y), Color.White);
-           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X, player.Position.Y), Color.White);
-           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X, (player.Position.Y+96)), Color.White);
-           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X-48, player.Position.Y+48), Color.White);
-           spriteBatch.DrawString(font, "*", new Vector2(player.Position.X+48, player.Position.Y+48), Color.White);
 
+            foreach (var component in _gameComponents)
+                component.Draw(gameTime, spriteBatch);
+            ///////////////////////////////////////////////
             spriteBatch.End();
 
             base.Draw(gameTime);

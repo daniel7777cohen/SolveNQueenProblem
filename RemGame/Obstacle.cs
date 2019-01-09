@@ -21,12 +21,14 @@ namespace RemGame
         private Vector2 size;
         private bool kinesisOn = false;
         private bool inAir = false;
+        private PhysicsView p;
 
-        public Obstacle(World world, Texture2D texture, Vector2 size)
+        public Obstacle(World world, Texture2D texture, Vector2 size,SpriteFont font)
         {
             body = BodyFactory.CreateRectangle(world, size.X * CoordinateHelper.pixelToUnit, size.Y * CoordinateHelper.pixelToUnit, 1);
             this.size = size;
             this.texture = texture;
+            p = new PhysicsView(body,body.Position,size,font);
         }
 
         public Body Body { get => body; set => body = value; }
@@ -73,7 +75,7 @@ namespace RemGame
            );
             //spriteBatch.Draw(texture, destination, null, Color.White);
             spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
-
+            p.Draw(gameTime,spriteBatch);
         }
     }
 }
