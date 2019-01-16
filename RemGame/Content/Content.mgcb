@@ -188,6 +188,24 @@
 /processorParam:TextureFormat=Color
 /build:Player/Ron_standing.png
 
+#begin Sound/Music/General Music 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sound/Music/General Music 1.mp3
+
+#begin Sound/SoundFX/Footsteps Brick 1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/SoundFX/Footsteps Brick 1.mp3
+
+#begin Sound/SoundFX/Jump.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/SoundFX/Jump.mp3
+
 #begin Tiles/tile1.png
 /importer:TextureImporter
 /processor:TextureProcessor

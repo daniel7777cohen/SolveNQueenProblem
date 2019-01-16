@@ -30,7 +30,7 @@ namespace RemGame
 
         public void Update()
         {
-            rectangle.X -= 3;
+            rectangle.X -= 1;
         }
     }
 }

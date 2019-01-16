@@ -43,12 +43,15 @@ namespace RemGame
         /// 
         private bool isAttacking = false;
         private RevoluteJoint axis1;
-    
 
-        private float speed = 0.8f;
+
+
+        private const float SPEED = 0.8F;
+        private float speed = SPEED;
         private bool isMoving = false;
         private bool isJumping = false;
         private bool isSliding = false;
+        private bool isBending = false;
         private Movement direction = Movement.Right;
 
 
@@ -82,6 +85,8 @@ namespace RemGame
         internal Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
         public bool IsJumping { get => isJumping; set => isJumping = value; }
+        public bool IsMoving { get => isMoving; set => isMoving = value; }
+        public bool IsBending { get => isBending; set => isBending = value; }
 
         public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
@@ -91,7 +96,7 @@ namespace RemGame
             this.mass = mass / 2.0f;
             shootTexture = bullet;
 
-            isMoving = false;
+            IsMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
             float wheelSize = size.X ;
 
@@ -105,12 +110,18 @@ namespace RemGame
             
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
             wheel.Position = torso.Position + new Vector2(0, 96);
-            
+
+
             wheel.Body.Friction = 22.0f;
             
             // Create a joint to keep the torso upright
             JointFactory.CreateAngleJoint(world, torso.Body,new Body(world));
 
+            torso.Body.CollisionCategories = Category.Cat10;
+            wheel.Body.CollisionCategories = Category.Cat11;
+
+            torso.Body.CollidesWith = Category.Cat1;
+            wheel.Body.CollidesWith = Category.Cat1;
 
             // Connect the feet to the torso
             axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, wheel.Body, Vector2.Zero);
@@ -129,7 +140,9 @@ namespace RemGame
         }
 
         public void Move(Movement movement)
-        {
+        {   
+            if(!IsBending)
+            speed = SPEED;
             switch (movement)
             {
                 case Movement.Left:
@@ -180,23 +193,28 @@ namespace RemGame
         //should create variables for funciton
         public void Slide(Movement dir)
         {
-            isSliding = true;
-            isMoving = true;
-            torso.Body.CollidesWith = Category.None;
-
-            if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
+            
+            speed = SPEED;
+            if (!isJumping)
             {
-                if (dir == Movement.Right)
-                    torso.Body.ApplyLinearImpulse(slideForce);
-                else
+                isSliding = true;
+                IsMoving = true;
+                torso.Body.CollidesWith = Category.None;
+
+                if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
-                    slideForce.X = slideForce.X * -1; 
-                    torso.Body.ApplyLinearImpulse(slideForce);
-                    slideForce.X = slideForce.X * -1;
+                    if (dir == Movement.Right)
+                        torso.Body.ApplyLinearImpulse(slideForce);
+                    else
+                    {
+                        slideForce.X = slideForce.X * -1;
+                        torso.Body.ApplyLinearImpulse(slideForce);
+                        slideForce.X = slideForce.X * -1;
+                    }
+
+                    previousSlide = DateTime.Now;
+
                 }
-
-                previousSlide = DateTime.Now;
-
             }
         }
 
@@ -248,9 +266,13 @@ namespace RemGame
 
         public void bend()
         {
-
-            torso.Body.IgnoreCollisionWith(wheel.Body);
-            torso.Position = new Vector2(wheel.Position.X,wheel.Position.Y-48);
+            if (!isJumping)
+            {
+                torso.Body.IgnoreCollisionWith(wheel.Body);
+                torso.Position = new Vector2(wheel.Position.X, wheel.Position.Y - 48);
+                speed = SPEED / 2;
+                
+            }
 
         }
 
@@ -271,38 +293,38 @@ namespace RemGame
 
             anim = animations[(int)direction];
 
-            if (isMoving) // apply animation
+            if (IsMoving) // apply animation
                 Anim.Update(gameTime);
             else //player will appear as standing with frame [1] from the atlas.
                 Anim.CurrentFrame = 1;
 
-            isMoving = false;
+            IsMoving = false;
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
                 Move(Movement.Left);
-                isMoving = true;
                 direction = Movement.Left;
+                IsMoving = true;
 
             }
             else if (keyboardState.IsKeyDown(Keys.Right))
             {
                 Move(Movement.Right);
-                isMoving = true;
                 direction = Movement.Right;
+                IsMoving = true;
 
             }
             else
             {
+                IsMoving = false;
                 Move(Movement.Stop);
-                isMoving = false;
+                
 
             }
 
             //if statment should changed
             if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
             {
-                isMoving = true;
                 Jump();
 
             }
@@ -366,23 +388,15 @@ namespace RemGame
                     torso.Position = new Vector2(torso.Position.X, torso.Position.Y - 48); 
                 }
 
-                    
-
-               
+                IsBending = true;
             }
-/*
-            if(prevKeyboardState.IsKeyDown(Keys.Down) && keyboardState.IsKeyUp(Keys.Down))
-            {
-                torso.Position = new Vector2(torso.Position.X,torso.Position.Y+48);
-            }
-       */     
-            /*
+            
             if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
             {
-                //torso.Body.Enabled = true;
+                IsBending = false;
 
             }
-            */
+            
             //mele.Update(gameTime);
             previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
@@ -395,7 +409,6 @@ namespace RemGame
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            
 
             torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsObjRecToDraw();

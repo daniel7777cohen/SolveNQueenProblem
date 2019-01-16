@@ -53,11 +53,13 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Figures\Kid.cs" />
     <Compile Include="LevelDesgin\Obstacle.cs" />
+    <Compile Include="Utils\ISoundManager.cs" />
     <Compile Include="Utils\PhysicsObject.cs" />
     <Compile Include="Utils\PhysicsView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Figures\RangedShoot.cs" />
+    <Compile Include="Utils\SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

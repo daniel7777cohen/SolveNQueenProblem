@@ -19,10 +19,16 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerLeft.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerRight.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Ron_standing.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/Music/General Music 1.mp3</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/SoundFX/Footsteps Brick 1.mp3</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/SoundFX/Jump.mp3</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile1.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

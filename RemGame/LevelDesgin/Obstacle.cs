@@ -29,6 +29,7 @@ namespace RemGame
             this.size = size;
             this.texture = texture;
             p = new PhysicsView(body,body.Position,size,font);
+            body.CollisionCategories = Category.Cat1;
         }
 
         public Body Body { get => body; set => body = value; }

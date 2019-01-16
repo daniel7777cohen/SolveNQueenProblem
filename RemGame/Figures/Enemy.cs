@@ -121,8 +121,15 @@ namespace RemGame
             //shoot = new PhysicsObject(world, shootTexture, 30, 1);
             pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
             pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
+
+            torso.Body.CollisionCategories = Category.Cat10;
+            wheel.Body.CollisionCategories = Category.Cat11;
+
+            torso.Body.CollidesWith = Category.Cat1;
+            wheel.Body.CollidesWith = Category.Cat1;
+
         }
-        
+
         public void Move(Movement movement)
         {
             switch (movement)
@@ -267,7 +274,7 @@ namespace RemGame
            
 
 
-            if (!(pingPong) && Position.X < 450 - size.X / 2&&!(Ghost))
+            if (!(pingPong) && Position.X < 4000 - size.X / 2&&!(Ghost))
             {
                 Move(Movement.Right);
                 isMoving = true;
@@ -283,7 +290,7 @@ namespace RemGame
             else if(!(Ghost))
             {
                 pingPong = true;
-                if (pingPong && Position.X -size.X/2> 0)
+                if (pingPong && Position.X -size.X/2> 200)
                 {
                     Move(Movement.Left);
                     isMoving = true;
