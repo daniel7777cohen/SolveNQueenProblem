@@ -54,6 +54,10 @@ namespace RemGame
                         texture = Content.Load<Texture2D>("HUD");
                         Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
                         obs.Position = new Vector2(x * size, y * size);
+                        /*
+                        if (number == 2)
+                            obs.Body.CollisionCategories = Category.Cat30;
+                            */
                         ObstacleTiles.Add(obs);
                         
                         //collisionTiles.Add(new CollisionTiles(number, new Rectangle(x * size, y * size, size, size),world,new Vector2(64,64),font));
@@ -76,6 +80,8 @@ namespace RemGame
                     }
                     width = (x + 1) * size;
                     height = (y + 1) * size;
+                    
+
 
                 }
             }
@@ -87,15 +93,24 @@ namespace RemGame
                 en.Update(gameTime);
         }
 
-        public void Draw(GameTime gameTime,SpriteBatch spriteBatch)
+        public void DrawObstacle(GameTime gameTime,SpriteBatch spriteBatch)
         {
            // foreach (CollisionTiles tile in collisionTiles)
                 foreach (Obstacle ob in ObstacleTiles)
                     ob.Draw(gameTime,spriteBatch);
 
+            
+        }
+
+        public void DrawEnemies(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+           
+
             foreach (Enemy en in enemies)
                 en.Draw(gameTime, spriteBatch);
         }
+
+
 
     }
 }

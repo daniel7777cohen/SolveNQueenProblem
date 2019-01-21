@@ -41,8 +41,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="LevelDesgin\IScrollingBackgroundManager .cs" />
     <Compile Include="LevelDesgin\Map.cs" />
     <Compile Include="LevelDesgin\ScrollingBackground.cs" />
+    <Compile Include="LevelDesgin\ScrollingBackgroundManager.cs" />
     <Compile Include="LevelDesgin\Tile.cs" />
     <Compile Include="Utils\AnimatedSprite.cs" />
     <Compile Include="Button.cs" />

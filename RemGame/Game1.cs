@@ -63,6 +63,8 @@ namespace RemGame
         /// </summary>
         Map map;
 
+        //ScrollingBackgroundManager scrollingBackgroundManager;
+        
         Scrollingbackground[] sc;
         const int maxLayers = 12;
         Scrollingbackground Sc1;
@@ -77,11 +79,7 @@ namespace RemGame
         Scrollingbackground Sc10;
         Scrollingbackground Sc11;
         Scrollingbackground Sc12;
-        Scrollingbackground Sc13;
-        Scrollingbackground Sc14;
-
-
-
+        
         SoundManager soundManager;
         String [] mainMusicPlaylist;
         SoundEffect walking;
@@ -93,13 +91,10 @@ namespace RemGame
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-
-           // graphics.PreferredBackBufferWidth = 1920;
-           // graphics.PreferredBackBufferHeight = 1080;
-
+            //scrollingBackgroundManager = new ScrollingBackgroundManager(this, "Layers\\");
 
         }
 
@@ -108,8 +103,7 @@ namespace RemGame
             IsMouseVisible = true;
 
             cam = new Camera2D(GraphicsDevice);
-            //cam.
-
+            //scrollingBackgroundManager.setCamera(cam);
             base.Initialize();
         }
 
@@ -124,9 +118,15 @@ namespace RemGame
 
             soundManager = new SoundManager(this);
             soundManager.LoadContent("Sound/Music", "Sound/SoundFX");
+            /*
+            scrollingBackgroundManager.AddBackground("back", "b-01_background", new Vector2(0, 0), new Rectangle(0, 0, 1920, 1080), 10, 0.5f, Color.White);
+            scrollingBackgroundManager.AddBackground("trees1", "b-02_back-A", new Vector2(0, 0), new Rectangle(0, 0, 1920, 1080), 100, 0.1f, Color.White);
+            scrollingBackgroundManager.AddBackground("trees2", "b-03_back-B", new Vector2(0, 0), new Rectangle(0, 0, 1920, 1080), 100, 0.1f, Color.White);
+            scrollingBackgroundManager.AddBackground("ground", "b-04_ground", new Vector2(0, 0), new Rectangle(0, 0, 1920, 1080), 100, 0.1f, Color.White);
+            scrollingBackgroundManager.AddBackground("grass", "f-01_ground-grass", new Vector2(0, 0), new Rectangle(0, 0, 1920, 1080), 100, 0.1f, Color.White);
+            scrollingBackgroundManager.AddBackground("hills", "f-02_front", new Vector2(0, 0), new Rectangle(0, 0, 1920, 1080), 100, 0.1f, Color.White);
             
-
-
+*/
             //mainMusicPlaylist = new string[] { "MonoGame MusicTest - Accordion 1", "MonoGame MusicTest - Precussion 1", "MonoGame MusicTest - Stings 1" };
             //soundManager.StartPlayList(mainMusicPlaylist, 0);
             //soundManager.Play("MonoGame MusicTest - Accordion 1");
@@ -137,7 +137,7 @@ namespace RemGame
 
             font = Content.Load<SpriteFont>("Fonts/Font");
 
-            //Tile.Content = Content;
+            Tile.Content = Content;
             Map.Content = Content;
             /*
             map.Generate(new int[,]
@@ -191,54 +191,38 @@ namespace RemGame
             */
             ////Straight MAP
             ///
+            
             map.Generate(new int[,]
             {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},            
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},                
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+                {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
             }, 64, font);
-            /*
-            var randomButton = new Button(Content.Load<Texture2D>("Buttons/Button"), Content.Load<SpriteFont>("Fonts/Font"))
-            {
-                Position = new Vector2(350,200),
-                Text = "Random",
-            };
-
-            randomButton.Click += RandomButton_Click;
-
-            var quitButton = new Button(Content.Load<Texture2D>("Buttons/Button"), Content.Load<SpriteFont>("Fonts/Font"))
-            {
-                Position = new Vector2(350, 250),
-                Text = "Quit",
-            };
-
-            quitButton.Click += QuitButton_Click;
-            */
-
-
-            Sc1 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X, (int)cam.Position.Y-200, 1920, 1080));
-            Sc2 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle(0, 0, 1920, 1080));
-            Sc3 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle(0, 0, 1920, 1080));
-            Sc4 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle(0, 0, 1920, 1080));
-            Sc5 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle(0, 0, 1920, 1080));
-            Sc6 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle(0, 0, 1920, 1080));
-            Sc7 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle(1910, (int)cam.Position.Y - 200, 1920, 1080));
-            Sc8 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle(1920, 0, 1920, 1080));
-            Sc9 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle(1920, 0, 1920, 1080));
-            Sc10 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle(1920, 0, 1920, 1080));
-            Sc11= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle(1920, 0, 1920, 1080));
-            Sc12= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle(1920, 0, 1920, 1080));
+            
+            
+            Sc1 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X, -150, 1920, 1200),1);
+            Sc2 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle(0, 0, 1920, 1080),2);
+            Sc3 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle(0, 0, 1920, 1080),2);
+            Sc4 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle(0, 0, 1920, 1080),3);
+            Sc5 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle(0, 0, 1920, 1080),3);
+            Sc6 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle(0, 0, 1920, 1080),3);
+            Sc7 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X + 1920, -150, 1920, 1200),1);
+            Sc8 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle(1920, 0, 1920, 1080),2);
+            Sc9 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle(1920, 0, 1920, 1080),2);
+            Sc10 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle(1920, 0, 1920, 1080),3);
+            Sc11= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle(1920, 0, 1920, 1080),3);
+            Sc12= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle(1920, 0, 1920, 1080),3);
 
             sc = new Scrollingbackground[maxLayers];
             sc[0] = Sc1;
@@ -261,7 +245,8 @@ namespace RemGame
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            /*plat = new Obstacle[maxPlat];
+            plat = new Obstacle[maxPlat];
+            /*
             for (int i = 0; i < maxPlat; i++)
             {
                 plat[3-i] = new Obstacle(world, Content.Load<Texture2D>("HUD"), new Vector2(70,70),font);
@@ -275,16 +260,10 @@ namespace RemGame
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(96, 96),
                 100,
-                new Vector2(700, 0), false, font);
+                new Vector2(200, 570), false, font);
 
 
-            DemoEnemy = new Enemy(world,
-                Content.Load<Texture2D>("Player"),
-                Content.Load<Texture2D>("Player"),
-                Content.Load<Texture2D>("Player/bullet"),
-                new Vector2(96, 96),
-                100,
-                new Vector2(100, 0), false, font);
+          
 
 
 
@@ -295,12 +274,12 @@ namespace RemGame
             walking = Content.Load<SoundEffect>("Sound/SoundFX/Footsteps Brick 1");
             walkingInstance = walking.CreateInstance();
             walkingInstance.IsLooped = true;
-            walkingInstance.Volume = 0.2f;
+            walkingInstance.Volume = 0.1f;
 
             jumping = Content.Load<SoundEffect>("Sound/SoundFX/Jump");
             jumpingInstance = jumping.CreateInstance();
             jumpingInstance.IsLooped = false;
-            jumpingInstance.Volume = 0.2f;
+            jumpingInstance.Volume = 0.1f;
             //jumpingInstance.Pitch = 0.1f;
 
 
@@ -308,8 +287,7 @@ namespace RemGame
             player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
             player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
 
-            DemoEnemy.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
-            DemoEnemy.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
+           
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             _gameComponents = new List<Component>()
@@ -317,7 +295,6 @@ namespace RemGame
                 //randomButton,
                 //quitButton,
                 player,
-                DemoEnemy,
 
             };
         }
@@ -339,10 +316,12 @@ namespace RemGame
             // TODO: Unload any non ContentManager content here
         }
 
+        
+
         protected override void Update(GameTime gameTime)
         {
             currentMouseState = Mouse.GetState();
-
+            
             //after componnet list is set THIS can be deleted
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -366,35 +345,24 @@ namespace RemGame
                     if (mouseToWorld.X>=obj.Position.X-35&& mouseToWorld.X<=obj.Position.X+35&&mouseToWorld.Y>=obj.Position.Y&&mouseToWorld.Y<=obj.Position.Y+70)
                            player.Kinesis(obj, currentMouseState);
 
-
-                        // if ((currentMouseState.Position.X >= obj.Position.X-35) && (currentMouseState.Position.X <= obj.Position.X+35)&&
-                        //     (currentMouseState.Position.Y >= obj.Position.Y) && (currentMouseState.Position.Y <= obj.Position.Y +70))
-                        // {
-                        //    player.Kinesis(obj, currentMouseState);
-                        // }
                 }
             }
 
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
-          if(player.IsMoving )
+            
+            if (player.IsMoving )
             foreach (var scrolling in sc)
             {
-                if (scrolling.rectangle.X + scrolling.texture.Width <= cam.Position.X)
-                {
-                    scrolling.rectangle.X = (int)cam.Position.X + scrolling.texture.Width;
+                if(player.Direction == Movement.Right)
+                    scrolling.Update(cam,-1,player.WheelSpeed,gameTime);
+                else
+                    scrolling.Update(cam, 1,player.WheelSpeed,gameTime);
                 }
-                scrolling.Update();
-            }
                 
-
-            
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
-            camLocation = new Vector2(player.Position.X, player.Position.Y - 200);
-            cam.LookAt(camLocation);
-
             if (!player.IsBending)
             {
+                
                 walkingInstance.Pitch = 0.0f;
                 if (player.IsMoving)
                 {
@@ -412,37 +380,61 @@ namespace RemGame
 
             if (player.IsJumping)
                 jumpingInstance.Play();
+            /*
+            if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X >= (graphics.GraphicsDevice.Viewport.Width / 2.0f))
+                scrollingBackgroundManager.ScrollRate = -2.0f;
+            else if (keyboardState.IsKeyDown(Keys.Left) && player.Position.X <= 0.0f)
+                scrollingBackgroundManager.ScrollRate = 2.0f;
+            else
+                scrollingBackgroundManager.ScrollRate = 0.0f;
 
-            
-                
 
+            scrollingBackgroundManager.Update(gameTime);
+            */
+            camLocation = new Vector2(player.Position.X, player.Position.Y - 200);
+            cam.LookAt(camLocation);
             //cam.Rotate(0.0005f);
             //cam.ZoomOut(0.0001f);
             map.Update(gameTime);
             soundManager.Update(gameTime);
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
             base.Update(gameTime);
         }
+
+        
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(_backgroundColor);
 
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
+            /*
+            scrollingBackgroundManager.Draw("back", spriteBatch);
+            scrollingBackgroundManager.Draw("trees1", spriteBatch);
+            scrollingBackgroundManager.Draw("trees2", spriteBatch);
+*/
 
-            map.Draw(gameTime, spriteBatch);
+            map.DrawObstacle(gameTime, spriteBatch);
+            //scrollingBackgroundManager.Draw("ground", spriteBatch);
+
 
             //floor.Draw(spriteBatch);
-
-            for (int i = 0; i < 4; i++)
+            
+            sc[0].Draw(spriteBatch);
+            sc[6].Draw(spriteBatch);
+            for (int i = 1; i < 4; i++)
             {
                 sc[i].Draw(spriteBatch);
             }
             //////////////////////////////////////////////
-            for (int i = 6; i < 10; i++)
+            for (int i = 7; i < 10; i++)
             {
                 sc[i].Draw(spriteBatch);
             }
+            
             ///////////////////////////////////////
+            ///
+            map.DrawEnemies(gameTime, spriteBatch);
             spriteBatch.DrawString(font, "Mouse Position"+cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
 
             //floor.Draw(spriteBatch);
@@ -455,7 +447,7 @@ namespace RemGame
             {
                 p.Draw(gameTime,spriteBatch);
             }
-*/
+            */
             foreach (var component in _gameComponents)
                 component.Draw(gameTime, spriteBatch);
             ///////////////////////////////////////////////
@@ -476,7 +468,10 @@ namespace RemGame
                 sc[i].Draw(spriteBatch);
 
             }
-
+            /*
+            scrollingBackgroundManager.Draw("grass", spriteBatch);
+            scrollingBackgroundManager.Draw("hills", spriteBatch);
+            */
             spriteBatch.End();
 
             base.Draw(gameTime);
