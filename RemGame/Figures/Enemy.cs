@@ -25,10 +25,17 @@ namespace RemGame
         private Vector2 size;
         private float mass;
         private Vector2 position;
+        private Vector2 lastPosition;
+        private int distance;
+        private int oldDistance;
 
         private PhysicsObject torso;
-
         private PhysicsObject wheel;
+
+        private DateTime previousWalk = DateTime.Now;   // time at which we previously jumped
+        private const float walkInterval = 5.0f;        // in seconds
+
+        private static Random r = new Random();
         /*
                 /// <tmp>
                 private PhysicsObject mele;
@@ -80,8 +87,9 @@ namespace RemGame
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
         internal Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
+        public int Distance { get => distance; set => distance = value; }
 
-        public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f)
+        public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance)
         {
             this.world = world;
             this.size = size;
@@ -97,6 +105,17 @@ namespace RemGame
             torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
             position = torso.Position;
+
+            lastPosition = Vector2.Zero;
+
+            //r = new Random();
+            int rInt = r.Next(300, 700);
+            Console.WriteLine(rInt);
+
+            distance = rInt;
+            
+
+            oldDistance = distance;
 
             // Create the feet of the body
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
@@ -271,127 +290,136 @@ namespace RemGame
                 }
 
             }
-           
+          
 
-
-            if (!(pingPong) && Position.X < 4000 - size.X / 2&&!(Ghost))
-            {
-                Move(Movement.Right);
-                isMoving = true;
-                direction = Movement.Right;
-                
-                /*
-                Move(Movement.Left);
-                isMoving = true;
-                direction = Movement.Left;
-                */
-            }
-
-            else if(!(Ghost))
-            {
-                pingPong = true;
-                if (pingPong && Position.X -size.X/2> 200)
+            if (lastPosition == Vector2.Zero)
+                lastPosition = Position;
+            //if ((DateTime.Now - previousWalk).TotalSeconds >= walkInterval)
+            //{
+                if (!(pingPong) && Position.X < lastPosition.X + distance + size.X / 2 && !(Ghost))
                 {
+
+                    Move(Movement.Right);
+                    isMoving = true;
+                    direction = Movement.Right;
+
+                    /*
                     Move(Movement.Left);
                     isMoving = true;
                     direction = Movement.Left;
+                    */
+
+
                 }
-                else
-                    pingPong = false;
+
+                else if (!(Ghost))
+                {
+                    pingPong = true;
+                    if (pingPong && Position.X + size.X / 2 > lastPosition.X - distance)
+                    {
+                        Move(Movement.Left);
+                        isMoving = true;
+                        direction = Movement.Left;
+                    }
+                    else
+                        pingPong = false;
+                    /*
+                    Move(Movement.Right);
+                    isMoving = true;
+                    direction = Movement.Right;
+    */
+                }
+
+                previousWalk = DateTime.Now;
+           // }
                 /*
-                Move(Movement.Right);
-                isMoving = true;
-                direction = Movement.Right;
-*/
-            }
-            /*
-            else
-            {
-                Move(Movement.Stop);
-                isMoving = false;
+                else
+                {
+                    Move(Movement.Stop);
+                    isMoving = false;
 
-            }
-            */
-            /* 
-                                    if (keyboardState.IsKeyDown(Keys.Left))
-                                    {
-                                        Move(Movement.Left);
-                                        isMoving = true;
-                                        direction = Movement.Left;
+                }
+                */
+                /* 
+                                        if (keyboardState.IsKeyDown(Keys.Left))
+                                        {
+                                            Move(Movement.Left);
+                                            isMoving = true;
+                                            direction = Movement.Left;
 
-                                    }
-                                    else if (keyboardState.IsKeyDown(Keys.Right))
-                                    {
-                                        Move(Movement.Right);
-                                        isMoving = true;
-                                        direction = Movement.Right;
+                                        }
+                                        else if (keyboardState.IsKeyDown(Keys.Right))
+                                        {
+                                            Move(Movement.Right);
+                                            isMoving = true;
+                                            direction = Movement.Right;
 
-                                    }
-                                    else
-                                    {
-                                        Move(Movement.Stop);
-                                        isMoving = false;
+                                        }
+                                        else
+                                        {
+                                            Move(Movement.Stop);
+                                            isMoving = false;
 
-                                    }
+                                        }
 
-                                    //if statment should changed
-                                    if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
-                                    {
-                                        isMoving = true;
-                                        Jump();
-                                    }
+                                        //if statment should changed
+                                        if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+                                        {
+                                            isMoving = true;
+                                            Jump();
+                                        }
 
-                                    if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
-                                    {
+                                        if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
+                                        {
 
-                                        if (keyboardState.IsKeyDown(Keys.Right))
-                                            Slide(Movement.Right);
+                                            if (keyboardState.IsKeyDown(Keys.Right))
+                                                Slide(Movement.Right);
 
-                                        else if (keyboardState.IsKeyDown(Keys.Left))
-                                            Slide(Movement.Left);
+                                            else if (keyboardState.IsKeyDown(Keys.Left))
+                                                Slide(Movement.Left);
 
-                                    }
+                                        }
 
 
-                                    if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
-                                    {
-                                        shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                                        Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+                                        if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
+                                        {
+                                            shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                                            Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
 
-                                    }
-                                    if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
-                                    {
-                                        //IsAttacking = true;
-                                        shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                                        Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-                                        Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X) / 4, (shootDirection.Y - shootBase.Y) / 4);
-                                        shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-                                        shoot.Body.ApplyForce(shootForce);
+                                        }
+                                        if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
+                                        {
+                                            //IsAttacking = true;
+                                            shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                                            Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+                                            Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X) / 4, (shootDirection.Y - shootBase.Y) / 4);
+                                            shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                                            shoot.Body.ApplyForce(shootForce);
 
-                                    }
+                                        }
 
-                                    if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
-                                    {
-                                        meleAttack();
+                                        if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
+                                        {
+                                            meleAttack();
 
-                                    }
+                                        }
 
 
-                                    if (keyboardState.IsKeyDown(Keys.Down))
-                                    {
-                                        bent();
-                                    }
-           */
-            /*
-            if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
-            {
-                //torso.Body.Enabled = true;
+                                        if (keyboardState.IsKeyDown(Keys.Down))
+                                        {
+                                            bent();
+                                        }
+               */
+                /*
+                if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    //torso.Body.Enabled = true;
 
-            }
-            */
-            //mele.Update(gameTime);
+                }
+                */
+                //mele.Update(gameTime);
 
-            previousMouseState = currentMouseState;
+                previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
         }

@@ -65,13 +65,15 @@ namespace RemGame
                     }
                     else if(number == 3)
                     {
+                        Random r = new Random();
+                        int rInt = r.Next(200, 700);
                         Enemy en = new Enemy(world,
                         Content.Load<Texture2D>("Player"),
                         Content.Load<Texture2D>("Player"),
                         Content.Load<Texture2D>("Player/bullet"),
                         new Vector2(96, 96),
                         100,
-                        new Vector2(x * size, y * size), false, font);
+                        new Vector2(x * size, y * size), false, font, rInt);
                         en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4);
                         en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4);
                         enemies.Add(en);

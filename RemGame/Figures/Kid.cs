@@ -12,6 +12,8 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Collision;
+
 
 namespace RemGame
 {
@@ -105,12 +107,13 @@ namespace RemGame
             Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
             float wheelSize = size.X ;
 
-
+            
             // Create the torso
             torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
             position = torso.Position;
-
+            
+            
             // Create the feet of the body
             
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
