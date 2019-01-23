@@ -66,7 +66,7 @@ namespace RemGame
         //ScrollingBackgroundManager scrollingBackgroundManager;
         
         Scrollingbackground[] sc;
-        const int maxLayers = 12;
+        const int maxLayers = 18;
         Scrollingbackground Sc1;
         Scrollingbackground Sc2;
         Scrollingbackground Sc3;
@@ -79,7 +79,13 @@ namespace RemGame
         Scrollingbackground Sc10;
         Scrollingbackground Sc11;
         Scrollingbackground Sc12;
-        
+        Scrollingbackground Sc13;
+        Scrollingbackground Sc14;
+        Scrollingbackground Sc15;
+        Scrollingbackground Sc16;
+        Scrollingbackground Sc17;
+        Scrollingbackground Sc18;
+
         SoundManager soundManager;
         String [] mainMusicPlaylist;
         SoundEffect walking;
@@ -133,7 +139,7 @@ namespace RemGame
             //soundManager.Play("MonoGame MusicTest - Precussion 1");
 
 
-            soundManager.Play("General Music 1");
+            //soundManager.Play("General Music 1");
 
             font = Content.Load<SpriteFont>("Fonts/Font");
 
@@ -204,27 +210,27 @@ namespace RemGame
                 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+                {1,0,3,0,0,0,3,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
                 {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
             }, 64, font);
             
             
-            Sc1 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X, -150, 1920, 1200),1);
-            Sc2 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle(0, 0, 1920, 1080),2);
-            Sc3 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle(0, 0, 1920, 1080),2);
-            Sc4 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle(0, 0, 1920, 1080),3);
-            Sc5 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle(0, 0, 1920, 1080),3);
-            Sc6 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle(0, 0, 1920, 1080),3);
-            Sc7 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X + 1920, -150, 1920, 1200),1);
-            Sc8 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle(1920, 0, 1920, 1080),2);
-            Sc9 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle(1920, 0, 1920, 1080),2);
-            Sc10 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle(1920, 0, 1920, 1080),3);
-            Sc11= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle(1920, 0, 1920, 1080),3);
-            Sc12= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle(1920, 0, 1920, 1080),3);
+            Sc1 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.BoundingRectangle.Left-1920, -150, 1920, 1200),1,null);
+            Sc2 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle((int)cam.BoundingRectangle.Left-1920, 0, 1920, 1080),2,null);
+            Sc3 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle((int)cam.BoundingRectangle.Left-1920, 0, 1920, 1080),2,null);
+            Sc4 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle((int)cam.BoundingRectangle.Left-1920, 0, 1920, 1080),3,null);
+            Sc5 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle((int)cam.BoundingRectangle.Left-1920, 0, 1920, 1080),3,null);
+            Sc6 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle((int)cam.BoundingRectangle.Left-1920, 0, 1920, 1080),2,null);
+            Sc7 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X, -150, 1920, 1200),1,Sc1);
+            Sc8 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle((int)cam.Position.X, 0, 1920, 1080),2,Sc2);
+            Sc9 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle((int)cam.Position.X, 0, 1920, 1080),2,Sc3);
+            Sc10 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle((int)cam.Position.X, 0, 1920, 1080),3,Sc4);
+            Sc11= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle((int)cam.Position.X, 0, 1920, 1080),3,Sc5);
+            Sc12= new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle((int)cam.Position.X, 0, 1920, 1080),2,Sc6);
 
-            sc = new Scrollingbackground[maxLayers];
+            sc = new Scrollingbackground[12];
             sc[0] = Sc1;
             sc[1] = Sc2;
             sc[2] = Sc3;
@@ -237,8 +243,12 @@ namespace RemGame
             sc[9] = Sc10;
             sc[10] = Sc11;
             sc[11] = Sc12;
-            
 
+            for (int i = 0; i < 6; i++)
+            {
+                sc[i].setRighttwinSc(sc[i + 6]);
+            }
+            /*
 
             floor = new Floor(world,Content.Load<Texture2D>("cave_walk"),new Vector2(GraphicsDevice.Viewport.Width*2, 60));
             floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height-60);
@@ -261,10 +271,6 @@ namespace RemGame
                 new Vector2(96, 96),
                 100,
                 new Vector2(200, 570), false, font);
-
-
-          
-
 
 
             playerLeft = Content.Load<Texture2D>("Player/playerLeft");
@@ -325,17 +331,7 @@ namespace RemGame
             //after componnet list is set THIS can be deleted
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            /*
-            for(int i =0; i <= 5; i++)
-            {
-                if (sc[i].rectangle.X + sc[i].texture.Width <= 0)
-                {
-                    sc[i].rectangle.X = sc[i].rectangle.X + sc[i].texture.Width;
-                }
-
-                sc[i].Update();
-            }
-            */
+  
 
             if (currentMouseState.RightButton == ButtonState.Pressed)
             {
@@ -380,18 +376,9 @@ namespace RemGame
 
             if (player.IsJumping)
                 jumpingInstance.Play();
-            /*
-            if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X >= (graphics.GraphicsDevice.Viewport.Width / 2.0f))
-                scrollingBackgroundManager.ScrollRate = -2.0f;
-            else if (keyboardState.IsKeyDown(Keys.Left) && player.Position.X <= 0.0f)
-                scrollingBackgroundManager.ScrollRate = 2.0f;
-            else
-                scrollingBackgroundManager.ScrollRate = 0.0f;
 
-
-            scrollingBackgroundManager.Update(gameTime);
-            */
             camLocation = new Vector2(player.Position.X, player.Position.Y - 200);
+            
             cam.LookAt(camLocation);
             //cam.Rotate(0.0005f);
             //cam.ZoomOut(0.0001f);
@@ -408,46 +395,33 @@ namespace RemGame
             GraphicsDevice.Clear(_backgroundColor);
 
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
-            /*
-            scrollingBackgroundManager.Draw("back", spriteBatch);
-            scrollingBackgroundManager.Draw("trees1", spriteBatch);
-            scrollingBackgroundManager.Draw("trees2", spriteBatch);
-*/
+
 
             map.DrawObstacle(gameTime, spriteBatch);
-            //scrollingBackgroundManager.Draw("ground", spriteBatch);
-
 
             //floor.Draw(spriteBatch);
             
             sc[0].Draw(spriteBatch);
             sc[6].Draw(spriteBatch);
-            for (int i = 1; i < 4; i++)
+
+            for (int i = 1; i < 3; i++)
             {
                 sc[i].Draw(spriteBatch);
             }
             //////////////////////////////////////////////
-            for (int i = 7; i < 10; i++)
+            for (int i = 7; i < 9; i++)
             {
                 sc[i].Draw(spriteBatch);
+
             }
-            
-            ///////////////////////////////////////
-            ///
+      
             map.DrawEnemies(gameTime, spriteBatch);
-            spriteBatch.DrawString(font, "Mouse Position"+cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
 
             //floor.Draw(spriteBatch);
-            spriteBatch.DrawString(font, "*", new Vector2(floor.Position.X+100, floor.Position.Y), Color.White);
+            //spriteBatch.DrawString(font, "*", new Vector2(floor.Position.X+100, floor.Position.Y), Color.White);
 
             //////////////////////////////////////////////
-            ///
-           /*
-            foreach (Obstacle p in plat)
-            {
-                p.Draw(gameTime,spriteBatch);
-            }
-            */
+  
             foreach (var component in _gameComponents)
                 component.Draw(gameTime, spriteBatch);
             ///////////////////////////////////////////////
@@ -456,22 +430,21 @@ namespace RemGame
 
             spriteBatch.DrawString(font, cam.Position.X + "/" + cam.Position.Y, new Vector2(cam.Position.X, cam.Position.Y), Color.White);
             
-            for (int i = 4; i <= 5; i++)
+            for (int i = 3; i <= 5; i++)
             {
                 
                 sc[i].Draw(spriteBatch);
                 
              }
-            for (int i = 10; i <= 11; i++)
+            for (int i = 9; i <= 11; i++)
             {
 
                 sc[i].Draw(spriteBatch);
 
             }
-            /*
-            scrollingBackgroundManager.Draw("grass", spriteBatch);
-            scrollingBackgroundManager.Draw("hills", spriteBatch);
-            */
+
+            spriteBatch.DrawString(font, "Mouse Position" + cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
+
             spriteBatch.End();
 
             base.Draw(gameTime);

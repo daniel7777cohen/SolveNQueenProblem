@@ -48,7 +48,7 @@ namespace RemGame
         private RevoluteJoint axis1;
 
 
-        private float speed = 0.4f;
+        private float speed = 0.5f;
         private bool isMoving = false;
         private Movement direction = Movement.Right;
 
