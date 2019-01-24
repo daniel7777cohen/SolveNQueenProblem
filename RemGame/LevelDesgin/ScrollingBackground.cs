@@ -16,6 +16,7 @@ namespace RemGame
         protected Rectangle rectangle;
         protected int scrollingSpeed;
         protected Scrollingbackground twinSc;
+        protected float scrollingDelta = 0;
 
 
         public void Draw(SpriteBatch spriteBatch)
@@ -39,9 +40,8 @@ namespace RemGame
             this.twinSc = sC;
         }
 
-        public void Update(Camera2D cam, int direction, float playerSpeed, GameTime gameTime)
-        {
-            
+        public void Update(Camera2D cam, int direction, float playerSpeed)
+        {   
             if(direction == -1)
             {         
                 if (rectangle.X + texture.Width < cam.Position.X)            
@@ -55,9 +55,12 @@ namespace RemGame
                     rectangle.X = twinSc.rectangle.X - texture.Width+5;
 
             }
+            if (scrollingSpeed != 0)
+            {
+               
+                rectangle.X += (int)(Math.Abs(playerSpeed) * direction);
 
-            rectangle.X += (int)(scrollingSpeed/2 * direction);
-
+            }
         }
     }
 

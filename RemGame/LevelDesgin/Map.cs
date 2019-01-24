@@ -17,19 +17,23 @@ namespace RemGame
         private List<Tile> collisionTiles = new List<Tile>();
         private List<Obstacle> obstacleTiles = new List<Obstacle>();
         private List<Enemy> enemies = new List<Enemy>();
+        private Kid player;
 
         private int width, height;
         private World world;
         public Texture2D texture;
         private static ContentManager content;
+        Random r;
+        
 
         //public List<CollisionTiles> CollisionTiles { get => collisionTiles; }
-        
+
 
 
         public Map(World world)
         {
             this.world = world;
+            
         }
 
         public List<Tile> CollisionTiles { get => collisionTiles; }
@@ -39,6 +43,11 @@ namespace RemGame
         public static ContentManager Content { protected get => content; set => content = value; }
         public List<Obstacle> ObstacleTiles { get => obstacleTiles; set => obstacleTiles = value; }
         internal List<Enemy> Enemies { get => enemies; set => enemies = value; }
+
+        public void setPlayerToMap(Kid player)
+        {
+            this.player = player;
+        }
 
         public void Generate(int[,] map, int size, SpriteFont font)
         {
@@ -65,8 +74,8 @@ namespace RemGame
                     }
                     else if(number == 3)
                     {
-                        Random r = new Random();
-                        int rInt = r.Next(200, 700);
+                        r = new Random();
+                        int rInt = r.Next(192, 320);
                         Enemy en = new Enemy(world,
                         Content.Load<Texture2D>("Player"),
                         Content.Load<Texture2D>("Player"),
@@ -92,7 +101,8 @@ namespace RemGame
         public void Update(GameTime gameTime)
         {
             foreach (Enemy en in enemies)
-                en.Update(gameTime);
+                en.Update(gameTime,player.Position);
+            
         }
 
         public void DrawObstacle(GameTime gameTime,SpriteBatch spriteBatch)

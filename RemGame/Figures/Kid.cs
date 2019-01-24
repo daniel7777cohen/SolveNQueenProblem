@@ -119,8 +119,8 @@ namespace RemGame
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
             wheel.Position = torso.Position + new Vector2(0, 96);
 
-
-            wheel.Body.Friction = 100.0f;
+            torso.Body.Friction = 50.0f;
+            wheel.Body.Friction = 50.0f;
 
             
             // Create a joint to keep the torso upright
@@ -137,7 +137,7 @@ namespace RemGame
             axis1.CollideConnected = false;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque =50.0f;
+            axis1.MaxMotorTorque = 12.0f;
 
             
 
@@ -197,6 +197,7 @@ namespace RemGame
             
             
         }
+        
         //should create variables for funciton
         public void Slide(Movement dir)
         {
@@ -240,9 +241,14 @@ namespace RemGame
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            isMeleAttacking = false;
-            mele.Body.Dispose();
-            return true;
+            //if (fixtureB.CollisionCategories != Category.Cat1)
+            //{
+                isMeleAttacking = false;
+                mele.Body.Dispose();
+                return true;
+            //}
+            
+            
         }
         public void rangedShoot(Vector2 shootForce)
         {
@@ -257,9 +263,18 @@ namespace RemGame
         }
         bool Shoot_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            isRangeAttacking = false;
-            shoot.Body.Dispose();
-            return true;
+            if (fixtureB.CollisionCategories == Category.Cat10 || fixtureB.CollisionCategories == Category.Cat11)
+            {
+
+                isRangeAttacking = false;
+                shoot.Body.Dispose();
+                return true;
+            }
+            else
+            {
+
+                return true;
+            }
         }
 
         public void Kinesis(Obstacle obj,MouseState currentMouseState)
@@ -378,12 +393,12 @@ namespace RemGame
             {
                 if (keyboardState.IsKeyDown(Keys.Right) && (!prevKeyboardState.IsKeyDown(Keys.Right)))
                 {
-                    wheel.Body.ApplyLinearImpulse(new Vector2(1.0f, 0));
+                    wheel.Body.ApplyLinearImpulse(new Vector2(1.5f, 0));
                 }
 
                 else if (keyboardState.IsKeyDown(Keys.Left) && (!prevKeyboardState.IsKeyDown(Keys.Left)))
                 {
-                    wheel.Body.ApplyLinearImpulse(new Vector2(-1.0f, 0));
+                    wheel.Body.ApplyLinearImpulse(new Vector2(-1.5f, 0));
                 }
             }
 
@@ -409,6 +424,7 @@ namespace RemGame
             {
                 shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
                 Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X), (shootDirection.Y - shootBase.Y));
+                if(shootForce.X > 5 || shootForce.X < -5 || shootForce.Y > 5 || shootForce.Y < -5)
                 rangedShoot(shootForce*4);
             }
              
@@ -420,18 +436,21 @@ namespace RemGame
             }
 
 
-            if (Position.X < 800)
+            if (Position.X < 400)
             {
+                wheel.Body.ApplyLinearImpulse(new Vector2(1,0));
                 Scene();
             }
-            if (Position.X > 800 && Position.X < 810)
+            if (Position.X > 400 && Position.X < 410)
             {
                 showText = true;
             }
+            else
+                showText = false;
 
 
 
-                if (keyboardState.IsKeyDown(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.Down))
             {
                // axis1.BodyA.IgnoreCollisionWith(axis1.BodyB);
                 //axis1.BodyB.IgnoreCollisionWith(axis1.BodyA);
@@ -456,7 +475,10 @@ namespace RemGame
                 IsBending = false;
 
             }
-            WheelSpeed = wheel.Body.AngularVelocity;
+
+           
+            WheelSpeed = wheel.Body.AngularVelocity/4;
+            
             //mele.Update(gameTime);
             previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
@@ -492,6 +514,7 @@ namespace RemGame
 
             pv1.Draw(gameTime, spriteBatch);
             pv2.Draw(gameTime, spriteBatch);
+            //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
 
 
             //wheel.Draw(gameTime,spriteBatch);
