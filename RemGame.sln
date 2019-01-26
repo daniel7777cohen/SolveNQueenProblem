@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemGame", "RemGame\RemGame.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer", "Farseer\Farseer.csproj", "{0B03B2D6-BCDB-4E07-AAFA-4EF84EA6A31B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XELibrary", "..\..\..\Downloads\REM-states\XELibrary\XELibrary.csproj", "{623010CD-3E24-4F0E-9EAE-922DAD230975}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,14 @@ Global
 		{0B03B2D6-BCDB-4E07-AAFA-4EF84EA6A31B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B03B2D6-BCDB-4E07-AAFA-4EF84EA6A31B}.Release|x86.ActiveCfg = Release|Any CPU
 		{0B03B2D6-BCDB-4E07-AAFA-4EF84EA6A31B}.Release|x86.Build.0 = Release|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Debug|x86.Build.0 = Debug|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|x86.ActiveCfg = Release|Any CPU
+		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

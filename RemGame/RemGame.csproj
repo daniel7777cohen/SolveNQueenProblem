@@ -41,16 +41,23 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BaseGameState.cs" />
+    <Compile Include="Game1.cs" />
+    <Compile Include="GameStateInterfaces.cs" />
     <Compile Include="LevelDesgin\Map.cs" />
     <Compile Include="LevelDesgin\ScrollingBackground.cs" />
     <Compile Include="LevelDesgin\Tile.cs" />
+    <Compile Include="OptionsMenuState.cs" />
+    <Compile Include="PausedState.cs" />
+    <Compile Include="PlayingStateOrg.cs" />
+    <Compile Include="StartMenuState.cs" />
+    <Compile Include="TitleIntroState.cs" />
     <Compile Include="Utils\AnimatedSprite.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Utils\CoordinateHelper.cs" />
     <Compile Include="Figures\Enemy.cs" />
     <Compile Include="LevelDesgin\Floor.cs" />
-    <Compile Include="Game1.cs" />
     <Compile Include="Figures\Kid.cs" />
     <Compile Include="LevelDesgin\Obstacle.cs" />
     <Compile Include="Utils\ISoundManager.cs" />
@@ -93,6 +100,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Downloads\REM-states\XELibrary\XELibrary.csproj">
+      <Project>{623010cd-3e24-4f0e-9eae-922dad230975}</Project>
+      <Name>XELibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Farseer\Farseer.csproj">
       <Project>{0b03b2d6-bcdb-4e07-aafa-4ef84ea6a31b}</Project>
       <Name>Farseer</Name>
