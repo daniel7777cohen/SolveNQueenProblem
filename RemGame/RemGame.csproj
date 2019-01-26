@@ -100,13 +100,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Downloads\REM-states\XELibrary\XELibrary.csproj">
-      <Project>{623010cd-3e24-4f0e-9eae-922dad230975}</Project>
-      <Name>XELibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Farseer\Farseer.csproj">
       <Project>{0b03b2d6-bcdb-4e07-aafa-4ef84ea6a31b}</Project>
       <Name>Farseer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XELibrary\XELibrary.csproj">
+      <Project>{623010cd-3e24-4f0e-9eae-922dad230975}</Project>
+      <Name>XELibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

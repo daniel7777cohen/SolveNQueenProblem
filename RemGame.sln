@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemGame", "RemGame\RemGame.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer", "Farseer\Farseer.csproj", "{0B03B2D6-BCDB-4E07-AAFA-4EF84EA6A31B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XELibrary", "..\..\..\Downloads\REM-states\XELibrary\XELibrary.csproj", "{623010CD-3E24-4F0E-9EAE-922DAD230975}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XELibrary", "XELibrary\XELibrary.csproj", "{623010CD-3E24-4F0E-9EAE-922DAD230975}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
