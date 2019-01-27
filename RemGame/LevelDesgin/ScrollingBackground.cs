@@ -58,7 +58,7 @@ namespace RemGame
             if (scrollingSpeed != 0)
             {
                
-                rectangle.X += (int)(Math.Abs(playerSpeed) * direction);
+                rectangle.X += 1 * direction;
 
             }
         }

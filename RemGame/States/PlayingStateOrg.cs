@@ -84,12 +84,13 @@ namespace RemGame
             soundManager.LoadContent("Sound/Music", "Sound/SoundFX");
             soundManager.Play("General Music 1");
             
+            
 
             hall = Content.Load<SoundEffect>("Sound/SoundFX/hallWay");
             hallInstance = hall.CreateInstance();
             
             hallInstance.Play();
-            hallInstance.Volume = 0.06f;
+            hallInstance.Volume = 0.04f;
             //  general.LoadContent(@"Sounds/Music/", "");
             //general.Play("General Music 1");
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -247,7 +248,7 @@ namespace RemGame
             jumping = Content.Load<SoundEffect>("Sound/SoundFX/Jump");
             jumpingInstance = jumping.CreateInstance();
             jumpingInstance.IsLooped = false;
-            jumpingInstance.Volume = 0.02f;
+            jumpingInstance.Volume = 0.01f;
             //jumpingInstance.Pitch = 0.1f;
 
 
@@ -336,7 +337,7 @@ namespace RemGame
 
             }
 
-            camLocation = new Vector2(player.Position.X, player.Position.Y - 200);
+            camLocation = new Vector2(player.Position.X, player.Position.Y - 100);
 
             cam.LookAt(camLocation);
             //cam.Rotate(0.0005f);

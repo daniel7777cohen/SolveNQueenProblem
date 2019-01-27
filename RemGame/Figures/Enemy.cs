@@ -222,7 +222,7 @@ namespace RemGame
 
         public void meleAttack()
         {
-            if ((DateTime.Now - previousShoot).TotalSeconds >= shootInterval)
+            if ((DateTime.Now - previousShoot).TotalSeconds >= shootInterval && !Ghost)
             {
                 isMeleAttacking = true;
                 mele = new PhysicsObject(world, shootTexture, 30, 1);
