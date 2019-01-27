@@ -134,7 +134,7 @@ namespace RemGame
             switch (GetSoundType(soundName))
             {
                 case SoundType.Song:
-                    MediaPlayer.Volume = 0.2f;
+                    MediaPlayer.Volume = 0.1f;
                     MediaPlayer.Play(songs[soundName]);
                     break;
                 case SoundType.SoundEffect:

@@ -246,7 +246,6 @@ namespace RemGame
             else
                 shootingDirection = -1;
             mele.Body.ApplyLinearImpulse(new Vector2(30* shootingDirection, 0));
-            //mele.Body.FixtureList[0].OnCollision = dispose;
             mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
  
         }
@@ -280,7 +279,7 @@ namespace RemGame
         {
             if (fixtureB.CollisionCategories == Category.Cat10 || fixtureB.CollisionCategories == Category.Cat11)
             {
-
+                
                 isRangeAttacking = false;
                 //shoot.Body.Enabled = false;
                 shoot.Body.Dispose();
@@ -339,7 +338,8 @@ namespace RemGame
             if (!isJumping)
             {
                 //torso.Body.IgnoreCollisionWith(wheel.Body);
-                torso.Position = new Vector2(wheel.Position.X, wheel.Position.Y );
+                axis1.CollideConnected = true;
+                //torso.Position = new Vector2(torso.Position.X, wheel.Position.Y-48);
                 speed = SPEED / 2;
                 
             }
@@ -470,12 +470,9 @@ namespace RemGame
             {
                // axis1.BodyA.IgnoreCollisionWith(axis1.BodyB);
                 //axis1.BodyB.IgnoreCollisionWith(axis1.BodyA);
-                if(torso.Position.Y +96 != wheel.Position.Y+48)
+                //if(torso.Position.Y +96 != wheel.Position.Y+48)
                 bend();
-                else
-                {
-                    torso.Position = new Vector2(torso.Position.X, torso.Position.Y - 48); 
-                }
+                
 
                 IsBending = true;
                 /*

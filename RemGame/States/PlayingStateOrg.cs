@@ -63,9 +63,11 @@ namespace RemGame
         //String[] mainMusicPlaylist;
         SoundEffect walking;
         SoundEffect jumping;
+        SoundEffect hall;
 
         SoundEffectInstance walkingInstance;
         SoundEffectInstance jumpingInstance;
+        SoundEffectInstance hallInstance;
         SoundManager soundManager;
         public PlayingState(Game game)
             : base(game)
@@ -81,6 +83,13 @@ namespace RemGame
         {
             soundManager.LoadContent("Sound/Music", "Sound/SoundFX");
             soundManager.Play("General Music 1");
+            
+
+            hall = Content.Load<SoundEffect>("Sound/SoundFX/hallWay");
+            hallInstance = hall.CreateInstance();
+            
+            hallInstance.Play();
+            hallInstance.Volume = 0.06f;
             //  general.LoadContent(@"Sounds/Music/", "");
             //general.Play("General Music 1");
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -233,13 +242,14 @@ namespace RemGame
             walking = Content.Load<SoundEffect>("Sound/SoundFX/Footsteps Brick 1");
             walkingInstance = walking.CreateInstance();
             walkingInstance.IsLooped = true;
-            walkingInstance.Volume = 0.1f;
+            walkingInstance.Volume = 0.02f;
 
             jumping = Content.Load<SoundEffect>("Sound/SoundFX/Jump");
             jumpingInstance = jumping.CreateInstance();
             jumpingInstance.IsLooped = false;
-            jumpingInstance.Volume = 0.1f;
+            jumpingInstance.Volume = 0.02f;
             //jumpingInstance.Pitch = 0.1f;
+
 
 
 
@@ -309,6 +319,7 @@ namespace RemGame
                 {
 
                     walkingInstance.Play();
+
                 }
 
                 else
@@ -320,8 +331,11 @@ namespace RemGame
                 walkingInstance.Pitch = -0.5f;
 
             if (player.IsJumping)
+            {
                 jumpingInstance.Play();
-            
+
+            }
+
             camLocation = new Vector2(player.Position.X, player.Position.Y - 200);
 
             cam.LookAt(camLocation);

@@ -339,15 +339,12 @@ namespace RemGame
                 }
 
             }
-   
-           
-            //if ((DateTime.Now - previousWalk).TotalSeconds >= walkInterval)
-            //{
-            
+
+
             if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200)
             {
                 speed = SPEED;
-                int dir =0;
+                int dir = 0;
                 isBackToLastPos = false;
                 if (playerPosition.X < Position.X - 150)
                 {
@@ -375,14 +372,14 @@ namespace RemGame
             else if (!isBackToLastPos)
             {
                 speed = 0.2f;
-                if (lastPosition.X+4 < Position.X)
+                if (lastPosition.X + 4 < Position.X)
                 {
-                   
+
                     Move(Movement.Left);
                     isMoving = true;
                     direction = Movement.Left;
                 }
-                else if (lastPosition.X-4 > Position.X)
+                else if (lastPosition.X - 4 > Position.X)
                 {
                     Move(Movement.Right);
                     isMoving = true;
@@ -394,35 +391,45 @@ namespace RemGame
                     isBackToLastPos = true;
                 }
             }
-            else if(isBackToLastPos) {
-                speed = SPEED;
+            else if (isBackToLastPos)
+            {
+                
+                    speed = SPEED;
 
-                //torso.Body.OnCollision += OnCollisionEventHandler()             
-                if (!(pingPong) && Position.X <= lastPosition.X + distance - size.X / 2 && !(Ghost))
-                {
-                    //Console.WriteLine("RIGHT")
-                    Move(Movement.Right);
-                    isMoving = true;
-                    direction = Movement.Right;
-
-                }
-
-                else if (!(Ghost))
-                {
-                    pingPong = true;
-                    if (pingPong && Position.X >= lastPosition.X + size.X / 2 - distance)
+                    //torso.Body.OnCollision += OnCollisionEventHandler()             
+                    if (!(pingPong) && Position.X <= lastPosition.X + distance - size.X / 2 && !(Ghost))
                     {
-                        Move(Movement.Left);
+                        //Console.WriteLine("RIGHT")
+                        Move(Movement.Right);
                         isMoving = true;
-                        direction = Movement.Left;
+                        direction = Movement.Right;
+
                     }
-                    else
-                        pingPong = false;
 
+                    else if (!(Ghost))
+                    {
+                        pingPong = true;
+                        if (pingPong && Position.X >= lastPosition.X + size.X / 2 - distance)
+                        {
+                            Move(Movement.Left);
+                            isMoving = true;
+                            direction = Movement.Left;
+                        }
+                        else
+                            pingPong = false;
+
+                    }
+
+                
+
+                else
+                {
+                    Move(Movement.Stop);
                 }
-            }
-                previousWalk = DateTime.Now;
 
+            }
+            
+            
                 //}
             
         
