@@ -27,7 +27,7 @@ namespace RemGame
             Columns = columns;
             CurrentFrame = 0;
             totalFrames = Rows * Columns;
-            speed = 0.15D;
+            speed = 0.25D;
             timer = speed;
             
         }

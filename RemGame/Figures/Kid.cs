@@ -241,13 +241,13 @@ namespace RemGame
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            //if (fixtureB.CollisionCategories != Category.Cat1)
-            //{
+            if (contact.IsTouching) { 
                 isMeleAttacking = false;
+                //mele.Body.Enabled = false;
                 mele.Body.Dispose();
                 return true;
-            //}
-            
+            }
+            return false;
             
         }
         public void rangedShoot(Vector2 shootForce)
@@ -267,6 +267,7 @@ namespace RemGame
             {
 
                 isRangeAttacking = false;
+                shoot.Body.Enabled = false;
                 shoot.Body.Dispose();
                 return true;
             }
@@ -512,8 +513,8 @@ namespace RemGame
             }
             
 
-            pv1.Draw(gameTime, spriteBatch);
-            pv2.Draw(gameTime, spriteBatch);
+            //pv1.Draw(gameTime, spriteBatch);
+            //pv2.Draw(gameTime, spriteBatch);
             //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
 
 

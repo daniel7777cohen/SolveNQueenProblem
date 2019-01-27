@@ -57,7 +57,7 @@ namespace RemGame
 
 
         
-        private const float SPEED = 0.5f;
+        private const float SPEED = 0.3f;
         private float speed = SPEED;
         private bool isMoving = false;
         private bool isBackToLastPos = true;
@@ -461,8 +461,8 @@ namespace RemGame
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
 
             anim.Draw(spriteBatch, dest, torso.Body);
-            pv1.Draw(gameTime, spriteBatch);
-            pv2.Draw(gameTime, spriteBatch);
+            //pv1.Draw(gameTime, spriteBatch);
+            //pv2.Draw(gameTime, spriteBatch);
             /*
                         if (isAttacking)
                             mele.Draw(gameTime, spriteBatch);

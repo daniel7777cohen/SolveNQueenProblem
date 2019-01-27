@@ -78,7 +78,7 @@ namespace RemGame
             Rectangle destination = new Rectangle
             (
                 (int)Position.X,
-                (int)Position.Y+(int)Size.Y/2,
+                (int)Position.Y+(int)Size.Y,
                 (int)Size.X*2,
                 (int)Size.Y*2
             );
