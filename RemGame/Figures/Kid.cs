@@ -59,6 +59,7 @@ namespace RemGame
         private bool isSliding = false;
         private bool isBending = false;
         private Movement direction = Movement.Right;
+        private bool lookRight = true;
 
         private bool showText = false;
 
@@ -72,7 +73,9 @@ namespace RemGame
 
         private DateTime previousBend = DateTime.Now;   // time at which we previously jumped
         private const float bendInterval = 0.1f;        // in seconds
+
         
+
 
         private AnimatedSprite anim;
         private AnimatedSprite[] animations = new AnimatedSprite[2];
@@ -156,10 +159,12 @@ namespace RemGame
             switch (movement)
             {
                 case Movement.Left:
+                    lookRight = false;
                     axis1.MotorSpeed = -MathHelper.TwoPi * speed;
                     break;
 
                 case Movement.Right:
+                    lookRight = true;
                     axis1.MotorSpeed = MathHelper.TwoPi * speed;
                     break;
 
@@ -230,10 +235,17 @@ namespace RemGame
         {
             isMeleAttacking = true;
             mele = new PhysicsObject(world, shootTexture, 30, 1);
+            mele.Body.IgnoreCollisionWith(torso.Body);
+            mele.Body.IgnoreCollisionWith(wheel.Body);
             mele.Body.Mass = 4.0f;
             mele.Body.IgnoreGravity = true;
             mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-            mele.Body.ApplyLinearImpulse(new Vector2(30, 0));
+            int shootingDirection;
+            if (lookRight)
+                shootingDirection = 1;
+            else
+                shootingDirection = -1;
+            mele.Body.ApplyLinearImpulse(new Vector2(30* shootingDirection, 0));
             //mele.Body.FixtureList[0].OnCollision = dispose;
             mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
  
@@ -254,6 +266,9 @@ namespace RemGame
         {
             isRangeAttacking = true;
             shoot = new PhysicsObject(world, shootTexture, 30, 1);
+            shoot.Body.IgnoreCollisionWith(torso.Body);
+            shoot.Body.IgnoreCollisionWith(wheel.Body);
+
             //Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
             shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
             shoot.Body.Mass = 2.0f;
@@ -267,7 +282,7 @@ namespace RemGame
             {
 
                 isRangeAttacking = false;
-                shoot.Body.Enabled = false;
+                //shoot.Body.Enabled = false;
                 shoot.Body.Dispose();
                 return true;
             }

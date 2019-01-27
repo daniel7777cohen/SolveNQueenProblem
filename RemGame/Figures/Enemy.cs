@@ -33,6 +33,9 @@ namespace RemGame
         private PhysicsObject torso;
         private PhysicsObject wheel;
 
+        private PhysicsObject mele;
+
+
         private DateTime previousWalk = DateTime.Now;   // time at which we previously jumped
         private const float walkInterval = 3.0f;        // in seconds
 
@@ -53,6 +56,7 @@ namespace RemGame
         private PhysicsView pv2;
 
         private bool isAttacking = false;
+        private bool isMeleAttacking = false;
         private RevoluteJoint axis1;
 
 
@@ -62,6 +66,7 @@ namespace RemGame
         private bool isMoving = false;
         private bool isBackToLastPos = true;
         private Movement direction = Movement.Right;
+        private bool lookingRight = true;
 
 
 
@@ -85,8 +90,11 @@ namespace RemGame
         MouseState currentMouseState;
         MouseState previousMouseState = Mouse.GetState();
 
+        Texture2D shootTexture;
 
-        
+        private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
+        private const float shootInterval = 1.5f;
+
 
         public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance)
         {
@@ -115,6 +123,8 @@ namespace RemGame
 
             oldDistance = distance;
 
+
+            shootTexture = bullet;
             // Create the feet of the body
             wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
             wheel.Position = torso.Position + new Vector2(0, torsoSize.X / 2);
@@ -139,8 +149,8 @@ namespace RemGame
             pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
             pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
 
-            torso.Body.CollisionCategories = Category.Cat10;
-            wheel.Body.CollisionCategories = Category.Cat11;
+            torso.Body.CollisionCategories = Category.Cat20;
+            wheel.Body.CollisionCategories = Category.Cat21;
 
             torso.Body.CollidesWith = Category.Cat1;
             wheel.Body.CollidesWith = Category.Cat1;
@@ -159,11 +169,12 @@ namespace RemGame
             switch (movement)
             {
                 case Movement.Left:
-                    if (!keyboardState.IsKeyDown(Keys.LeftShift))
-                        axis1.MotorSpeed = -MathHelper.TwoPi * speed;
+                    lookingRight = false;
+                     axis1.MotorSpeed = -MathHelper.TwoPi * speed;
                     break;
 
                 case Movement.Right:
+                    lookingRight = true;
                     axis1.MotorSpeed = MathHelper.TwoPi * speed;
                     break;
 
@@ -211,11 +222,44 @@ namespace RemGame
 
         public void meleAttack()
         {
-            IsAttacking = true;
-           // mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-            //mele.Body.ApplyLinearImpulse(new Vector2(4, 0));
-            //mele.Body.FixtureList[0].OnCollision = dispose;
-            // IsAttacking = false;
+            if ((DateTime.Now - previousShoot).TotalSeconds >= shootInterval)
+            {
+                isMeleAttacking = true;
+                mele = new PhysicsObject(world, shootTexture, 30, 1);
+                mele.Body.CollidesWith = Category.Cat10;
+                mele.Body.CollidesWith = Category.Cat11;
+                //mele.Body.CollidesWith = Category.Cat1;
+
+                mele.Body.Mass = 4.0f;
+                mele.Body.IgnoreGravity = true;
+                mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                int dir;
+                if (lookingRight)
+                    dir = 1;
+                else
+                    dir = -1;
+                mele.Body.ApplyLinearImpulse(new Vector2(30*dir, 0));
+                //mele.Body.FixtureList[0].OnCollision = dispose;
+                mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
+                previousShoot = DateTime.Now;
+
+            }
+            else
+            isAttacking = false;
+            
+        }
+
+        bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        {
+            if (contact.IsTouching)
+            {
+                isMeleAttacking = false;
+                //mele.Body.Enabled = false;
+                mele.Body.Dispose();
+                return true;
+            }
+            return false;
+
         }
 
         public void Kinesis(Obstacle obj, MouseState currentMouseState)
@@ -296,29 +340,36 @@ namespace RemGame
 
             }
    
-            if (position.X < 1000)
-            {
-                Console.WriteLine(lastPosition);
-                Console.WriteLine("pos:" + Position);
-            }
+           
             //if ((DateTime.Now - previousWalk).TotalSeconds >= walkInterval)
             //{
             
-            if (playerPosition.X > Position.X - 150 && playerPosition.X < Position.X + 150)
+            if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200)
             {
                 speed = SPEED;
+                int dir =0;
                 isBackToLastPos = false;
-                if (playerPosition.X < Position.X)
+                if (playerPosition.X < Position.X - 150)
                 {
                     Move(Movement.Left);
                     isMoving = true;
                     direction = Movement.Left;
+                    this.meleAttack();
+
                 }
-                else
+                else if (playerPosition.X > Position.X + 150)
                 {
                     Move(Movement.Right);
                     isMoving = true;
                     direction = Movement.Right;
+                    this.meleAttack();
+
+                }
+
+                else
+                {
+                    Move(Movement.Stop);
+                    this.meleAttack();
                 }
             }
             else if (!isBackToLastPos)
@@ -463,12 +514,12 @@ namespace RemGame
             anim.Draw(spriteBatch, dest, torso.Body);
             //pv1.Draw(gameTime, spriteBatch);
             //pv2.Draw(gameTime, spriteBatch);
-            /*
-                        if (isAttacking)
-                            mele.Draw(gameTime, spriteBatch);
 
-                            shoot.Draw(gameTime, spriteBatch);
-            */
+            if (isMeleAttacking && !(mele.Body.IsDisposed))
+                mele.Draw(gameTime, spriteBatch);
+
+
+
 
 
 
