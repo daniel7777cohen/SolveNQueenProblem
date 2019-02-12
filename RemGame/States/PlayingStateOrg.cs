@@ -82,14 +82,14 @@ namespace RemGame
         protected override void LoadContent()
         {
             soundManager.LoadContent("Sound/Music", "Sound/SoundFX");
-            soundManager.Play("General Music 1");
+            //soundManager.Play("General Music 1");
             
             
 
             hall = Content.Load<SoundEffect>("Sound/SoundFX/hallWay");
             hallInstance = hall.CreateInstance();
             
-            hallInstance.Play();
+            //hallInstance.Play();
             hallInstance.Volume = 0.04f;
             //  general.LoadContent(@"Sounds/Music/", "");
             //general.Play("General Music 1");
@@ -319,13 +319,13 @@ namespace RemGame
                 if (player.IsMoving)
                 {
 
-                    walkingInstance.Play();
+                    //walkingInstance.Play();
 
                 }
 
                 else
                 {
-                    walkingInstance.Stop();
+                    //walkingInstance.Stop();
                 }
             }
             else
@@ -333,7 +333,7 @@ namespace RemGame
 
             if (player.IsJumping)
             {
-                jumpingInstance.Play();
+                //jumpingInstance.Play();
 
             }
 
