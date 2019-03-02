@@ -21,6 +21,7 @@ namespace RemGame
         bool pingPong = false;
         bool Ghost = false;
         /// </summary>
+        private int health = 5;
         private World world;
         private Texture2D texture;
         private Vector2 size;
@@ -152,8 +153,15 @@ namespace RemGame
             torso.Body.CollisionCategories = Category.Cat20;
             wheel.Body.CollisionCategories = Category.Cat21;
 
-            torso.Body.CollidesWith = Category.Cat1;
-            wheel.Body.CollidesWith = Category.Cat1;
+            
+
+            torso.Body.CollidesWith = Category.Cat1 | Category.Cat28;
+            wheel.Body.CollidesWith = Category.Cat1 | Category.Cat28;
+
+
+            torso.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
+            //wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
+
 
         }
 
@@ -251,6 +259,7 @@ namespace RemGame
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+            Console.WriteLine("Mele_OnCollision");
             if (contact.IsTouching)
             {
                 isMeleAttacking = false;
@@ -258,6 +267,31 @@ namespace RemGame
                 mele.Body.Dispose();
                 return true;
             }
+            return false;
+
+        }
+
+        bool HitByPlayer(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        {
+            Console.WriteLine("HitByPlayer");
+            if (fixtureB.CollisionCategories == Category.Cat28)
+            {
+                if (health > 0)
+                {
+                    health--;
+                    Console.WriteLine(health);
+                }
+                else
+                {
+                    //torso.Body.Enabled = false;
+                    //wheel.Body.Enabled = false;
+                    torso.Body.Dispose();
+                    wheel.Body.Dispose();
+
+                }
+                return true;
+            }
+            
             return false;
 
         }
@@ -305,6 +339,8 @@ namespace RemGame
             torso.Position = wheel.Position;
         }
 
+
+
         public void Update(GameTime gameTime, Vector2 playerPosition)
         {
 
@@ -319,6 +355,7 @@ namespace RemGame
                 Anim.Update(gameTime);
             else //player will appear as standing with frame [1] from the atlas.
                 Anim.CurrentFrame = 1;
+
 
             isMoving = false;
             if (keyboardState.IsKeyDown(Keys.Q) && !(prevKeyboardState.IsKeyDown(Keys.Q)))
@@ -340,60 +377,60 @@ namespace RemGame
 
             }
 
+            if (!torso.Body.IsDisposed) {
+                if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200)
+                {
+                    speed = SPEED;
+                    int dir = 0;
+                    isBackToLastPos = false;
+                    if (playerPosition.X < Position.X - 150)
+                    {
+                        Move(Movement.Left);
+                        isMoving = true;
+                        direction = Movement.Left;
+                        this.meleAttack();
 
-            if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200)
-            {
-                speed = SPEED;
-                int dir = 0;
-                isBackToLastPos = false;
-                if (playerPosition.X < Position.X - 150)
-                {
-                    Move(Movement.Left);
-                    isMoving = true;
-                    direction = Movement.Left;
-                    this.meleAttack();
+                    }
+                    else if (playerPosition.X > Position.X + 150)
+                    {
+                        Move(Movement.Right);
+                        isMoving = true;
+                        direction = Movement.Right;
+                        this.meleAttack();
 
-                }
-                else if (playerPosition.X > Position.X + 150)
-                {
-                    Move(Movement.Right);
-                    isMoving = true;
-                    direction = Movement.Right;
-                    this.meleAttack();
+                    }
 
+                    else
+                    {
+                        Move(Movement.Stop);
+                        this.meleAttack();
+                    }
                 }
+                else if (!isBackToLastPos)
+                {
+                    speed = 0.2f;
+                    if (lastPosition.X + 4 < Position.X)
+                    {
 
-                else
-                {
-                    Move(Movement.Stop);
-                    this.meleAttack();
+                        Move(Movement.Left);
+                        isMoving = true;
+                        direction = Movement.Left;
+                    }
+                    else if (lastPosition.X - 4 > Position.X)
+                    {
+                        Move(Movement.Right);
+                        isMoving = true;
+                        direction = Movement.Right;
+                    }
+                    else
+                    {
+                        Move(Movement.Stop);
+                        isBackToLastPos = true;
+                    }
                 }
-            }
-            else if (!isBackToLastPos)
-            {
-                speed = 0.2f;
-                if (lastPosition.X + 4 < Position.X)
+                else if (isBackToLastPos)
                 {
 
-                    Move(Movement.Left);
-                    isMoving = true;
-                    direction = Movement.Left;
-                }
-                else if (lastPosition.X - 4 > Position.X)
-                {
-                    Move(Movement.Right);
-                    isMoving = true;
-                    direction = Movement.Right;
-                }
-                else
-                {
-                    Move(Movement.Stop);
-                    isBackToLastPos = true;
-                }
-            }
-            else if (isBackToLastPos)
-            {
-                
                     speed = SPEED;
 
                     //torso.Body.OnCollision += OnCollisionEventHandler()             
@@ -420,13 +457,13 @@ namespace RemGame
 
                     }
 
-                
 
-                else
-                {
-                    Move(Movement.Stop);
+
+                    else
+                    {
+                        Move(Movement.Stop);
+                    }
                 }
-
             }
             
             
@@ -517,7 +554,7 @@ namespace RemGame
             Rectangle dest = torso.physicsObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
-
+            if(!torso.Body.IsDisposed)
             anim.Draw(spriteBatch, dest, torso.Body);
             //pv1.Draw(gameTime, spriteBatch);
             //pv2.Draw(gameTime, spriteBatch);

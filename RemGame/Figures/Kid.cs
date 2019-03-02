@@ -237,6 +237,7 @@ namespace RemGame
             mele = new PhysicsObject(world, shootTexture, 30, 1);
             mele.Body.IgnoreCollisionWith(torso.Body);
             mele.Body.IgnoreCollisionWith(wheel.Body);
+            mele.Body.CollisionCategories = Category.Cat28;
             mele.Body.Mass = 4.0f;
             mele.Body.IgnoreGravity = true;
             mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
