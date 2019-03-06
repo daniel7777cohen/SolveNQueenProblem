@@ -296,7 +296,7 @@ namespace RemGame
 
             if (currentMouseState.RightButton == ButtonState.Pressed)
                 {
-                    Console.WriteLine(cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)));
+                   // Console.WriteLine(cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)));
                     foreach (Obstacle obj in map.ObstacleTiles)
                     {
                         Vector2 mouseToWorld = cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y));
@@ -314,7 +314,7 @@ namespace RemGame
 
             if (player.IsMoving && player.ActualMovningSpeed !=0)
             {
-                Console.WriteLine(player.ActualMovningSpeed);
+              //  Console.WriteLine(player.ActualMovningSpeed);
 
                 foreach (var scrolling in sc)
                 {

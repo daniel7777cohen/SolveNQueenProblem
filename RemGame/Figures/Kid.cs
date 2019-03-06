@@ -19,6 +19,8 @@ namespace RemGame
 {
     class Kid:Component
     {
+        private bool GameOver = false;
+
         private World world;
         private Texture2D texture;
         private Vector2 size;
@@ -36,7 +38,9 @@ namespace RemGame
         private PhysicsObject wheel;
 
         /// <tmp>
-        private PhysicsObject mele;
+        private PhysicsObject shot;
+        private List<PhysicsObject> shotList = new List<PhysicsObject>();
+
         private PhysicsObject shoot;
 
         Vector2 shootBase;
@@ -71,6 +75,9 @@ namespace RemGame
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 0.7f;        // in seconds
         private Vector2 slideForce = new Vector2(7, 0); // applied force when jumping
+
+        private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
+        private const float shootInterval = 0.3f;        // in seconds
 
         private DateTime previousBend = DateTime.Now;   // time at which we previously jumped
         private const float bendInterval = 0.1f;        // in seconds
@@ -238,35 +245,51 @@ namespace RemGame
             }
         }
 
-        public void meleAttack()
+        public void Shoot()
         {
-            isMeleAttacking = true;
-            mele = new PhysicsObject(world, shootTexture, 30, 1);
-            mele.Body.IgnoreCollisionWith(torso.Body);
-            mele.Body.IgnoreCollisionWith(wheel.Body);
-            mele.Body.CollisionCategories = Category.Cat28;
-            mele.Body.Mass = 4.0f;
-            mele.Body.IgnoreGravity = true;
-            mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-            int shootingDirection;
-            if (lookRight)
-                shootingDirection = 1;
-            else
-                shootingDirection = -1;
-            mele.Body.ApplyLinearImpulse(new Vector2(30* shootingDirection, 0));
-            mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
- 
+            if ((DateTime.Now - previousShoot).TotalSeconds >= shootInterval)
+            {
+
+                isMeleAttacking = true;
+                shot = new PhysicsObject(world, shootTexture, 30, 1);
+                shot.Body.CollisionCategories = Category.Cat28;
+                shot.Body.CollidesWith = Category.Cat20 | Category.Cat21 | Category.Cat1;
+                shot.Body.Mass = 2.0f;
+                shot.Body.IgnoreGravity = true;
+                shot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                int shootingDirection;
+                if (lookRight)
+                    shootingDirection = 1;
+                else
+                    shootingDirection = -1;
+                shot.Body.ApplyLinearImpulse(new Vector2(15 * shootingDirection, 0));
+                shot.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
+                shotList.Add(shot);
+
+                previousShoot = DateTime.Now;
+
+            }
         }
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            if (contact.IsTouching) { 
-                isMeleAttacking = false;
-                //mele.Body.Enabled = false;
-                mele.Body.Dispose();
-                return true;
+               
+            PhysicsObject tmp = null;
+            foreach(PhysicsObject p in shotList)
+            {
+                if (p.Body.BodyId == fixtureA.Body.BodyId)
+                    tmp = p;
             }
-            return false;
+ 
+            if (tmp != null)
+            {
+                shotList.Remove(tmp);
+                tmp.Body.Dispose();
+            }
+            
+            return true;
+            
+            
             
         }
         public void rangedShoot(Vector2 shootForce)
@@ -285,7 +308,7 @@ namespace RemGame
         }
         bool Shoot_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            if (fixtureB.CollisionCategories == Category.Cat10 || fixtureB.CollisionCategories == Category.Cat11)
+            if (fixtureB.CollisionCategories == Category.Cat20 || fixtureB.CollisionCategories == Category.Cat21)
             {
                 
                 isRangeAttacking = false;
@@ -295,7 +318,6 @@ namespace RemGame
             }
             else
             {
-
                 return true;
             }
         }
@@ -371,9 +393,9 @@ namespace RemGame
                 if (Health > 0)
                 {
                     Health--;
-                    Console.WriteLine(Health);
+                    //Console.WriteLine(Health);
                 }
-                else if (Health == 0)
+                else
                 {
                     IsAlive = false;
                     torso.Body.Enabled = false;
@@ -381,36 +403,41 @@ namespace RemGame
                     //torso.Body.Dispose();
                     //wheel.Body.Dispose();
                 }
-                return true;
             }
         
             return true;
-
         }
 
         public override void Update(GameTime gameTime)
         {
-            keyboardState = Keyboard.GetState();
-            currentMouseState = Mouse.GetState();
-            actualMovningSpeed = torso.Body.AngularVelocity;
-            //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
-
-            if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
-                isJumping = false;
-            if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
+            if (isAlive)
             {
-                isSliding = false;
-                torso.Body.CollidesWith = Category.All;
-            }
+                keyboardState = Keyboard.GetState();
+                currentMouseState = Mouse.GetState();
+                actualMovningSpeed = torso.Body.AngularVelocity;
+                //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
-            anim = animations[2];
+                if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
+                    isJumping = false;
+                if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
+                {
+                    isSliding = false;
+                    torso.Body.CollidesWith = Category.All;
+                }
 
-            //if (IsMoving) // apply animation
-            //else //player will appear as standing with frame [1] from the atlas.
+                anim = animations[2];
+
+                foreach (PhysicsObject s in shotList)
+                {
+                    s.Update(gameTime);
+                }
+
+                //if (IsMoving) // apply animation
+                //else //player will appear as standing with frame [1] from the atlas.
                 //Anim.CurrentFrame = 1;
 
-            IsMoving = false;
-            
+                IsMoving = false;
+
                 if (keyboardState.IsKeyDown(Keys.Left))
                 {
                     Move(Movement.Left);
@@ -483,9 +510,10 @@ namespace RemGame
 
                 if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
                 {
-                    meleAttack();
+                    Shoot();
 
                 }
+
 
 
                 if (Position.X < 400)
@@ -525,47 +553,62 @@ namespace RemGame
 
                 }
 
-                //mele.Update(gameTime);
+
                 previousMouseState = currentMouseState;
                 prevKeyboardState = keyboardState;
 
 
-            
+            }
+            else
+            GameOver = true;
         }
 
         //needs to be changed
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
-            torso.Draw(gameTime,spriteBatch);
-            //Rectangle dest = torso.physicsObjRecToDraw();
-            //dest.Height = dest.Height+(int)wheel.Size.Y/2;
-            //dest.Y = dest.Y + (int)wheel.Size.Y/2;
-
-            //Anim.Draw(spriteBatch, dest, torso.Body);
-
-            if (isMeleAttacking && !(mele.Body.IsDisposed))
-                mele.Draw(gameTime, spriteBatch);
-
-           if (isRangeAttacking && !(shoot.Body.IsDisposed))
-                shoot.Draw(gameTime, spriteBatch);
-
-            if (showText)
+            if (!GameOver)
             {
-                
-                spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
+                torso.Draw(gameTime, spriteBatch);
+                //Rectangle dest = torso.physicsObjRecToDraw();
+                //dest.Height = dest.Height+(int)wheel.Size.Y/2;
+                //dest.Y = dest.Y + (int)wheel.Size.Y/2;
+
+                //Anim.Draw(spriteBatch, dest, torso.Body);
+                foreach (PhysicsObject s in shotList)
+                {
+                    s.Draw(gameTime, spriteBatch);
+                }
+                if (isRangeAttacking && !(shoot.Body.IsDisposed))
+                    shoot.Draw(gameTime, spriteBatch);
+
+                if (showText)
+                {
+
+                    spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
+                }
+
+                //spriteBatch.Begin();
+                for (int i = 0; i < Health; i++)
+                {
+                    spriteBatch.Draw(shootTexture, new Vector2(Position.X - 900 + i * 60, Position.Y - 600), Color.White);
+                }
+                // spriteBatch.End();
+
+                //pv1.Draw(gameTime, spriteBatch);
+                //pv2.Draw(gameTime, spriteBatch);
+                //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
+
+
+                //wheel.Draw(gameTime,spriteBatch);
             }
-            
+            else
+            {
+                spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
-            //pv1.Draw(gameTime, spriteBatch);
-            //pv2.Draw(gameTime, spriteBatch);
-            //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
+            }
 
-
-            //wheel.Draw(gameTime,spriteBatch);
         }
-
-
+        
     }
 }

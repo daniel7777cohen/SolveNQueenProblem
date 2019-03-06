@@ -262,7 +262,7 @@ namespace RemGame
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             
-            Console.WriteLine("Mele_OnCollision");
+            //Console.WriteLine("Mele_OnCollision");
 
             isMeleAttacking = false;
             //mele.Body.Enabled = false;
@@ -279,7 +279,7 @@ namespace RemGame
                     if (health > 0)
                     {
                         health--;
-                        Console.WriteLine(health);
+                       // Console.WriteLine(health);
                     }
                     else
                     {
