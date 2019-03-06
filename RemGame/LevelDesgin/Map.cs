@@ -60,7 +60,7 @@ namespace RemGame
 
                     if (number > 0 && number <= 2)
                     {
-                        texture = Content.Load<Texture2D>("HUD");
+                        texture = Content.Load<Texture2D>("Tiles/HUD");
                         Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
                         obs.Position = new Vector2(x * size, y * size);
                         /*
@@ -77,8 +77,8 @@ namespace RemGame
                         r = new Random();
                         int rInt = r.Next(192, 320);
                         Enemy en = new Enemy(world,
-                        Content.Load<Texture2D>("Player"),
-                        Content.Load<Texture2D>("Player"),
+                        Content.Load<Texture2D>("Player/playerLeft"),
+                        Content.Load<Texture2D>("Player/playerRight"),
                         Content.Load<Texture2D>("Player/bullet"),
                         new Vector2(96, 96),
                         100,
@@ -101,7 +101,7 @@ namespace RemGame
         public void Update(GameTime gameTime)
         {
             foreach (Enemy en in enemies)
-                en.Update(gameTime,player.Position);
+                en.Update(gameTime,player.Position,player.IsAlive);
             
         }
 

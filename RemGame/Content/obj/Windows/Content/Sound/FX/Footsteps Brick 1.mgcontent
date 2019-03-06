@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Footsteps Brick 1.mp3</SourceFile>
+  <SourceTime>2019-01-26T19:57:31.2770082+02:00</SourceTime>
+  <DestFile>C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Sound/FX/Footsteps Brick 1.xnb</DestFile>
+  <DestTime>2019-03-06T19:57:28.978036+02:00</DestTime>
+  <Importer>Mp3Importer</Importer>
+  <ImporterTime>2018-12-08T18:35:54+02:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2018-12-08T18:35:54+02:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

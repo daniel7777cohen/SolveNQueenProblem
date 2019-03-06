@@ -27,7 +27,7 @@ namespace RemGame
 
     class Scrollingbackground : Backgrounds
     {
-        public Scrollingbackground(Texture2D newTexture, Rectangle newRectangle, int newScrollingSpeed,Scrollingbackground sC)
+        public Scrollingbackground(Texture2D newTexture, Rectangle newRectangle, int newScrollingSpeed, Scrollingbackground sC)
         {
             texture = newTexture;
             rectangle = newRectangle;
@@ -40,29 +40,30 @@ namespace RemGame
             this.twinSc = sC;
         }
 
-        public void Update(Camera2D cam, int direction, float playerSpeed)
-        {   
-            if(direction == -1)
-            {         
-                if (rectangle.X + texture.Width < cam.Position.X)            
-                    rectangle.X = twinSc.rectangle.X+texture.Width-5;
-                
-            }
+        public void Update(Camera2D cam, int direction)
+        {
+           
+                if (direction == -1)
+                {
+                    if (rectangle.X + texture.Width < cam.Position.X)
+                        rectangle.X = twinSc.rectangle.X + texture.Width - 5;
 
-            else
-            {
-                if (rectangle.X  > cam.Position.X + texture.Width)
-                    rectangle.X = twinSc.rectangle.X - texture.Width+5;
+                }
 
-            }
-            if (scrollingSpeed != 0)
-            {
-               
-                rectangle.X += 1 * direction;
+                else
+                {
+                    if (rectangle.X > cam.Position.X + texture.Width)
+                        rectangle.X = twinSc.rectangle.X - texture.Width + 5;
 
+                }
+                if (scrollingSpeed != 0)
+                {
+
+                    rectangle.X += 1 * direction;
+
+                }
             }
+        
         }
-    }
-
 
 }

@@ -69,7 +69,7 @@ namespace RemGame
 
         protected override void LoadContent()
         {
-            texture = Content.Load<Texture2D>(@"Textures\startMenu");
+            texture = Content.Load<Texture2D>(@"ScreenDisplay\startMenu");
             font = Content.Load<SpriteFont>(@"Fonts\Arial");
         }
 

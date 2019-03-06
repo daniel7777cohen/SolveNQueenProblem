@@ -94,8 +94,8 @@ namespace RemGame
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Load sounds
-            string musicPath = @"Sounds/Music/";
-            string fxPath    = @"Sounds/SoundFX/";
+            string musicPath = @"Sound/Music/";
+            string fxPath    = @"Sound/FX/";
 
             //soundManager.LoadContent(musicPath, fxPath);
         }

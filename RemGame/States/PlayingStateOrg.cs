@@ -22,6 +22,8 @@ namespace RemGame
 
         private Color _backgroundColor = Color.CornflowerBlue;
         private List<Component> _gameComponents;
+        private bool isRonAlive = true;
+
         World world;
         Kid player;
         Enemy DemoEnemy;
@@ -31,6 +33,7 @@ namespace RemGame
         MouseState currentMouseState;
         Texture2D playerLeft;
         Texture2D playerRight;
+        Texture2D playerStand;
         SpriteFont font;
         Camera2D cam;
         Vector2 camLocation;
@@ -69,6 +72,9 @@ namespace RemGame
         SoundEffectInstance jumpingInstance;
         SoundEffectInstance hallInstance;
         SoundManager soundManager;
+
+        public bool IsRonAlive { get => isRonAlive; set => isRonAlive = value; }
+
         public PlayingState(Game game)
             : base(game)
         {
@@ -81,12 +87,12 @@ namespace RemGame
 
         protected override void LoadContent()
         {
-            soundManager.LoadContent("Sound/Music", "Sound/SoundFX");
-            //soundManager.Play("General Music 1");
+            soundManager.LoadContent(@"Sound/Music", @"Sound/FX");
+            soundManager.Play("General Music 1");
             
             
 
-            hall = Content.Load<SoundEffect>("Sound/SoundFX/hallWay");
+            hall = Content.Load<SoundEffect>("Sound/FX/hallWay");
             hallInstance = hall.CreateInstance();
             
             //hallInstance.Play();
@@ -230,7 +236,7 @@ namespace RemGame
             */
             player = new Kid(world,
                 Content.Load<Texture2D>("Player/Ron_standing"),
-                Content.Load<Texture2D>("Player"),
+                Content.Load<Texture2D>("Player/Ron_standing"),
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(96, 96),
                 100,
@@ -238,14 +244,18 @@ namespace RemGame
 
             playerLeft = Content.Load<Texture2D>("Player/playerLeft");
             playerRight = Content.Load<Texture2D>("Player/playerRight");
+            playerStand = Content.Load<Texture2D>("Player/Ron_standing");
+
+
+           
             // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
 
-            walking = Content.Load<SoundEffect>("Sound/SoundFX/Footsteps Brick 1");
+            walking = Content.Load<SoundEffect>("Sound/FX/Footsteps Brick 1");
             walkingInstance = walking.CreateInstance();
             walkingInstance.IsLooped = true;
             walkingInstance.Volume = 0.02f;
 
-            jumping = Content.Load<SoundEffect>("Sound/SoundFX/Jump");
+            jumping = Content.Load<SoundEffect>("Sound/FX/Jump");
             jumpingInstance = jumping.CreateInstance();
             jumpingInstance.IsLooped = false;
             jumpingInstance.Volume = 0.01f;
@@ -256,6 +266,8 @@ namespace RemGame
 
             player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
             player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
+            player.Animations[2] = new AnimatedSprite(playerStand, 1, 1);
+
             map.setPlayerToMap(player);
 
 
@@ -300,15 +312,16 @@ namespace RemGame
 
 
 
-            if (player.IsMoving)
+            if (player.IsMoving && player.ActualMovningSpeed !=0)
             {
+                Console.WriteLine(player.ActualMovningSpeed);
 
                 foreach (var scrolling in sc)
                 {
                     if (player.Direction == Movement.Right)
-                        scrolling.Update(cam, -1, player.WheelSpeed);
+                        scrolling.Update(cam, -1);
                     else
-                        scrolling.Update(cam, 1, player.WheelSpeed);
+                        scrolling.Update(cam, 1);
                 }
             }
 

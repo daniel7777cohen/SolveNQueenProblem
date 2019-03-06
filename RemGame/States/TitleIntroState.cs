@@ -23,7 +23,7 @@ namespace RemGame
 
         protected override void LoadContent()
         {
-            texture = Content.Load<Texture2D>(@"Texture\titleIntro");
+          texture = Content.Load<Texture2D>(@"ScreenDisplay\titleIntro");
         }
 
         public override void Update(GameTime gameTime)
@@ -39,7 +39,7 @@ namespace RemGame
 
             base.Update(gameTime);
         }
-
+        
         public override void Draw(GameTime gameTime)
         {
             Vector2 pos = new Vector2(Game.GraphicsDevice.Viewport.Width / 2,
@@ -53,7 +53,7 @@ namespace RemGame
 
             base.Draw(gameTime);
         }
-
+        
         protected override void StateChanged(object sender, EventArgs e)
         {
             base.StateChanged(sender, e);

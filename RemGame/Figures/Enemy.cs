@@ -60,7 +60,7 @@ namespace RemGame
         private bool isMeleAttacking = false;
         private RevoluteJoint axis1;
 
-
+        private bool isPlayerAlive = true;
         
         private const float SPEED = 0.3f;
         private float speed = SPEED;
@@ -160,7 +160,7 @@ namespace RemGame
 
 
             torso.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
-            //wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
+            wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
 
 
         }
@@ -234,8 +234,9 @@ namespace RemGame
             {
                 isMeleAttacking = true;
                 mele = new PhysicsObject(world, shootTexture, 30, 1);
-                mele.Body.CollidesWith = Category.Cat10;
-                mele.Body.CollidesWith = Category.Cat11;
+                mele.Body.CollisionCategories = Category.Cat30;
+                mele.Body.CollidesWith = Category.Cat10 | Category.Cat11 | Category.Cat1;
+                
                 //mele.Body.CollidesWith = Category.Cat1;
 
                 mele.Body.Mass = 4.0f;
@@ -248,7 +249,8 @@ namespace RemGame
                     dir = -1;
                 mele.Body.ApplyLinearImpulse(new Vector2(30*dir, 0));
                 //mele.Body.FixtureList[0].OnCollision = dispose;
-                mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
+                if (isPlayerAlive)
+                    mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
                 previousShoot = DateTime.Now;
 
             }
@@ -259,40 +261,38 @@ namespace RemGame
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+            
             Console.WriteLine("Mele_OnCollision");
-            if (contact.IsTouching)
-            {
-                isMeleAttacking = false;
-                //mele.Body.Enabled = false;
-                mele.Body.Dispose();
-                return true;
-            }
-            return false;
+
+            isMeleAttacking = false;
+            //mele.Body.Enabled = false;
+            mele.Body.Dispose();
+            return true;
+        
 
         }
-
+        
         bool HitByPlayer(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            Console.WriteLine("HitByPlayer");
-            if (fixtureB.CollisionCategories == Category.Cat28)
-            {
-                if (health > 0)
+                if (fixtureB.CollisionCategories == Category.Cat28)
                 {
-                    health--;
-                    Console.WriteLine(health);
-                }
-                else
-                {
-                    //torso.Body.Enabled = false;
-                    //wheel.Body.Enabled = false;
-                    torso.Body.Dispose();
-                    wheel.Body.Dispose();
+                    if (health > 0)
+                    {
+                        health--;
+                        Console.WriteLine(health);
+                    }
+                    else
+                    {
+                        //torso.Body.Enabled = false;
+                        //wheel.Body.Enabled = false;
+                        torso.Body.Dispose();
+                        wheel.Body.Dispose();
 
+                    }
+                    return true;
                 }
-                return true;
-            }
             
-            return false;
+            return true;
 
         }
 
@@ -341,9 +341,10 @@ namespace RemGame
 
 
 
-        public void Update(GameTime gameTime, Vector2 playerPosition)
+        public void Update(GameTime gameTime,Vector2 playerPosition, bool PlayerAlive)
         {
-
+            if (!PlayerAlive)
+                isPlayerAlive = false;
             keyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
@@ -378,7 +379,7 @@ namespace RemGame
             }
 
             if (!torso.Body.IsDisposed) {
-                if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200)
+                if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200 && isPlayerAlive)
                 {
                     speed = SPEED;
                     int dir = 0;
@@ -405,6 +406,7 @@ namespace RemGame
                         Move(Movement.Stop);
                         this.meleAttack();
                     }
+
                 }
                 else if (!isBackToLastPos)
                 {
@@ -468,78 +470,19 @@ namespace RemGame
             
             
                 //}
-            
-        
-           
-                /*
-                else
-                {
-                    Move(Movement.Stop);
-                    isMoving = false;
-
-                }
-                */
-                /* 
-                                     
-
-                                    //if statment should changed
-                                    if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
-                                    {
-                                        isMoving = true;
-                                        Jump();
-                                    }
-
-                                    if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
-                                    {
-
-                                        if (keyboardState.IsKeyDown(Keys.Right))
-                                            Slide(Movement.Right);
-
-                                        else if (keyboardState.IsKeyDown(Keys.Left))
-                                            Slide(Movement.Left);
-
-                                    }
-
-
-                                    if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
-                                    {
-                                        shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                                        Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-
-                                    }
-                                    if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
-                                    {
-                                        //IsAttacking = true;
-                                        shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                                        Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-                                        Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X) / 4, (shootDirection.Y - shootBase.Y) / 4);
-                                        shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
-                                        shoot.Body.ApplyForce(shootForce);
-
-                                    }
-
-                                    if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
-                                    {
-                                        meleAttack();
-
-                                    }
-
-
-                                    if (keyboardState.IsKeyDown(Keys.Down))
-                                    {
-                                        bent();
-                                    }
-               */
-                /*
+            /*
                 if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
                 {
                     //torso.Body.Enabled = true;
 
                 }
                 */
-                //mele.Update(gameTime);
+                if(isMeleAttacking)
+                mele.Update(gameTime);
+                
+                if(!isPlayerAlive)
 
-                previousMouseState = currentMouseState;
+            previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
         }

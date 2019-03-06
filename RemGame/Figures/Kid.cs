@@ -50,10 +50,11 @@ namespace RemGame
         private RevoluteJoint axis1;
 
 
-
+        private int health = 5;
+        private bool isAlive = true;
         private const float SPEED = 1.0f;
         private float speed = SPEED;
-        float wheelSpeed = 0;
+        private float actualMovningSpeed=0;
         private bool isMoving = false;
         private bool isJumping = false;
         private bool isSliding = false;
@@ -78,7 +79,7 @@ namespace RemGame
 
 
         private AnimatedSprite anim;
-        private AnimatedSprite[] animations = new AnimatedSprite[2];
+        private AnimatedSprite[] animations = new AnimatedSprite[3];
 
 
         KeyboardState keyboardState;
@@ -95,7 +96,9 @@ namespace RemGame
         public bool IsJumping { get => isJumping; set => isJumping = value; }
         public bool IsMoving { get => isMoving; set => isMoving = value; }
         public bool IsBending { get => isBending; set => isBending = value; }
-        public float WheelSpeed { get => wheelSpeed; set => wheelSpeed = value; }
+        public int Health { get => health; set => health = value; }
+        public bool IsAlive { get => isAlive; set => isAlive = value; }
+        public float ActualMovningSpeed { get => actualMovningSpeed; set => actualMovningSpeed = value; }
 
         public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
@@ -132,12 +135,16 @@ namespace RemGame
             torso.Body.CollisionCategories = Category.Cat10;
             wheel.Body.CollisionCategories = Category.Cat11;
 
-            torso.Body.CollidesWith = Category.Cat1;
-            wheel.Body.CollidesWith = Category.Cat1;
+            torso.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+            wheel.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+
+            torso.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
+            wheel.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
+
 
             // Connect the feet to the torso
             axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, wheel.Body, Vector2.Zero);
-            axis1.CollideConnected = false;
+            axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
             axis1.MaxMotorTorque = 12.0f;
@@ -349,18 +356,43 @@ namespace RemGame
 
         public void Scene()
         {
+
+            Move(Movement.Right);
+            isMoving = true;
+            direction = Movement.Right;
+
+        }
+
+        bool HitByEnemy(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        {
             
-                Move(Movement.Right);
-                isMoving = true;
-                direction = Movement.Right;
-            
+            if (fixtureB.CollisionCategories == Category.Cat30)
+            {
+                if (Health > 0)
+                {
+                    Health--;
+                    Console.WriteLine(Health);
+                }
+                else if (Health == 0)
+                {
+                    IsAlive = false;
+                    torso.Body.Enabled = false;
+                    torso.Body.Enabled = false;
+                    //torso.Body.Dispose();
+                    //wheel.Body.Dispose();
+                }
+                return true;
+            }
+        
+            return true;
+
         }
 
         public override void Update(GameTime gameTime)
         {
             keyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
-            
+            actualMovningSpeed = torso.Body.AngularVelocity;
             //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
             if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
@@ -371,147 +403,147 @@ namespace RemGame
                 torso.Body.CollidesWith = Category.All;
             }
 
-            anim = animations[(int)direction];
+            anim = animations[2];
 
-            if (IsMoving) // apply animation
-                Anim.Update(gameTime);
-            else //player will appear as standing with frame [1] from the atlas.
-                Anim.CurrentFrame = 1;
+            //if (IsMoving) // apply animation
+            //else //player will appear as standing with frame [1] from the atlas.
+                //Anim.CurrentFrame = 1;
 
             IsMoving = false;
-
-            if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                Move(Movement.Left);
-                direction = Movement.Left;
-                IsMoving = true;
-
-            }
-            else if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                Move(Movement.Right);
-                direction = Movement.Right;
-                IsMoving = true;
-
-            }
-            else
-            {
-                IsMoving = false;
-                Move(Movement.Stop);
-            }
             
-            //if statment should changed
-            if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
-            {
-                Jump();
-            }
-           
-            if (isJumping)
-            {
-                if (keyboardState.IsKeyDown(Keys.Right) && (!prevKeyboardState.IsKeyDown(Keys.Right)))
+                if (keyboardState.IsKeyDown(Keys.Left))
                 {
-                    wheel.Body.ApplyLinearImpulse(new Vector2(1.5f, 0));
+                    Move(Movement.Left);
+                    direction = Movement.Left;
+                    IsMoving = true;
+
+                }
+                else if (keyboardState.IsKeyDown(Keys.Right))
+                {
+                    Move(Movement.Right);
+                    direction = Movement.Right;
+                    IsMoving = true;
+
+                }
+                else
+                {
+                    IsMoving = false;
+                    Move(Movement.Stop);
+
+                    Anim = animations[2];
+                }
+                Anim.Update(gameTime);
+
+
+                //if statment should changed
+                if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+                {
+                    Jump();
                 }
 
-                else if (keyboardState.IsKeyDown(Keys.Left) && (!prevKeyboardState.IsKeyDown(Keys.Left)))
+                if (isJumping)
                 {
-                    wheel.Body.ApplyLinearImpulse(new Vector2(-1.5f, 0));
+                    if (keyboardState.IsKeyDown(Keys.Right) && (!prevKeyboardState.IsKeyDown(Keys.Right)))
+                    {
+                        wheel.Body.ApplyLinearImpulse(new Vector2(1.5f, 0));
+                    }
+
+                    else if (keyboardState.IsKeyDown(Keys.Left) && (!prevKeyboardState.IsKeyDown(Keys.Left)))
+                    {
+                        wheel.Body.ApplyLinearImpulse(new Vector2(-1.5f, 0));
+                    }
                 }
-            }
 
-            if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
-            {
-                
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    Slide(Movement.Right);
-
-                else if (keyboardState.IsKeyDown(Keys.Left))
-                    Slide(Movement.Left);
-
-            }
-
-            if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
-            {
-                shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-
-                //Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-
-            }
-            if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
-            {
-                shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
-                Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X), (shootDirection.Y - shootBase.Y));
-                if(shootForce.X > 5 || shootForce.X < -5 || shootForce.Y > 5 || shootForce.Y < -5)
-                rangedShoot(shootForce*4);
-            }
-             
-
-            if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
-            {
-                meleAttack();
-
-            }
-
-
-            if (Position.X < 400)
-            {
-                wheel.Body.ApplyLinearImpulse(new Vector2(1,0));
-                Scene();
-            }
-            if (Position.X > 400 && Position.X < 410)
-            {
-                showText = true;
-            }
-            else
-                showText = false;
-
-
-
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-               // axis1.BodyA.IgnoreCollisionWith(axis1.BodyB);
-                //axis1.BodyB.IgnoreCollisionWith(axis1.BodyA);
-                //if(torso.Position.Y +96 != wheel.Position.Y+48)
-                bend();
-                
-
-                IsBending = true;
-                /*
-                if(keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+                if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
                 {
-                    wheel.Body.CollidesWith = Category.Cat30;
+
+                    if (keyboardState.IsKeyDown(Keys.Right))
+                        Slide(Movement.Right);
+
+                    else if (keyboardState.IsKeyDown(Keys.Left))
+                        Slide(Movement.Left);
+
                 }
-                */
-            }
+
+                if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
+                {
+                    shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+
+                    //Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
+
+                }
+                if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
+                {
+                    shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
+                    Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X), (shootDirection.Y - shootBase.Y));
+                    if (shootForce.X > 5 || shootForce.X < -5 || shootForce.Y > 5 || shootForce.Y < -5)
+                        rangedShoot(shootForce * 4);
+                }
+
+
+                if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
+                {
+                    meleAttack();
+
+                }
+
+
+                if (Position.X < 400)
+                {
+                    wheel.Body.ApplyLinearImpulse(new Vector2(1, 0));
+                    Scene();
+                }
+                if (Position.X > 400 && Position.X < 410)
+                {
+                    showText = true;
+                }
+                else
+                    showText = false;
+
+
+
+                if (keyboardState.IsKeyDown(Keys.Down))
+                {
+                    // axis1.BodyA.IgnoreCollisionWith(axis1.BodyB);
+                    //axis1.BodyB.IgnoreCollisionWith(axis1.BodyA);
+                    //if(torso.Position.Y +96 != wheel.Position.Y+48)
+                    bend();
+
+
+                    IsBending = true;
+                    /*
+                    if(keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+                    {
+                        wheel.Body.CollidesWith = Category.Cat30;
+                    }
+                    */
+                }
+
+                if (keyboardState.IsKeyUp(Keys.Down) && prevKeyboardState.IsKeyDown(Keys.Down))
+                {
+                    IsBending = false;
+
+                }
+
+                //mele.Update(gameTime);
+                previousMouseState = currentMouseState;
+                prevKeyboardState = keyboardState;
+
+
             
-            if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
-            {
-                IsBending = false;
-
-            }
-
-           
-            WheelSpeed = wheel.Body.AngularVelocity/4;
-            
-            //mele.Update(gameTime);
-            previousMouseState = currentMouseState;
-            prevKeyboardState = keyboardState;
-
-            
-
         }
 
         //needs to be changed
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            
+
             torso.Draw(gameTime,spriteBatch);
             //Rectangle dest = torso.physicsObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
 
-            //anim.Draw(spriteBatch, dest, torso.Body);
+            //Anim.Draw(spriteBatch, dest, torso.Body);
 
             if (isMeleAttacking && !(mele.Body.IsDisposed))
                 mele.Draw(gameTime, spriteBatch);
