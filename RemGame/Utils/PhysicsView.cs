@@ -42,6 +42,7 @@ namespace RemGame
         */
             if (font != null)
             {
+                
                 spriteBatch.DrawString(font, "*" + (int)Position.X + "/" + (int)Position.Y, new Vector2(Position.X, Position.Y), Color.White);
                 spriteBatch.DrawString(font, "*" + (int)(Position.Y + textureSize.Y), new Vector2(Position.X, (Position.Y + textureSize.Y)), Color.White);
                 spriteBatch.DrawString(font, "*" + ((int)Position.X - (int)textureSize.X / 2) + "/" + (int)(Position.Y + textureSize.X / 2), new Vector2(Position.X - textureSize.X / 2, Position.Y + textureSize.X / 2), Color.White);

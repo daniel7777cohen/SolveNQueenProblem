@@ -78,9 +78,9 @@ namespace RemGame
             Rectangle destination = new Rectangle
             (
                 (int)Position.X,
-                (int)Position.Y+48,
+                (int)Position.Y+80,
                 (int)Size.X*2,
-                (int)Size.Y*3
+                (int)Size.Y*4
             );
             //spriteBatch.Draw(texture, destination, null, Color.White);
             spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width/2, texture.Height/2), SpriteEffects.None, 0);

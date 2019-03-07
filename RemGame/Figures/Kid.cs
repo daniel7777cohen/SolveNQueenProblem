@@ -31,10 +31,12 @@ namespace RemGame
 
         PhysicsView pv1;
         PhysicsView pv2;
+        PhysicsView pv3;
 
 
-        private PhysicsObject torso;
 
+        private PhysicsObject upBody;
+        private PhysicsObject midBody;
         private PhysicsObject wheel;
 
         /// <tmp>
@@ -52,11 +54,12 @@ namespace RemGame
         private bool isRangeAttacking = false;
 
         private RevoluteJoint axis1;
+        private Joint axis2;
 
 
-        private int health = 5;
+        private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 1.0f;
+        private const float SPEED = 1.5f;
         private float speed = SPEED;
         private float actualMovningSpeed=0;
         private bool isMoving = false;
@@ -70,7 +73,7 @@ namespace RemGame
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 1.1f;        // in seconds
-        private Vector2 jumpForce = new Vector2(0, -8); // applied force when jumping
+        private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 0.7f;        // in seconds
@@ -99,7 +102,7 @@ namespace RemGame
         public AnimatedSprite Anim { get => anim; set => anim = value; }
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
         internal Movement Direction { get => direction; set => direction = value; }
-        public Vector2 Position { get => torso.Position; }
+        public Vector2 Position { get => upBody.Position; }
         public bool IsJumping { get => isJumping; set => isJumping = value; }
         public bool IsMoving { get => isMoving; set => isMoving = value; }
         public bool IsBending { get => isBending; set => isBending = value; }
@@ -120,48 +123,58 @@ namespace RemGame
             Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
             float wheelSize = size.X ;
 
-            
-            // Create the torso
-            torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
-            torso.Position = startPosition;
-            position = torso.Position;
-            
-            
-            // Create the feet of the body
-            
-            wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
-            wheel.Position = torso.Position + new Vector2(0, 96);
 
-            torso.Body.Friction = 50.0f;
+            // Create the torso
+            upBody = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
+            upBody.Position = startPosition;
+            position = upBody.Position;
+
+            midBody = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
+            midBody.Position = upBody.Position + new Vector2(0, 64);
+            // Create the feet of the body
+
+            wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
+            wheel.Position = midBody.Position + new Vector2(0, 64);
+
+            upBody.Body.Friction = 50.0f;
+            midBody.Body.Friction = 50.0f;
             wheel.Body.Friction = 50.0f;
 
             
             // Create a joint to keep the torso upright
-            JointFactory.CreateAngleJoint(world, torso.Body,new Body(world));
+            JointFactory.CreateAngleJoint(world, upBody.Body,new Body(world));
+            JointFactory.CreateAngleJoint(world, midBody.Body, new Body(world));
 
-            torso.Body.CollisionCategories = Category.Cat10;
+
+            upBody.Body.CollisionCategories = Category.Cat10;
             wheel.Body.CollisionCategories = Category.Cat11;
 
-            torso.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+            upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+            midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
             wheel.Body.CollidesWith = Category.Cat1 | Category.Cat30;
 
-            torso.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
+            upBody.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
+            midBody.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
 
 
             // Connect the feet to the torso
-            axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, wheel.Body, Vector2.Zero);
+            axis1 = JointFactory.CreateRevoluteJoint(world, midBody.Body, wheel.Body, Vector2.Zero);
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
             axis1.MaxMotorTorque = 12.0f;
 
-            
+            axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
+            axis2.CollideConnected = true;
+            //axis2.MotorEnabled = false;
 
-            
 
-            pv1 = new PhysicsView(torso.Body,torso.Position,torso.Size, f);
-            pv2 = new PhysicsView(wheel.Body,wheel.Position, wheel.Size, f);
+
+
+            pv1 = new PhysicsView(upBody.Body, upBody.Position, upBody.Size, f);
+            pv2 = new PhysicsView(midBody.Body, midBody.Position, wheel.Size, f);
+            pv3 = new PhysicsView(wheel.Body,wheel.Position, wheel.Size, f);
         }
 
         
@@ -210,7 +223,7 @@ namespace RemGame
                 if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
                 {
 
-                    torso.Body.ApplyLinearImpulse(jumpForce);
+                    upBody.Body.ApplyLinearImpulse(jumpForce);
                     previousJump = DateTime.Now;
                 }
             
@@ -220,22 +233,21 @@ namespace RemGame
         //should create variables for funciton
         public void Slide(Movement dir)
         {
-            
             speed = SPEED;
             if (!isJumping)
             {
-                isSliding = true;
-                IsMoving = true;
-                torso.Body.CollidesWith = Category.None;
-
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
+                    isSliding = true;
+                    IsMoving = true;
+                    upBody.Body.CollidesWith = Category.None;
+                    midBody.Body.CollidesWith = Category.None;
                     if (dir == Movement.Right)
-                        torso.Body.ApplyLinearImpulse(slideForce);
+                        wheel.Body.ApplyLinearImpulse(slideForce);
                     else
                     {
                         slideForce.X = slideForce.X * -1;
-                        torso.Body.ApplyLinearImpulse(slideForce);
+                        wheel.Body.ApplyLinearImpulse(slideForce);
                         slideForce.X = slideForce.X * -1;
                     }
 
@@ -251,12 +263,12 @@ namespace RemGame
             {
 
                 isMeleAttacking = true;
-                shot = new PhysicsObject(world, shootTexture, 30, 1);
+                shot = new PhysicsObject(world, shootTexture, 15, 1);
                 shot.Body.CollisionCategories = Category.Cat28;
                 shot.Body.CollidesWith = Category.Cat20 | Category.Cat21 | Category.Cat1;
                 shot.Body.Mass = 2.0f;
                 shot.Body.IgnoreGravity = true;
-                shot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                shot.Position = new Vector2(upBody.Position.X + upBody.Size.X / 2, upBody.Position.Y + upBody.Size.Y / 2);
                 int shootingDirection;
                 if (lookRight)
                     shootingDirection = 1;
@@ -296,11 +308,11 @@ namespace RemGame
         {
             isRangeAttacking = true;
             shoot = new PhysicsObject(world, shootTexture, 30, 1);
-            shoot.Body.IgnoreCollisionWith(torso.Body);
+            shoot.Body.IgnoreCollisionWith(upBody.Body);
             shoot.Body.IgnoreCollisionWith(wheel.Body);
 
             //Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-            shoot.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+            shoot.Position = new Vector2(upBody.Position.X + upBody.Size.X / 2, upBody.Position.Y + upBody.Size.Y / 2);
             shoot.Body.Mass = 2.0f;
             shoot.Body.ApplyForce(shootForce);
             shoot.Body.OnCollision += new OnCollisionEventHandler(Shoot_OnCollision);
@@ -367,9 +379,8 @@ namespace RemGame
         {
             if (!isJumping)
             {
-                //torso.Body.IgnoreCollisionWith(wheel.Body);
-                axis1.CollideConnected = true;
-                //torso.Position = new Vector2(torso.Position.X, wheel.Position.Y-48);
+
+                upBody.Body.CollidesWith = Category.None;
                 speed = SPEED / 2;
                 
             }
@@ -395,11 +406,11 @@ namespace RemGame
                     Health--;
                     //Console.WriteLine(Health);
                 }
-                else
+                if (Health == 0)
                 {
                     IsAlive = false;
-                    torso.Body.Enabled = false;
-                    torso.Body.Enabled = false;
+                    upBody.Body.Enabled = false;
+                    upBody.Body.Enabled = false;
                     //torso.Body.Dispose();
                     //wheel.Body.Dispose();
                 }
@@ -414,7 +425,7 @@ namespace RemGame
             {
                 keyboardState = Keyboard.GetState();
                 currentMouseState = Mouse.GetState();
-                actualMovningSpeed = torso.Body.AngularVelocity;
+                actualMovningSpeed = upBody.Body.AngularVelocity;
                 //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
                 if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
@@ -422,7 +433,8 @@ namespace RemGame
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
                     isSliding = false;
-                    torso.Body.CollidesWith = Category.All;
+                    upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+                    midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
 
                 anim = animations[2];
@@ -550,7 +562,7 @@ namespace RemGame
                 if (keyboardState.IsKeyUp(Keys.Down) && prevKeyboardState.IsKeyDown(Keys.Down))
                 {
                     IsBending = false;
-
+                    upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
 
 
@@ -569,7 +581,7 @@ namespace RemGame
         {
             if (!GameOver)
             {
-                torso.Draw(gameTime, spriteBatch);
+                upBody.Draw(gameTime, spriteBatch);
                 //Rectangle dest = torso.physicsObjRecToDraw();
                 //dest.Height = dest.Height+(int)wheel.Size.Y/2;
                 //dest.Y = dest.Y + (int)wheel.Size.Y/2;
@@ -595,8 +607,10 @@ namespace RemGame
                 }
                 // spriteBatch.End();
 
-                //pv1.Draw(gameTime, spriteBatch);
-                //pv2.Draw(gameTime, spriteBatch);
+                pv1.Draw(gameTime, spriteBatch);
+                pv2.Draw(gameTime, spriteBatch);
+                pv3.Draw(gameTime, spriteBatch);
+
                 //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
 
 

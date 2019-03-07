@@ -153,15 +153,12 @@ namespace RemGame
             torso.Body.CollisionCategories = Category.Cat20;
             wheel.Body.CollisionCategories = Category.Cat21;
 
-            
-
             torso.Body.CollidesWith = Category.Cat1 | Category.Cat28;
             wheel.Body.CollidesWith = Category.Cat1 | Category.Cat28;
 
 
             torso.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
-
 
         }
 
@@ -239,7 +236,7 @@ namespace RemGame
                 
                 //mele.Body.CollidesWith = Category.Cat1;
 
-                mele.Body.Mass = 4.0f;
+                mele.Body.Mass = 1.0f;
                 mele.Body.IgnoreGravity = true;
                 mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
                 int dir;
@@ -247,7 +244,7 @@ namespace RemGame
                     dir = 1;
                 else
                     dir = -1;
-                mele.Body.ApplyLinearImpulse(new Vector2(30*dir, 0));
+                mele.Body.ApplyLinearImpulse(new Vector2(10*dir, 0));
                 //mele.Body.FixtureList[0].OnCollision = dispose;
                 if (isPlayerAlive)
                     mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
