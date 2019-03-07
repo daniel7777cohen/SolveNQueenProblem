@@ -22,6 +22,7 @@ namespace RemGame
     {
         private GraphicsDeviceManager graphics;
 
+
         public SpriteBatch SpriteBatch { get; private set; }
 
         CelAnimationManager celAnimationManager;
@@ -44,6 +45,7 @@ namespace RemGame
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
             Content.RootDirectory = "Content";
 

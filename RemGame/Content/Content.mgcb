@@ -111,6 +111,18 @@
 /processorParam:TextureFormat=Color
 /build:Layers/f-02_front.png
 
+#begin Layers/level.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Layers/level.jpg
+
 #begin Player/bullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
