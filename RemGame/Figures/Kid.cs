@@ -163,7 +163,7 @@ namespace RemGame
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque = 12.0f;
+            axis1.MaxMotorTorque = 3.0f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
             axis2.CollideConnected = true;
@@ -607,9 +607,9 @@ namespace RemGame
                 }
                 // spriteBatch.End();
 
-                pv1.Draw(gameTime, spriteBatch);
-                pv2.Draw(gameTime, spriteBatch);
-                pv3.Draw(gameTime, spriteBatch);
+                //pv1.Draw(gameTime, spriteBatch);
+                //pv2.Draw(gameTime, spriteBatch);
+                //pv3.Draw(gameTime, spriteBatch);
 
                 //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
 
