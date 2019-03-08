@@ -59,7 +59,7 @@ namespace RemGame
 
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 1.5f;
+        private const float SPEED = 2.0f;
         private float speed = SPEED;
         private float actualMovningSpeed=0;
         private bool isMoving = false;
@@ -72,12 +72,12 @@ namespace RemGame
         private bool showText = false;
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
-        private const float jumpInterval = 1.1f;        // in seconds
+        private const float jumpInterval = 1.12f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
-        private const float slideInterval = 0.7f;        // in seconds
-        private Vector2 slideForce = new Vector2(7, 0); // applied force when jumping
+        private const float slideInterval = 1.0f;        // in seconds
+        private Vector2 slideForce = new Vector2(5, 0); // applied force when jumping
 
         private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
         private const float shootInterval = 0.3f;        // in seconds
@@ -218,11 +218,9 @@ namespace RemGame
         public void Jump()
 
         {
-            isJumping = true;
-            
                 if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
                 {
-
+                    isJumping = true;
                     upBody.Body.ApplyLinearImpulse(jumpForce);
                     previousJump = DateTime.Now;
                 }
@@ -428,8 +426,11 @@ namespace RemGame
                 actualMovningSpeed = upBody.Body.AngularVelocity;
                 //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
-                if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
+                if ((DateTime.Now - previousJump).TotalSeconds <= jumpInterval && isJumping==true)
+                    isJumping = true;
+                else
                     isJumping = false;
+
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
                     isSliding = false;

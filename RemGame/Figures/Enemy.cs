@@ -234,7 +234,7 @@ namespace RemGame
             if ((DateTime.Now - previousShoot).TotalSeconds >= randomInterval && !Ghost)
             {
                 isMeleAttacking = true;
-                mele = new PhysicsObject(world, shootTexture, 30, 1);
+                mele = new PhysicsObject(world, shootTexture, 15, 1);
                 mele.Body.CollisionCategories = Category.Cat30;
                 mele.Body.CollidesWith = Category.Cat10 | Category.Cat11 | Category.Cat1;
                 
@@ -242,7 +242,7 @@ namespace RemGame
 
                 mele.Body.Mass = 1.0f;
                 mele.Body.IgnoreGravity = true;
-                mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y + torso.Size.Y / 2);
+                mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y);
                 int dir;
                 if (lookingRight)
                     dir = 1;

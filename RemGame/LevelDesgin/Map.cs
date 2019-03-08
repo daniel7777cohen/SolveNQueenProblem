@@ -13,7 +13,7 @@ namespace RemGame
 {
     class Map
     {
-       // private List<CollisionTiles> collisionTiles = new List<CollisionTiles>();
+        // private List<CollisionTiles> collisionTiles = new List<CollisionTiles>();
         private List<Tile> collisionTiles = new List<Tile>();
         private List<Obstacle> obstacleTiles = new List<Obstacle>();
         private List<Enemy> enemies = new List<Enemy>();
@@ -24,7 +24,8 @@ namespace RemGame
         public Texture2D texture;
         private static ContentManager content;
         Random r;
-        
+        private bool finished_tutorial = false;
+        public bool Finished_tutorial { get => finished_tutorial; set => finished_tutorial = value; }
 
         //public List<CollisionTiles> CollisionTiles { get => collisionTiles; }
 
@@ -33,7 +34,7 @@ namespace RemGame
         public Map(World world)
         {
             this.world = world;
-            
+
         }
 
         public List<Tile> CollisionTiles { get => collisionTiles; }
@@ -68,11 +69,11 @@ namespace RemGame
                             obs.Body.CollisionCategories = Category.Cat30;
                             */
                         ObstacleTiles.Add(obs);
-                        
+
                         //collisionTiles.Add(new CollisionTiles(number, new Rectangle(x * size, y * size, size, size),world,new Vector2(64,64),font));
                         //collisionTiles.Add(new Tile(number, new Rectangle(x * size, y * size, size, size), world, new Vector2(64, 64)));
                     }
-                    else if(number == 3)
+                    else if (number == 3)
                     {
                         r = new Random();
                         int rInt = r.Next(192, 320);
@@ -86,12 +87,21 @@ namespace RemGame
                         en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4);
                         en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4);
                         enemies.Add(en);
-
-                        
+                    }
+                    else if (number == 4)
+                    {
+                        texture = Content.Load<Texture2D>("Tiles/HUD");
+                        //Door door = new Door(world, texture, new Vector2(64, 64), font);
+                        //door.Position = new Vector2(x * size, y * size);
+                        /*
+                        if (number == 2)
+                            obs.Body.CollisionCategories = Category.Cat30;
+                            */
+                       // ObstacleTiles.Add(door);
                     }
                     width = (x + 1) * size;
                     height = (y + 1) * size;
-                    
+
 
 
                 }
@@ -101,22 +111,22 @@ namespace RemGame
         public void Update(GameTime gameTime)
         {
             foreach (Enemy en in enemies)
-                en.Update(gameTime,player.Position,player.IsAlive);
-            
+                en.Update(gameTime, player.Position, player.IsAlive);
+
         }
 
-        public void DrawObstacle(GameTime gameTime,SpriteBatch spriteBatch)
+        public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)
         {
-           // foreach (CollisionTiles tile in collisionTiles)
-                foreach (Obstacle ob in ObstacleTiles)
-                    ob.Draw(gameTime,spriteBatch);
+            // foreach (CollisionTiles tile in collisionTiles)
+            foreach (Obstacle ob in ObstacleTiles)
+                ob.Draw(gameTime, spriteBatch);
 
-            
+
         }
 
         public void DrawEnemies(GameTime gameTime, SpriteBatch spriteBatch)
         {
-           
+
 
             foreach (Enemy en in enemies)
                 en.Draw(gameTime, spriteBatch);
