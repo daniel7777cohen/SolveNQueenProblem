@@ -56,3 +56,24 @@ C:\Users\ben11\source\repos\RemGame\Farseer\obj\Debug\Farseer.csproj.CoreCompile
 C:\Users\ben11\source\repos\RemGame\Farseer\obj\Debug\Farseer.csproj.CopyComplete
 C:\Users\ben11\source\repos\RemGame\Farseer\obj\Debug\Farseer.dll
 C:\Users\ben11\source\repos\RemGame\Farseer\obj\Debug\Farseer.pdb
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\Farseer.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\Farseer.pdb
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\MonoGame.Framework.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.DXGI.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.Direct3D11.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.MediaFoundation.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.Direct2D1.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.XAudio2.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\MonoGame.Framework.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.DXGI.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.Direct3D11.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.MediaFoundation.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.Direct2D1.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\bin\Debug\SharpDX.XAudio2.xml
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.csprojAssemblyReference.cache
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.csproj.CoreCompileInputs.cache
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.csproj.CopyComplete
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.dll
+C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.pdb

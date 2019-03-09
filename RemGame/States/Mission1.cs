@@ -67,7 +67,7 @@ namespace RemGame
         Texture2D backGround3;
         Texture2D backGround4;
         Texture2D backGround5;
-
+        Texture2D hearts;
 
         //String[] mainMusicPlaylist;
         SoundEffect walking;
@@ -84,16 +84,18 @@ namespace RemGame
         public Mission1(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(IMissionOne), this);
-            //   soundManager = new SoundManager(game);
+            if (game.Services.GetService(typeof(IMissionOne)) == null)
+                game.Services.AddService(typeof(IMissionOne), this);
+            //soundManager = new SoundManager(game);
             //soundManager = (ISoundManager)game.Services.GetService(typeof(ISoundManager));
             //general = new SoundManager(game);
         }
 
         protected override void LoadContent()
         {
-            soundManager.LoadContent(@"Sound/Music", @"Sound/FX");
-            soundManager.Play("General Music 1");
+            hearts = Content.Load<Texture2D>("misc/heart");
+            //soundManager.LoadContent(@"Sound/Music", @"Sound/FX");
+            //soundManager.Play("General Music 1");
             hall = Content.Load<SoundEffect>("Sound/FX/hallWay");
             hallInstance = hall.CreateInstance();
             //hallInstance.Play();
@@ -237,7 +239,7 @@ namespace RemGame
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
             */
-            player = new Kid(world,
+            player = new Kid(hearts,world,
                 Content.Load<Texture2D>("Player/Ron_standing"),
                 Content.Load<Texture2D>("Player/Ron_standing"),
                 Content.Load<Texture2D>("Player/bullet"),
@@ -376,8 +378,8 @@ namespace RemGame
                 StateManager.PushState(OurGame.PausedState.Value);
                 soundManager.PauseSong();
             }
-            if (!(StateManager.State == OurGame.PausedState.Value))
-                soundManager.ResumeSong();
+           // if (!(StateManager.State == OurGame.PausedState.Value))
+               // soundManager.ResumeSong();
             /*
             if (currentMouseState.LeftButton == ButtonState.Pressed)
             {

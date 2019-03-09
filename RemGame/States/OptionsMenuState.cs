@@ -31,7 +31,8 @@ namespace RemGame
         public OptionsMenuState(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(IOptionsMenuState), this);
+            if (game.Services.GetService(typeof(IOptionsMenuState)) == null)
+                game.Services.AddService(typeof(IOptionsMenuState), this);
 
             selected = 0;
         }
@@ -76,8 +77,8 @@ namespace RemGame
 
         protected override void LoadContent()
         {
-            texture = Content.Load<Texture2D>(@"Textures\optionsMenu");
-            font = Content.Load<SpriteFont>(@"Fonts\ArialSmall");
+            texture = Content.Load<Texture2D>(@"ScreenDisplay\optionsMenu");
+            font = Content.Load<SpriteFont>(@"Fonts\Arial");
         }
 
         public override void Draw(GameTime gameTime)

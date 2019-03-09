@@ -24,7 +24,7 @@ namespace RemGame
 
 
         public SpriteBatch SpriteBatch { get; private set; }
-
+       
         CelAnimationManager celAnimationManager;
         ScrollingBackgroundManager scrollingBackgroundManager;
         InputHandler inputHandler;
@@ -78,6 +78,17 @@ namespace RemGame
             EnableSoundFx = true;
             EnableMusic = true;
 
+        }
+        public void Reset()
+        {
+            base.Initialize();
+            base.BeginRun();
+            TitleIntroState = new TitleIntroState(this);
+            StartMenuState = new StartMenuState(this);
+            PausedState = new PausedState(this);
+            OptionsMenuState = new OptionsMenuState(this);
+            PlayingState = new PlayingState(this);
+            Mission1 = new Mission1(this);
         }
         protected override void Initialize()
         {

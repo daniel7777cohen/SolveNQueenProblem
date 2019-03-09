@@ -22,8 +22,8 @@ namespace RemGame
         public StartMenuState(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(IStartMenuState), this);
-
+            if (game.Services.GetService(typeof(IStartMenuState)) == null)
+                game.Services.AddService(typeof(IStartMenuState), this);
             selected = 0;
         }
 
@@ -34,6 +34,7 @@ namespace RemGame
                 // Go back to title screen
                 StateManager.ChangeState(OurGame.TitleIntroState.Value);
             }
+
 
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Up))
                 selected--;
@@ -59,11 +60,15 @@ namespace RemGame
                         break;
                     case 1:
                         // Got back here from playing the game. So just pop myself off the stack
-                        if (StateManager.ContainsState(OurGame.PlayingState.Value))
+                        if (StateManager.ContainsState(OurGame.Mission1.Value))
                             StateManager.PopState();
                         else // Starting a new game.
-                            StateManager.ChangeState(OurGame.PlayingState.Value);
+                        {
+                            
+                            StateManager.ChangeState(OurGame.Mission1.Value);
+                        }
                         break;
+                
                     case 2:
                         StateManager.PushState(OurGame.OptionsMenuState.Value);
                         break;

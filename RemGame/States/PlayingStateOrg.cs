@@ -78,13 +78,13 @@ namespace RemGame
         SoundEffectInstance jumpingInstance;
         SoundEffectInstance hallInstance;
         SoundManager soundManager;
-
         public bool IsRonAlive { get => isRonAlive; set => isRonAlive = value; }
 
         public PlayingState(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(IPlayingState), this);
+            if (game.Services.GetService(typeof(IPlayingState)) == null)
+                game.Services.AddService(typeof(IPlayingState), this);
             soundManager = new SoundManager(game);
             //soundManager = (ISoundManager)game.Services.GetService(typeof(ISoundManager));
             //general = new SoundManager(game);
@@ -94,7 +94,7 @@ namespace RemGame
         {
             soundManager.LoadContent(@"Sound/Music", @"Sound/FX");
             //soundManager.Play("General Music 1");
-
+            Texture2D hearts = Content.Load<Texture2D>("misc/heart");
 
 
             hall = Content.Load<SoundEffect>("Sound/FX/hallWay");
@@ -244,7 +244,7 @@ namespace RemGame
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
             */
-            player = new Kid(world,
+            player = new Kid(hearts,world,
                 Content.Load<Texture2D>("Player/Ron_standing"),
                 Content.Load<Texture2D>("Player/Ron_standing"),
                 Content.Load<Texture2D>("Player/bullet"),
@@ -377,7 +377,13 @@ namespace RemGame
 
         private void handleInput(GameTime gameTime)
         {
-
+            if (!player.IsAlive)
+            {
+                StateManager.PopState();
+                OurGame.Reset();
+                StateManager.PushState(OurGame.StartMenuState.Value);
+                player.IsAlive = true;
+            }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Escape))
                 StateManager.PushState(OurGame.StartMenuState.Value);
             if (Input.KeyboardHandler.WasKeyPressed(Keys.P))

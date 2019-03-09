@@ -28,7 +28,9 @@ namespace RemGame
         public SoundManager(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(ISoundManager), this);
+            if (game.Services.GetService(typeof(ISoundManager)) == null)
+
+                game.Services.AddService(typeof(ISoundManager), this);
         }
 
         public override void Initialize()

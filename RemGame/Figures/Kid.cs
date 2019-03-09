@@ -48,6 +48,7 @@ namespace RemGame
         Vector2 shootBase;
         Vector2 shootDirection;
         Texture2D shootTexture;
+        Texture2D hearts;
         /// <tmp>
         /// 
         private bool isMeleAttacking = false;
@@ -109,9 +110,11 @@ namespace RemGame
         public int Health { get => health; set => health = value; }
         public bool IsAlive { get => isAlive; set => isAlive = value; }
         public float ActualMovningSpeed { get => actualMovningSpeed; set => actualMovningSpeed = value; }
-
-        public Kid(World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
+        
+        
+        public Kid(Texture2D hearts ,World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
+            this.hearts = hearts;
             this.world = world;
             this.size = size;
             this.texture = torsoTexture;
@@ -411,6 +414,7 @@ namespace RemGame
                     upBody.Body.Enabled = false;
                     //torso.Body.Dispose();
                     //wheel.Body.Dispose();
+                    Health = 8;
                 }
             }
         
@@ -604,7 +608,7 @@ namespace RemGame
                 //spriteBatch.Begin();
                 for (int i = 0; i < Health; i++)
                 {
-                    spriteBatch.Draw(shootTexture, new Vector2(Position.X - 900 + i * 60, Position.Y - 600), Color.White);
+                    spriteBatch.Draw(hearts, new Vector2(Position.X - 900 + i * 60, Position.Y - 600), Color.White);
                 }
                 // spriteBatch.End();
 
@@ -619,11 +623,16 @@ namespace RemGame
             }
             else
             {
+                
+                //needs to add a while loop for waiting 5 seconds before exiting to StartMenu
                 spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
 
         }
-        
+        public static void MyDelay(int seconds)
+        {
+            
+        }
     }
 }

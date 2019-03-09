@@ -16,7 +16,8 @@ namespace RemGame
         public TitleIntroState(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(ITitleIntroState), this);
+            if (game.Services.GetService(typeof(ITitleIntroState))==null)
+                game.Services.AddService(typeof(ITitleIntroState), this);
 
             soundManager = (ISoundManager)game.Services.GetService(typeof(ISoundManager));
         }

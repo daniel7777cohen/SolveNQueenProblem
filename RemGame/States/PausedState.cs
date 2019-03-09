@@ -17,7 +17,8 @@ namespace RemGame
         public PausedState(Game game)
             : base(game)
         {
-            game.Services.AddService(typeof(IPausedState), this);
+            if (game.Services.GetService(typeof(IPausedState)) == null)
+                game.Services.AddService(typeof(IPausedState), this);
         }
 
         protected override void LoadContent()
