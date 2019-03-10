@@ -48,6 +48,7 @@ namespace RemGame
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            //graphics.IsFullScreen = true;
 
             Content.RootDirectory = "Content";
 

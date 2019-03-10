@@ -89,8 +89,8 @@ namespace RemGame
         
 
 
-        private AnimatedSprite anim;
-        private AnimatedSprite[] animations = new AnimatedSprite[3];
+        private AnimatedSprite anim = null;
+        private AnimatedSprite[] animations = new AnimatedSprite[4];
 
 
         KeyboardState keyboardState;
@@ -196,6 +196,7 @@ namespace RemGame
                 case Movement.Right:
                     lookRight = true;
                     axis1.MotorSpeed = MathHelper.TwoPi * speed;
+                    anim = animations[3];
                     break;
 
                 case Movement.Stop:
@@ -442,16 +443,18 @@ namespace RemGame
                     midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
 
-                anim = animations[2];
 
                 foreach (PhysicsObject s in shotList)
                 {
                     s.Update(gameTime);
                 }
+                if(!isMoving)
+                anim = animations[2];
 
                 //if (IsMoving) // apply animation
+                    Anim.Update(gameTime);
                 //else //player will appear as standing with frame [1] from the atlas.
-                //Anim.CurrentFrame = 1;
+                  //  Anim.CurrentFrame = 1;
 
                 IsMoving = false;
 
@@ -474,9 +477,7 @@ namespace RemGame
                     IsMoving = false;
                     Move(Movement.Stop);
 
-                    Anim = animations[2];
                 }
-                Anim.Update(gameTime);
 
 
                 //if statment should changed
@@ -586,12 +587,12 @@ namespace RemGame
         {
             if (!GameOver)
             {
-                upBody.Draw(gameTime, spriteBatch);
-                //Rectangle dest = torso.physicsObjRecToDraw();
-                //dest.Height = dest.Height+(int)wheel.Size.Y/2;
-                //dest.Y = dest.Y + (int)wheel.Size.Y/2;
-
-                //Anim.Draw(spriteBatch, dest, torso.Body);
+                //upBody.Draw(gameTime, spriteBatch);
+                Rectangle dest = upBody.physicsObjRecToDraw();
+                dest.Height = dest.Height+(int)wheel.Size.Y/2;
+                dest.Y = dest.Y + (int)wheel.Size.Y/2;
+                if(Anim!=null)
+                Anim.Draw(spriteBatch, dest, upBody.Body);
                 foreach (PhysicsObject s in shotList)
                 {
                     s.Draw(gameTime, spriteBatch);

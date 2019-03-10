@@ -34,6 +34,7 @@ namespace RemGame
         Texture2D playerLeft;
         Texture2D playerRight;
         Texture2D playerStand;
+        Texture2D playerWalk;
         SpriteFont font;
         Camera2D cam;
         Vector2 camLocation;
@@ -99,10 +100,10 @@ namespace RemGame
 
             hall = Content.Load<SoundEffect>("Sound/FX/hallWay");
             hallInstance = hall.CreateInstance();
+            hallInstance.IsLooped = true;
 
             hallInstance.Play();
             hallInstance.Volume = 0.04f;
-            hallInstance.IsLooped = true;
             //  general.LoadContent(@"Sounds/Music/", "");
             //general.Play("General Music 1");
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -246,18 +247,19 @@ namespace RemGame
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
             */
+            playerLeft = Content.Load<Texture2D>("Player/playerLeft");
+            playerRight = Content.Load<Texture2D>("Player/playerRight");
+            playerStand = Content.Load<Texture2D>("Player/Anim/playerStand");
+            playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
+            SpriteEffects flip = SpriteEffects.FlipHorizontally;
+
             player = new Kid(hearts,world,
-                Content.Load<Texture2D>("Player/Ron_standing"),
-                Content.Load<Texture2D>("Player/Ron_standing"),
+                Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
+                Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(60, 60),
                 100,
                 cam.ScreenToWorld(new Vector2(50, 400)), false, font);
-
-            playerLeft = Content.Load<Texture2D>("Player/playerLeft");
-            playerRight = Content.Load<Texture2D>("Player/playerRight");
-            playerStand = Content.Load<Texture2D>("Player/Ron_standing");
-
 
 
             // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
@@ -266,6 +268,8 @@ namespace RemGame
             walkingInstance = walking.CreateInstance();
             walkingInstance.IsLooped = true;
             walkingInstance.Volume = 0.009f;
+            walkingInstance.Pitch = -0.2f;
+
 
             jumping = Content.Load<SoundEffect>("Sound/FX/Jump");
             jumpingInstance = jumping.CreateInstance();
@@ -273,12 +277,17 @@ namespace RemGame
             jumpingInstance.Volume = 0.01f;
             //jumpingInstance.Pitch = 0.1f;
 
+            Rectangle anim3 = new Rectangle(-30, -65, 240, 160);
+            Rectangle anim4 = new Rectangle(20, -50, 140, 130);
 
 
+            player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4, anim3, 0f);
+            player.Animations[1] = new AnimatedSprite(playerRight, 1, 4, anim3, 0f);
 
-            player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
-            player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
-            player.Animations[2] = new AnimatedSprite(playerStand, 1, 1);
+            player.Animations[2] = new AnimatedSprite(playerStand, 1,26, anim4,0.04f);
+
+            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.017f);
+            
 
             map.setPlayerToMap(player);
 
@@ -342,7 +351,7 @@ namespace RemGame
             if (!player.IsBending)
             {
 
-                walkingInstance.Pitch = 0.0f;
+                //walkingInstance.Pitch = 0.0f;
                 if (player.IsMoving && !player.IsJumping)
                 {
                     walkingInstance.Play();
@@ -446,9 +455,6 @@ namespace RemGame
             ///
             //map.DrawEnemies(gameTime, spriteBatch);
             map.Update(gameTime);
-
-
-
 
             //////////////////////////////////////////////
 

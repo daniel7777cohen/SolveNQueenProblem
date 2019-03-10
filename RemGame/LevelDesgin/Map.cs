@@ -84,8 +84,8 @@ namespace RemGame
                         new Vector2(96, 96),
                         100,
                         new Vector2(x * size, y * size), false, font, rInt);
-                        en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4);
-                        en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4);
+                        en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4,new Rectangle(0,0,0,0),0.0f);
+                        en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, 0, 0, 0), 0.0f);
                         enemies.Add(en);
                     }
                     else if (number == 4)

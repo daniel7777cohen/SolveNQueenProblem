@@ -120,9 +120,7 @@ namespace RemGame
 
             distance = rInt;
             
-
             oldDistance = distance;
-
 
             shootTexture = bullet;
             // Create the feet of the body
@@ -505,11 +503,6 @@ namespace RemGame
 
             if (isMeleAttacking && !(mele.Body.IsDisposed))
                 mele.Draw(gameTime, spriteBatch);
-
-
-
-
-
 
             //wheel.Draw(gameTime,spriteBatch);
         }

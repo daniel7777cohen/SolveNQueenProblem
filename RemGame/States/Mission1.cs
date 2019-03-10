@@ -34,6 +34,7 @@ namespace RemGame
         Texture2D playerLeft;
         Texture2D playerRight;
         Texture2D playerStand;
+        Texture2D playerWalk;
         SpriteFont font;
         Camera2D cam;
         Vector2 camLocation;
@@ -239,17 +240,19 @@ namespace RemGame
                 plat[3-i].Body.BodyType = BodyType.Static;
             }
             */
-            player = new Kid(hearts,world,
-                Content.Load<Texture2D>("Player/Ron_standing"),
-                Content.Load<Texture2D>("Player/Ron_standing"),
-                Content.Load<Texture2D>("Player/bullet"),
-                new Vector2(60, 60),
-                100,
-                cam.ScreenToWorld(new Vector2(50, 400)), false, font);
+
+            player = new Kid(hearts, world,
+                 Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
+                 Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
+                 Content.Load<Texture2D>("Player/bullet"),
+                 new Vector2(60, 60),
+                 100,
+                 cam.ScreenToWorld(new Vector2(50, 400)), false, font);
 
             playerLeft = Content.Load<Texture2D>("Player/playerLeft");
             playerRight = Content.Load<Texture2D>("Player/playerRight");
-            playerStand = Content.Load<Texture2D>("Player/Ron_standing");
+            playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
+            playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
 
 
 
@@ -269,9 +272,15 @@ namespace RemGame
 
 
 
-            player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4);
-            player.Animations[1] = new AnimatedSprite(playerRight, 1, 4);
-            player.Animations[2] = new AnimatedSprite(playerStand, 1, 1);
+            Rectangle anim3 = new Rectangle(-30, -65, 240, 260);
+
+            player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4, anim3, 0f);
+            player.Animations[1] = new AnimatedSprite(playerRight, 1, 4, anim3, 0f);
+
+            player.Animations[2] = new AnimatedSprite(playerStand, 1, 26, anim3, 0.25f);
+
+            Rectangle anim4 = new Rectangle(0, 0, 0, 0);
+            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim4, 0.017f);
 
             map.setPlayerToMap(player);
 
