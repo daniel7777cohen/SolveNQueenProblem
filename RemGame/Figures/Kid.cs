@@ -169,6 +169,8 @@ namespace RemGame
             axis1.MaxMotorTorque = 3.0f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
+            //axis2 = JointFactory.CreateAngleJoint(world,upBody.Body,midBody.Body);
+
             axis2.CollideConnected = true;
             //axis2.MotorEnabled = false;
 
@@ -201,11 +203,16 @@ namespace RemGame
 
                 case Movement.Stop:
                     
-                    if (axis1.MotorSpeed != 0)
-                    { 
-                       axis1.MotorSpeed = 0;
-                       axis1.BodyB.ResetDynamics();        
-                    }
+                    //if (axis1.MotorSpeed != 0)
+                    //{
+                        axis1.MotorSpeed = 0;
+
+                        axis1.BodyB.ResetDynamics();
+                        axis1.BodyA.ResetDynamics();
+                        upBody.Body.ResetDynamics();
+
+
+                    //}
 
                     break;
             }
