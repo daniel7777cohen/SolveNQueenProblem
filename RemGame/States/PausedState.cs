@@ -23,7 +23,7 @@ namespace RemGame
 
         protected override void LoadContent()
         {
-            texture = Content.Load<Texture2D>(@"Textures\pause");
+            texture = Content.Load<Texture2D>(@"ScreenDisplay\pause");
         }
 
         public override void Update(GameTime gameTime)

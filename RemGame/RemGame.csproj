@@ -44,6 +44,7 @@
     <Compile Include="Figures\Shot.cs" />
     <Compile Include="States\BaseGameState.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="States\EscapeState.cs" />
     <Compile Include="States\GameStateInterfaces.cs" />
     <Compile Include="LevelDesgin\Map.cs" />
     <Compile Include="LevelDesgin\ScrollingBackground.cs" />

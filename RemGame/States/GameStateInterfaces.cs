@@ -9,6 +9,7 @@ namespace RemGame
     public interface IStartMenuState : IGameState { }
     public interface IPlayingState : IGameState { }
     public interface IMissionOne : IGameState { }
+    public interface IEscapeState: IGameState { }
     public interface IPausedState : IGameState { }
     public interface IOptionsMenuState : IGameState { }
 }

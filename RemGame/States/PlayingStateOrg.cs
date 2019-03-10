@@ -387,7 +387,7 @@ namespace RemGame
                 player.IsAlive = true;
             }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Escape))
-                StateManager.PushState(OurGame.StartMenuState.Value);
+                StateManager.PushState(OurGame.EscapeState.Value);
             if (Input.KeyboardHandler.WasKeyPressed(Keys.P))
             {
                 StateManager.PushState(OurGame.PausedState.Value);

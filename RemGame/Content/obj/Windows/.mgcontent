@@ -27,6 +27,7 @@
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/optionsMenu.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/pause.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/resumeOResc.jpg</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/startMenu.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/titleIntro.jpg</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Footsteps Brick 1.mp3</File>
@@ -38,6 +39,7 @@
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
