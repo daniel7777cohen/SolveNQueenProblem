@@ -195,18 +195,6 @@
 /processorParam:TextureFormat=Color
 /build:misc/heart.png
 
-#begin Player/Anim/playerStand.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Player/Anim/playerStand.png
-
 #begin Player/Anim/Ron_Stand.png
 /importer:TextureImporter
 /processor:TextureProcessor

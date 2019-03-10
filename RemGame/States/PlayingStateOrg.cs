@@ -249,7 +249,7 @@ namespace RemGame
             */
             playerLeft = Content.Load<Texture2D>("Player/playerLeft");
             playerRight = Content.Load<Texture2D>("Player/playerRight");
-            playerStand = Content.Load<Texture2D>("Player/Anim/playerStand");
+            playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
             playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
             SpriteEffects flip = SpriteEffects.FlipHorizontally;
 
@@ -284,7 +284,7 @@ namespace RemGame
             player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4, anim3, 0f);
             player.Animations[1] = new AnimatedSprite(playerRight, 1, 4, anim3, 0f);
 
-            player.Animations[2] = new AnimatedSprite(playerStand, 1,26, anim4,0.04f);
+            player.Animations[2] = new AnimatedSprite(playerStand, 4,13, anim3,0.017f);
 
             player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.017f);
             
