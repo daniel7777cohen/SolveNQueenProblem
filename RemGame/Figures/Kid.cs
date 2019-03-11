@@ -388,10 +388,20 @@ namespace RemGame
         {
             if (!isJumping)
             {
+                if (IsMoving)
+                {
+                    upBody.Body.CollidesWith = Category.None;
+                    speed = SPEED / 2;
+                    anim = animations[1];
+                }
+                else
+                {
+                    upBody.Body.CollidesWith = Category.None;
+                    anim = animations[0];
 
-                upBody.Body.CollidesWith = Category.None;
-                speed = SPEED / 2;
-                
+
+                }
+                //////shot single image crouch
             }
 
         }

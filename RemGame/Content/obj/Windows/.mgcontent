@@ -20,6 +20,7 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-4.jpeg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-5.jpeg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/misc/heart.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/bullet.png</File>
@@ -40,6 +41,7 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

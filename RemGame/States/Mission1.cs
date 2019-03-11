@@ -272,15 +272,16 @@ namespace RemGame
 
 
 
-            Rectangle anim3 = new Rectangle(-30, -65, 240, 260);
+            Rectangle anim3 = new Rectangle(-30, -65, 240, 160);
+            Rectangle anim4 = new Rectangle(20, -50, 140, 130);
+
 
             player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4, anim3, 0f);
             player.Animations[1] = new AnimatedSprite(playerRight, 1, 4, anim3, 0f);
 
-            player.Animations[2] = new AnimatedSprite(playerStand, 1, 26, anim3, 0.25f);
+            player.Animations[2] = new AnimatedSprite(playerStand, 4, 13, anim3, 0.017f);
 
-            Rectangle anim4 = new Rectangle(0, 0, 0, 0);
-            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim4, 0.017f);
+            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.017f);
 
             map.setPlayerToMap(player);
 
