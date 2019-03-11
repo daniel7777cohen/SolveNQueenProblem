@@ -74,7 +74,7 @@ namespace RemGame
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 1.12f;        // in seconds
-        private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
+        private Vector2 jumpForce = new Vector2(0, -6); // applied force when jumping
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 1.0f;        // in seconds
@@ -233,7 +233,7 @@ namespace RemGame
                 if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
                 {
                     isJumping = true;
-                    upBody.Body.ApplyLinearImpulse(jumpForce);
+                    wheel.Body.ApplyLinearImpulse(jumpForce);
                     previousJump = DateTime.Now;
                 }
             
@@ -637,7 +637,7 @@ namespace RemGame
                 }
                 // spriteBatch.End();
 
-                //pv1.Draw(gameTime, spriteBatch);
+                pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
                 //pv3.Draw(gameTime, spriteBatch);
 
