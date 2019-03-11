@@ -42,6 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Figures\Shot.cs" />
+    <Compile Include="LevelDesgin\Bag.cs" />
+    <Compile Include="LevelDesgin\Door.cs" />
+    <Compile Include="LevelDesgin\Locker.cs" />
     <Compile Include="States\BaseGameState.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="States\EscapeState.cs" />
