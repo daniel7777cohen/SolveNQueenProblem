@@ -73,8 +73,8 @@ namespace RemGame
         private bool showText = false;
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
-        private const float jumpInterval = 1.12f;        // in seconds
-        private Vector2 jumpForce = new Vector2(0, -6); // applied force when jumping
+        private const float jumpInterval = 1.2f;        // in seconds
+        private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 1.0f;        // in seconds
@@ -203,14 +203,17 @@ namespace RemGame
                     break;
 
                 case Movement.Stop:
-                    
+
                     //if (axis1.MotorSpeed != 0)
                     //{
+                    
+                    if (!IsJumping)
+                    {
                         axis1.MotorSpeed = 0;
-
                         axis1.BodyB.ResetDynamics();
                         axis1.BodyA.ResetDynamics();
                         upBody.Body.ResetDynamics();
+                    }
 
 
                     //}
@@ -230,16 +233,23 @@ namespace RemGame
         public void Jump()
 
         {
-                if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
-                {
-                    isJumping = true;
-                    wheel.Body.ApplyLinearImpulse(jumpForce);
-                    previousJump = DateTime.Now;
-                }
-            
-            
+            if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
+            {
+                isJumping = true;
+                isMoving = true;
+                wheel.Body.ApplyLinearImpulse(jumpForce);
+                previousJump = DateTime.Now;
+            }
+            else
+            {
+                isJumping = true;
+                isMoving = true;
+            }
+
+
+
         }
-        
+
         //should create variables for funciton
         public void Slide(Movement dir)
         {
@@ -399,8 +409,6 @@ namespace RemGame
                 {
                     upBody.Body.CollidesWith = Category.None;
                     anim = animations[0];
-
-
                 }
                 //////shot single image crouch
             }
@@ -449,14 +457,16 @@ namespace RemGame
                 actualMovningSpeed = upBody.Body.AngularVelocity;
                 //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
-                if ((DateTime.Now - previousJump).TotalSeconds <= jumpInterval && isJumping==true)
-                    isJumping = true;
-                else
+                if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
+                {
                     isJumping = false;
-
+                    isMoving = false;
+                }
+               
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
                     isSliding = false;
+                    isMoving = false;
                     upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                     midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
@@ -466,11 +476,9 @@ namespace RemGame
                 {
                     s.Update(gameTime);
                 }
-                if(!isMoving)
-                anim = animations[2];
+                
 
                 //if (IsMoving) // apply animation
-                    Anim.Update(gameTime);
                 //else //player will appear as standing with frame [1] from the atlas.
                   //  Anim.CurrentFrame = 1;
 
@@ -568,19 +576,9 @@ namespace RemGame
 
                 if (keyboardState.IsKeyDown(Keys.Down))
                 {
-                    // axis1.BodyA.IgnoreCollisionWith(axis1.BodyB);
-                    //axis1.BodyB.IgnoreCollisionWith(axis1.BodyA);
-                    //if(torso.Position.Y +96 != wheel.Position.Y+48)
                     bend();
-
-
                     IsBending = true;
-                    /*
-                    if(keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
-                    {
-                        wheel.Body.CollidesWith = Category.Cat30;
-                    }
-                    */
+
                 }
 
                 if (keyboardState.IsKeyUp(Keys.Down) && prevKeyboardState.IsKeyDown(Keys.Down))
@@ -588,6 +586,11 @@ namespace RemGame
                     IsBending = false;
                     upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
+
+                if (!isMoving && !IsBending)
+                    anim = animations[2];
+
+                Anim.Update(gameTime);
 
 
                 previousMouseState = currentMouseState;

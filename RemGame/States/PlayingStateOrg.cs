@@ -75,6 +75,9 @@ namespace RemGame
         SoundEffect jumping;
         SoundEffect hall;
 
+        bool isJumpSoundPlayed = false;
+
+
         SoundEffectInstance walkingInstance;
         SoundEffectInstance jumpingInstance;
         SoundEffectInstance hallInstance;
@@ -368,10 +371,14 @@ namespace RemGame
                 walkingInstance.Volume = 0.01f;
             }
 
-            if (player.IsJumping)
+            if (player.IsJumping && !isJumpSoundPlayed)
             {
+                isJumpSoundPlayed = true;
                 jumpingInstance.Play();
             }
+
+            if (!player.IsJumping)
+                isJumpSoundPlayed = false;
 
             camLocation = new Vector2(player.Position.X, player.Position.Y - 100);
 
