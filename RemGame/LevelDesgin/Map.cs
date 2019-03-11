@@ -88,7 +88,7 @@ namespace RemGame
                         en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, 0, 0, 0), 0.0f);
                         enemies.Add(en);
                     }
-                    else if (number == 4)
+                    else if (number == 4)//door
                     {
                         texture = Content.Load<Texture2D>("Tiles/HUD");
                         //Door door = new Door(world, texture, new Vector2(64, 64), font);
