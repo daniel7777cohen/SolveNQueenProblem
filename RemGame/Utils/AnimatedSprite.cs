@@ -48,7 +48,7 @@ namespace RemGame
                 CurrentFrame = 0;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle destination,Body body)
+        public void Draw(SpriteBatch spriteBatch, Rectangle destination,Body body,bool toLeft)
         {
             int width = Texture.Width / Columns;
             int height = Texture.Height / Rows;
@@ -62,10 +62,12 @@ namespace RemGame
 
             //spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), SpriteEffects.None, 0);
             //spriteBatch.Draw(Texture, destination, sourceRectangle, Color.White, body.Rotation, new Vector2(width / 2.0f, height / 3.0f), SpriteEffects.None, 0);
+            if(toLeft)
+                spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, null, 0.0f, null, Color.White, flip, 0.0f);
+            else
+                spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
 
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
-            ///////////////////FLIPPING/////////////////////////////////
-            //spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, null,0.0f,null,Color.White,flip, 0.0f);
+
 
 
 

@@ -31,8 +31,8 @@ namespace RemGame
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
-        Texture2D playerLeft;
-        Texture2D playerRight;
+        Texture2D playerCrouch;
+        Texture2D playerCrouchWalk;
         Texture2D playerStand;
         Texture2D playerWalk;
         SpriteFont font;
@@ -249,8 +249,8 @@ namespace RemGame
                  100,
                  cam.ScreenToWorld(new Vector2(50, 400)), false, font);
 
-            playerLeft = Content.Load<Texture2D>("Player/playerLeft");
-            playerRight = Content.Load<Texture2D>("Player/playerRight");
+            playerCrouch = Content.Load<Texture2D>("Player/Anim/Ron_Crouch");
+            playerCrouchWalk = Content.Load<Texture2D>("Player/Anim/Ron_Crouch_Walk");
             playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
             playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
 
@@ -272,12 +272,12 @@ namespace RemGame
 
 
 
-            Rectangle anim3 = new Rectangle(-30, -65, 240, 160);
-            Rectangle anim4 = new Rectangle(20, -50, 140, 130);
+            Rectangle anim3 = new Rectangle(-110, -65, 240, 160);
+            Rectangle anim4 = new Rectangle(0, -50, 140, 130);
 
 
-            player.Animations[0] = new AnimatedSprite(playerLeft, 1, 4, anim3, 0f);
-            player.Animations[1] = new AnimatedSprite(playerRight, 1, 4, anim3, 0f);
+            player.Animations[0] = new AnimatedSprite(playerCrouch, 1, 1, anim3, 0f);
+            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2, 16, anim3, 0f);
 
             player.Animations[2] = new AnimatedSprite(playerStand, 4, 13, anim3, 0.017f);
 

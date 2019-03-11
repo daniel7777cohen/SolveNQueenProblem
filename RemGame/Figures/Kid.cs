@@ -60,7 +60,7 @@ namespace RemGame
 
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 2.0f;
+        private const float SPEED = 4.0f;
         private float speed = SPEED;
         private float actualMovningSpeed=0;
         private bool isMoving = false;
@@ -166,7 +166,7 @@ namespace RemGame
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque = 3.0f;
+            axis1.MaxMotorTorque = 4.0f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
             //axis2 = JointFactory.CreateAngleJoint(world,upBody.Body,midBody.Body);
@@ -193,6 +193,7 @@ namespace RemGame
                 case Movement.Left:
                     lookRight = false;
                     axis1.MotorSpeed = -MathHelper.TwoPi * speed;
+                    anim = animations[3];
                     break;
 
                 case Movement.Right:
@@ -608,8 +609,14 @@ namespace RemGame
                 Rectangle dest = upBody.physicsObjRecToDraw();
                 dest.Height = dest.Height+(int)wheel.Size.Y/2;
                 dest.Y = dest.Y + (int)wheel.Size.Y/2;
-                if(Anim!=null)
-                Anim.Draw(spriteBatch, dest, upBody.Body);
+                if (Anim != null)
+                {
+                    if(direction == Movement.Right)
+                        Anim.Draw(spriteBatch, dest, upBody.Body,false);
+                    else
+                        Anim.Draw(spriteBatch, dest, upBody.Body, true);
+
+                }
                 foreach (PhysicsObject s in shotList)
                 {
                     s.Draw(gameTime, spriteBatch);

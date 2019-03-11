@@ -277,8 +277,8 @@ namespace RemGame
             jumpingInstance.Volume = 0.01f;
             //jumpingInstance.Pitch = 0.1f;
 
-            Rectangle anim3 = new Rectangle(-30, -65, 240, 160);
-            Rectangle anim4 = new Rectangle(20, -50, 140, 130);
+            Rectangle anim3 = new Rectangle(-110, -65, 240, 160);
+            Rectangle anim4 = new Rectangle(0, -50, 140, 130);
 
 
             player.Animations[0] = new AnimatedSprite(playerCrouch, 1, 1, anim3, 0f);

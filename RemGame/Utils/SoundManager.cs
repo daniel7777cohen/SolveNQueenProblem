@@ -85,7 +85,7 @@ namespace RemGame
         {
             foreach (Song song in songs.Values)
             {
-                song.Dispose();
+               // song.Dispose();
             }
 
             foreach (SoundEffectInstance soundEffectInstance in playingInstances)

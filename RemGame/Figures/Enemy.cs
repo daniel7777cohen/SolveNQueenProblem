@@ -497,7 +497,7 @@ namespace RemGame
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
             if(!torso.Body.IsDisposed)
-            anim.Draw(spriteBatch, dest, torso.Body);
+            anim.Draw(spriteBatch, dest, torso.Body,false);
             //pv1.Draw(gameTime, spriteBatch);
             //pv2.Draw(gameTime, spriteBatch);
 
