@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/HUD.png</SourceFile>
-  <SourceTime>2019-03-06T20:00:42.0248256+02:00</SourceTime>
-  <DestFile>C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Tiles/HUD.xnb</DestFile>
-  <DestTime>2019-03-11T22:55:57.4502136+02:00</DestTime>
+  <SourceFile>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/HUD.png</SourceFile>
+  <SourceTime>2019-03-09T16:15:51.1045697+02:00</SourceTime>
+  <DestFile>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/bin/Windows/Content/Tiles/HUD.xnb</DestFile>
+  <DestTime>2019-03-12T20:00:11.4667495+02:00</DestTime>
   <Importer>TextureImporter</Importer>
-  <ImporterTime>2018-12-08T18:35:54+02:00</ImporterTime>
+  <ImporterTime>2018-09-24T00:55:52+03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
-  <ProcessorTime>2018-12-08T18:35:54+02:00</ProcessorTime>
+  <ProcessorTime>2018-09-24T00:55:52+03:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>255,0,255,255</Value>

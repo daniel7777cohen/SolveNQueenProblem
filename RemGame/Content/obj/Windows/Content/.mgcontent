@@ -4,49 +4,49 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Arial.spritefont</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-01_background.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-02_back-A.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-03_back-B.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-04_ground.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grass.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grss.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-02_front.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-1.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-2.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-3.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-4.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-5.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/misc/heart.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/bullet.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerLeft.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerRight.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/optionsMenu.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/pause.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/resumeOResc.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/startMenu.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/titleIntro.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Footsteps Brick 1.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/hallWay.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Jump.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/Music/General Music 1.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/HUD.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile1.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/../../../../../../../Desktop/דניאל/1.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/../../../../../../../Desktop/דניאל/2.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/../../../../../../../Desktop/דניאל/3.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/../../../../../../../Desktop/דניאל/4.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/../../../../../../../Desktop/דניאל/5.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Fonts/Arial.spritefont</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-01_background.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-02_back-A.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-03_back-B.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-04_ground.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/f-01_ground-grass.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/f-01_ground-grss.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/f-02_front.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/misc/heart.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/bullet.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/playerLeft.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/playerRight.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/optionsMenu.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/pause.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/resumeOResc.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/startMenu.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/titleIntro.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Footsteps Brick 1.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/hallWay.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Jump.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/Music/General Music 1.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/HUD.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/tile1.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
+    <File>Layers/level/1.jpg</File>
+    <File>Layers/level/2.jpg</File>
+    <File>Layers/level/3.jpg</File>
+    <File>Layers/level/4.jpg</File>
+    <File>Layers/level/5.jpg</File>
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
