@@ -285,11 +285,11 @@ namespace RemGame
 
 
             player.Animations[0] = new AnimatedSprite(playerCrouch, 1, 1, anim3, 0f);
-            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2 , 16 , anim3, 0f);
+            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2 , 16 , anim3, 0.02f);
 
             player.Animations[2] = new AnimatedSprite(playerStand, 4,13, anim3,0.017f);
 
-            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.017f);
+            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.025f);
             
 
             map.setPlayerToMap(player);

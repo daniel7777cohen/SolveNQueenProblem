@@ -60,7 +60,7 @@ namespace RemGame
 
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 4.0f;
+        private const float SPEED = 2.0f;
         private float speed = SPEED;
         private float actualMovningSpeed=0;
         private bool isMoving = false;
@@ -75,6 +75,11 @@ namespace RemGame
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 1.2f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
+        private float liftOff = 0;
+        private float beforeLanding = 0;
+        private bool goingDown = false;
+        private bool hasLanded = false;
+              
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 1.0f;        // in seconds
@@ -233,12 +238,18 @@ namespace RemGame
         public void Jump()
 
         {
+            
             if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
             {
+                
                 isJumping = true;
                 isMoving = true;
                 wheel.Body.ApplyLinearImpulse(jumpForce);
                 previousJump = DateTime.Now;
+                liftOff = wheel.Position.Y;
+                goingDown = false;
+                hasLanded = false;
+
             }
             else
             {
@@ -462,6 +473,20 @@ namespace RemGame
                     isJumping = false;
                     isMoving = false;
                 }
+                else
+                {
+                    if (wheel.Position.Y < liftOff)
+                        liftOff = wheel.Position.Y;
+                    else
+                    {
+                        goingDown = true;
+                        beforeLanding = wheel.Position.Y;
+                    }
+                    if (wheel.Position.Y > beforeLanding)
+                        beforeLanding = wheel.Position.Y;
+                    else
+                        hasLanded=true;
+                }
                
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
@@ -640,11 +665,21 @@ namespace RemGame
                 }
                 // spriteBatch.End();
 
-                pv1.Draw(gameTime, spriteBatch);
+                //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
                 //pv3.Draw(gameTime, spriteBatch);
+                if (IsJumping)
+                {
+                    spriteBatch.DrawString(f, "going up"+liftOff.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
+                    spriteBatch.DrawString(f, "going down" + beforeLanding.ToString(), new Vector2(Position.X + size.X, Position.Y-100), Color.White);
 
-                //spriteBatch.DrawString(f, WheelSpeed.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
+
+                }
+
+                if (hasLanded)
+                    spriteBatch.DrawString(f, "has landed", new Vector2(Position.X + size.X, Position.Y-200), Color.White);
+
+
 
 
                 //wheel.Draw(gameTime,spriteBatch);
