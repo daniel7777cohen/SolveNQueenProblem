@@ -83,11 +83,11 @@ namespace RemGame
 
         protected override void Dispose(bool disposing)
         {
-            foreach (Song song in songs.Values)
+            //foreach (Song song in songs.Values)
             {
-                song.Dispose();
+              //  song.Dispose();
 
-                song.Dispose();
+                //song.Dispose();
 
             }
 

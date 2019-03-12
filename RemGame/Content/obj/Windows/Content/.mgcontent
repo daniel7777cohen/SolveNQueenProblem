@@ -13,12 +13,11 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grass.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grss.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-02_front.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-1.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-2.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-3.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-4.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/row-1-col-5.jpeg</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack1.jpeg</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack2.jpeg</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack3.jpeg</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack4.jpeg</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack5.jpeg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/misc/heart.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
@@ -42,7 +41,6 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
