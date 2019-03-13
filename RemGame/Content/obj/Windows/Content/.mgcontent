@@ -19,10 +19,18 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack4.jpeg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack5.jpeg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/misc/heart.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_01_start.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_02_up.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_03_mid.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_04_down.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_05_end.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_01_start.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_02_slide.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_03_end.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/bullet.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerLeft.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerRight.png</File>
@@ -41,6 +49,14 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -76,15 +76,17 @@ namespace RemGame
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
         private const float jumpInterval = 1.2f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
+        private float takeOffPoi = 0;
         private float liftOff = 0;
         private float beforeLanding = 0;
         private bool goingDown = false;
-        private bool hasLanded = false;
+        private bool hasLanded = true;
               
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
-        private const float slideInterval = 1.0f;        // in seconds
-        private Vector2 slideForce = new Vector2(5, 0); // applied force when jumping
+        private const float slideInterval = 1.3f;        // in seconds
+        private Vector2 slideForce = new Vector2(8, 0); // applied force when jumping
+        private float startPoint = 0;
 
         private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
         private const float shootInterval = 0.3f;        // in seconds
@@ -96,7 +98,7 @@ namespace RemGame
 
 
         private AnimatedSprite anim = null;
-        private AnimatedSprite[] animations = new AnimatedSprite[4];
+        private AnimatedSprite[] animations = new AnimatedSprite[12];
 
 
         KeyboardState keyboardState;
@@ -172,7 +174,7 @@ namespace RemGame
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque = 4.0f;
+            axis1.MaxMotorTorque = 3.0f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
             //axis2 = JointFactory.CreateAngleJoint(world,upBody.Body,midBody.Body);
@@ -192,39 +194,37 @@ namespace RemGame
 
         public void Move(Movement movement)
         {   
-            if(!IsBending)
+            if(!IsBending || !isJumping)
             speed = SPEED;
-            switch (movement)
+            if (!isSliding)
             {
-                case Movement.Left:
-                    lookRight = false;
-                    axis1.MotorSpeed = -MathHelper.TwoPi * speed;
-                    anim = animations[3];
-                    break;
+                switch (movement)
+                {
+                    case Movement.Left:
+                        lookRight = false;
+                        axis1.MotorSpeed = -MathHelper.TwoPi * speed;
+                        if (!isJumping || !isSliding)
+                            anim = animations[3];
+                        break;
 
-                case Movement.Right:
-                    lookRight = true;
-                    axis1.MotorSpeed = MathHelper.TwoPi * speed;
-                    anim = animations[3];
-                    break;
+                    case Movement.Right:
+                        lookRight = true;
+                        axis1.MotorSpeed = MathHelper.TwoPi * speed;
+                        if (!isJumping || !isSliding)
+                            anim = animations[3];
+                        break;
 
-                case Movement.Stop:
+                    case Movement.Stop:
 
-                    //if (axis1.MotorSpeed != 0)
-                    //{
-                    
-                    if (!IsJumping)
-                    {
-                        axis1.MotorSpeed = 0;
-                        axis1.BodyB.ResetDynamics();
-                        axis1.BodyA.ResetDynamics();
-                        upBody.Body.ResetDynamics();
-                    }
-
-
-                    //}
-
-                    break;
+                        if (!isJumping && !isSliding)
+                        {
+                            axis1.MotorSpeed = 0;
+                            axis1.BodyB.ResetDynamics();
+                            axis1.BodyA.ResetDynamics();
+                            upBody.Body.ResetDynamics();
+                        }
+                        break;
+                }
             }
         }
 
@@ -242,23 +242,16 @@ namespace RemGame
             
             if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
             {
-                
+                anim = animations[4];
                 isJumping = true;
-                isMoving = true;
-                wheel.Body.ApplyLinearImpulse(jumpForce);
-                previousJump = DateTime.Now;
+                takeOffPoi = wheel.Position.Y;
                 liftOff = wheel.Position.Y;
+                wheel.Body.ApplyLinearImpulse(jumpForce);
                 goingDown = false;
                 hasLanded = false;
+                previousJump = DateTime.Now;
 
             }
-            else
-            {
-                isJumping = true;
-                isMoving = true;
-            }
-
-
 
         }
 
@@ -266,10 +259,12 @@ namespace RemGame
         public void Slide(Movement dir)
         {
             speed = SPEED;
-            if (!isJumping)
+            if (!isJumping || !isBending)
             {
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
+                    anim = animations[9];
+                    startPoint = wheel.Position.X;
                     isSliding = true;
                     IsMoving = true;
                     upBody.Body.CollidesWith = Category.None;
@@ -284,7 +279,6 @@ namespace RemGame
                     }
 
                     previousSlide = DateTime.Now;
-
                 }
             }
         }
@@ -469,33 +463,72 @@ namespace RemGame
                 actualMovningSpeed = upBody.Body.AngularVelocity;
                 //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
-                if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
+                if(!hasLanded)
                 {
-                    isJumping = false;
-                    isMoving = false;
-                }
-                else
-                {
-                    if (wheel.Position.Y < liftOff)
+                    isMoving = true;
+
+                    if (wheel.Position.Y <= liftOff)
+                    {
                         liftOff = wheel.Position.Y;
-                    else
+                        anim = animations[4];
+                        if (wheel.Position.Y <= takeOffPoi - 60)
+                        {
+                            anim = animations[5];
+                        }
+
+                    }
+
+
+                    else if (wheel.Position.Y > liftOff && !goingDown)
                     {
                         goingDown = true;
-                        beforeLanding = wheel.Position.Y;
+                        anim = animations[6];
+
                     }
-                    if (wheel.Position.Y > beforeLanding)
-                        beforeLanding = wheel.Position.Y;
+
+                    else if (wheel.Position.Y < takeOffPoi -2 || wheel.Position.Y > takeOffPoi + 2)
+                    {
+                        if (wheel.Position.Y > takeOffPoi - 160)
+                            anim = animations[7];
+                        if(wheel.Position.Y > takeOffPoi - 80)
+                            anim = animations[8];
+                    }
+
                     else
-                        hasLanded=true;
+                    {
+
+                        anim = animations[2];
+                        goingDown = false;
+                        hasLanded = true;
+                        isJumping = false;
+                        isMoving = false;
+                        liftOff = 0;
+                    }
+
+
                 }
-               
-                if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
+
+
+                if(isSliding)
                 {
-                    isSliding = false;
-                    isMoving = false;
-                    upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
-                    midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
-                }
+                    if (wheel.Position.X > startPoint + 100 || wheel.Position.X < startPoint - 100)
+                    {
+                        anim = animations[10];
+                    }
+
+                    if (wheel.Position.X > startPoint + 350 || wheel.Position.X < startPoint - 350)
+                    {
+                        anim = animations[11];
+                    }
+                    if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450)
+                    {
+                        isSliding = false;
+                        isMoving = false;
+                        upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+                        midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
+                    }
+
+                 }
 
 
                 foreach (PhysicsObject s in shotList)
@@ -533,25 +566,25 @@ namespace RemGame
 
 
                 //if statment should changed
-                if (keyboardState.IsKeyDown(Keys.Space) && !(prevKeyboardState.IsKeyDown(Keys.Space)))
+                if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
                     Jump();
                 }
 
                 if (isJumping)
                 {
-                    if (keyboardState.IsKeyDown(Keys.Right) && (!prevKeyboardState.IsKeyDown(Keys.Right)))
+                    if (keyboardState.IsKeyDown(Keys.Right))
                     {
-                        wheel.Body.ApplyLinearImpulse(new Vector2(1.5f, 0));
+                        wheel.Body.ApplyLinearImpulse(new Vector2(0.03f, 0));
                     }
 
-                    else if (keyboardState.IsKeyDown(Keys.Left) && (!prevKeyboardState.IsKeyDown(Keys.Left)))
+                    else if (keyboardState.IsKeyDown(Keys.Left))
                     {
-                        wheel.Body.ApplyLinearImpulse(new Vector2(-1.5f, 0));
+                        wheel.Body.ApplyLinearImpulse(new Vector2(-0.03f, 0));
                     }
                 }
 
-                if (keyboardState.IsKeyDown(Keys.LeftShift) && !(prevKeyboardState.IsKeyDown(Keys.LeftShift)))
+                if (keyboardState.IsKeyDown(Keys.LeftShift) && (!prevKeyboardState.IsKeyDown(Keys.LeftShift)))
                 {
 
                     if (keyboardState.IsKeyDown(Keys.Right))
@@ -613,7 +646,7 @@ namespace RemGame
                     upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
 
-                if (!isMoving && !IsBending)
+                if (!isMoving && !IsBending && !isJumping && !isSliding)
                     anim = animations[2];
 
                 Anim.Update(gameTime);
@@ -669,17 +702,17 @@ namespace RemGame
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
                 //pv3.Draw(gameTime, spriteBatch);
+                /*
                 if (IsJumping)
                 {
                     spriteBatch.DrawString(f, "going up"+liftOff.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
                     spriteBatch.DrawString(f, "going down" + beforeLanding.ToString(), new Vector2(Position.X + size.X, Position.Y-100), Color.White);
 
-
                 }
 
                 if (hasLanded)
                     spriteBatch.DrawString(f, "has landed", new Vector2(Position.X + size.X, Position.Y-200), Color.White);
-
+                    */
 
 
 

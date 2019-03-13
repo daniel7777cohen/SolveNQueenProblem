@@ -35,6 +35,9 @@ namespace RemGame
         Texture2D playerCrouchWalk;
         Texture2D playerStand;
         Texture2D playerWalk;
+        Texture2D[] jumpSetAnim = new Texture2D[5];
+        Texture2D[] slideSetAnim = new Texture2D[3];
+
         SpriteFont font;
         Camera2D cam;
         Vector2 camLocation;
@@ -254,6 +257,7 @@ namespace RemGame
             playerCrouchWalk = Content.Load<Texture2D>("Player/Anim/Ron_Crouch_Walk");
             playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
             playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
+
             SpriteEffects flip = SpriteEffects.FlipHorizontally;
 
             player = new Kid(hearts,world,
@@ -290,7 +294,27 @@ namespace RemGame
             player.Animations[2] = new AnimatedSprite(playerStand, 4,13, anim3,0.017f);
 
             player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.025f);
-            
+
+            jumpSetAnim[0] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_01_start");
+            jumpSetAnim[1] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_02_up");
+            jumpSetAnim[2] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_03_mid");
+            jumpSetAnim[3] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_04_down");
+            jumpSetAnim[4] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_05_end");
+
+            player.Animations[4] = new AnimatedSprite(jumpSetAnim[0], 1, 1, anim3, 0f);
+            player.Animations[5] = new AnimatedSprite(jumpSetAnim[1], 1, 1, anim3, 0f);
+            player.Animations[6] = new AnimatedSprite(jumpSetAnim[2], 1, 3, anim3, 0.5f);
+            player.Animations[7] = new AnimatedSprite(jumpSetAnim[3], 1, 1, anim3, 0f);
+            player.Animations[8] = new AnimatedSprite(jumpSetAnim[4], 1, 1, anim3, 0f);
+
+            slideSetAnim[0] = Content.Load<Texture2D>("Player/Anim/Slide/Ron_Slide_01_start");
+            slideSetAnim[1] = Content.Load<Texture2D>("Player/Anim/Slide/Ron_Slide_02_slide");
+            slideSetAnim[2] = Content.Load<Texture2D>("Player/Anim/Slide/Ron_Slide_03_end");
+
+            player.Animations[9] = new AnimatedSprite(slideSetAnim[0], 1, 4, anim3, 0.4f);
+            player.Animations[10] = new AnimatedSprite(slideSetAnim[1], 1, 6, anim3, 0.3f);
+            player.Animations[11] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.4f);
+
 
             map.setPlayerToMap(player);
 
