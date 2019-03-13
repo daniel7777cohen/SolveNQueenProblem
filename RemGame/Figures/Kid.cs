@@ -60,7 +60,7 @@ namespace RemGame
 
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 2.0f;
+        private const float SPEED = 10.0f;
 
         private float speed = SPEED;
         private float actualMovningSpeed=0;

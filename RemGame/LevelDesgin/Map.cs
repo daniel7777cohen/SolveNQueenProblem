@@ -58,22 +58,71 @@ namespace RemGame
                 for (int y = 0; y < map.GetLength(0); y++)
                 {
                     number = map[y, x];
+                    texture = Content.Load<Texture2D>("Tiles/HUD");
 
-                    if (number > 0 && number <= 2)
+
+                    //if (number > 0 && number <= 2)
+                    //{
+                    //obs.Position = new Vector2(x * size, y * size);
+                    /*
+                    if (number == 2)
+                        obs.Body.CollisionCategories = Category.Cat30;
+                        */
+                    //ObstacleTiles.Add(obs);
+
+                    //collisionTiles.Add(new CollisionTiles(number, new Rectangle(x * size, y * size, size, size),world,new Vector2(64,64),font));
+                    //collisionTiles.Add(new Tile(number, new Rectangle(x * size, y * size, size, size), world, new Vector2(64, 64)));
+                    //    }
+
+
+                    if (number == 1)//ground
                     {
-                        texture = Content.Load<Texture2D>("Tiles/HUD");
-                        Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
-                        obs.Position = new Vector2(x * size, y * size);
+                        Ground ground = new Ground(world, texture, new Vector2(64, 64), font);
+                        ground.Position = new Vector2(x * size, y * size);
+                       // ObstacleTiles.Add(ground);
+
+                    }
+                    else if (number == 2)//locker
+                    {
+                        Locker locker = new Locker(world, texture, new Vector2(64, 64), font);
+                        locker.Position = new Vector2(x * size, y * size);
+                       // ObstacleTiles.Add(locker);
+
+                    }
+                    else if (number == 3)//door
+                    {
+                        Door door = new Door(world, texture, new Vector2(64, 64), font);
+                        door.Position = new Vector2(x * size, y * size);
+
                         /*
                         if (number == 2)
                             obs.Body.CollisionCategories = Category.Cat30;
                             */
-                        ObstacleTiles.Add(obs);
-
-                        //collisionTiles.Add(new CollisionTiles(number, new Rectangle(x * size, y * size, size, size),world,new Vector2(64,64),font));
-                        //collisionTiles.Add(new Tile(number, new Rectangle(x * size, y * size, size, size), world, new Vector2(64, 64)));
+                        // ObstacleTiles.Add(door);
                     }
-                    else if (number == 3)
+                    else if (number == 4)//bag
+                    {
+                        Bag bag = new Bag(world, texture, new Vector2(64, 64), font);
+                        bag.Position = new Vector2(x * size, y * size);
+                        //ObstacleTiles.Add(bag);
+
+                    }
+                    else if (number == 5)//table
+                    {
+                        Table table = new Table(world, texture, new Vector2(64, 64), font);
+                        table.Position = new Vector2(x * size, y * size);
+                        //ObstacleTiles.Add(table);
+
+                    }
+                    else if (number == 6)//chair
+                    {
+                        Chair chair = new Chair(world, texture, new Vector2(64, 64), font);
+                        chair.Position = new Vector2(x * size, y * size);
+                        //ObstacleTiles.Add(chair);
+
+                    }
+                   
+                    else if (number == 8)//enemy
                     {
                         r = new Random();
                         int rInt = r.Next(192, 320);
@@ -84,23 +133,15 @@ namespace RemGame
                         new Vector2(96, 96),
                         100,
                         new Vector2(x * size, y * size), false, font, rInt);
-                        en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4,new Rectangle(0,0,0,0),0.0f);
+                        en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4, new Rectangle(0, 0, 0, 0), 0.0f);
                         en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, 0, 0, 0), 0.0f);
                         enemies.Add(en);
                     }
-                    else if (number == 4)//door
-                    {
-                        texture = Content.Load<Texture2D>("Tiles/HUD");
-                        //Door door = new Door(world, texture, new Vector2(64, 64), font);
-                        //door.Position = new Vector2(x * size, y * size);
-                        /*
-                        if (number == 2)
-                            obs.Body.CollisionCategories = Category.Cat30;
-                            */
-                       // ObstacleTiles.Add(door);
-                    }
+
                     width = (x + 1) * size;
                     height = (y + 1) * size;
+
+
 
 
 

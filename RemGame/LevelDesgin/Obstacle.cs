@@ -76,7 +76,7 @@ namespace RemGame
            );
             //spriteBatch.Draw(texture, destination, null, Color.White);
             spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
-            p.Draw(gameTime,spriteBatch);
+            //p.Draw(gameTime,spriteBatch);
         }
     }
 }
