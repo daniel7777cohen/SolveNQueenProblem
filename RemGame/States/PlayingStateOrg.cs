@@ -223,7 +223,7 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
-            if (closingWall.X + closingWall.Width > player.Position.X)
+            if (closingWall.X + closingWall.Width +20 > player.Position.X)
                 player.IsAlive = false;
 
             handleInput(gameTime);
