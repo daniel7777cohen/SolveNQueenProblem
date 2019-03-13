@@ -8,9 +8,7 @@ using FarseerPhysics.Factories;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using XELibrary;
-
-
-
+using Microsoft.Xna.Framework.Media;
 
 namespace RemGame
 {
@@ -27,10 +25,12 @@ namespace RemGame
         Kid player;
         Enemy DemoEnemy;
         Floor floor;
+
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
         MouseState previousMouseState;
+
         Texture2D playerCrouch;
         Texture2D playerCrouchWalk;
         Texture2D playerStand;
@@ -58,20 +58,37 @@ namespace RemGame
         Rectangle backgroundREC4;
         Rectangle backgroundREC5;
 
+        Texture2D hearts;
+
         Texture2D wall;
 
 
-        SoundEffect walking;
-        SoundEffect jumping;
+        SoundEffect footstep;
+        SoundEffect jump_Up;
+        SoundEffect jump_Down;
+        SoundEffect idle;
+        SoundEffect crouch;
+        SoundEffect slide;
+
         SoundEffect hall;
+
+        Song GeneralMusic;
+
+
 
         bool isJumpSoundPlayed = false;
 
 
         SoundEffectInstance walkingInstance;
-        SoundEffectInstance jumpingInstance;
+        SoundEffectInstance jumpingUpInstance;
+        SoundEffectInstance jumpingDownInstance;
+        SoundEffectInstance idleInstance;
+        SoundEffectInstance crouchingInstance;
+        SoundEffectInstance slidingInstance;
+
+
         SoundEffectInstance hallInstance;
-        SoundManager soundManager;
+
         public bool IsRonAlive { get => isRonAlive; set => isRonAlive = value; }
 
         public PlayingState(Game game)
@@ -79,24 +96,23 @@ namespace RemGame
         {
             if (game.Services.GetService(typeof(IPlayingState)) == null)
                 game.Services.AddService(typeof(IPlayingState), this);
-            soundManager = new SoundManager(game);
-            //soundManager = (ISoundManager)game.Services.GetService(typeof(ISoundManager));
-            //general = new SoundManager(game);
+   
         }
 
         protected override void LoadContent()
         {
-            soundManager.LoadContent(@"Sound/Music", @"Sound/FX");
-            //soundManager.Play("General Music 1");
-            Texture2D hearts = Content.Load<Texture2D>("misc/heart");
+            GeneralMusic = Content.Load<Song>("Sound/Music/General_Music_1");
+            MediaPlayer.Volume = 0.09f;
+            MediaPlayer.Play(GeneralMusic);
+            hearts = Content.Load<Texture2D>("misc/heart");
 
 
-            hall = Content.Load<SoundEffect>("Sound/FX/hallWay");
+            hall = Content.Load<SoundEffect>("Sound/FX/Level1/Hallway_Atmosphere");
             hallInstance = hall.CreateInstance();
             hallInstance.IsLooped = true;
 
             hallInstance.Play();
-            hallInstance.Volume = 0.04f;
+            hallInstance.Volume = 0.05f;
             //  general.LoadContent(@"Sounds/Music/", "");
             //general.Play("General Music 1");
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -181,28 +197,54 @@ namespace RemGame
 
 
 
-            walking = Content.Load<SoundEffect>("Sound/FX/Footsteps Brick 1");
-            walkingInstance = walking.CreateInstance();
+            footstep = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Footsteps");
+            walkingInstance = footstep.CreateInstance();
             walkingInstance.IsLooped = true;
-            walkingInstance.Volume = 0.009f;
-            walkingInstance.Pitch = -0.2f;
+            walkingInstance.Pitch = 0.18f;
 
 
-            jumping = Content.Load<SoundEffect>("Sound/FX/Jump");
-            jumpingInstance = jumping.CreateInstance();
-            jumpingInstance.IsLooped = false;
-            jumpingInstance.Volume = 0.01f;
+            jump_Up = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Jump_Up");
+            jumpingUpInstance = jump_Up.CreateInstance();
+            jumpingUpInstance.IsLooped = false;
+            jumpingUpInstance.Volume = 0.02f;
+
+            jump_Down = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Jump_Down");
+            jumpingDownInstance = jump_Down.CreateInstance();
+            jumpingDownInstance.IsLooped = false;
+            jumpingDownInstance.Volume = 0.04f;
+
+            idle = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Idle");
+            idleInstance = idle.CreateInstance();
+            idleInstance.IsLooped = true;
+            idleInstance.Volume = 0.1f;
+            idleInstance.Pitch = 0.3f;
+
+
+            crouch = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Crouch");
+            crouchingInstance = crouch.CreateInstance();
+            crouchingInstance.IsLooped = true;
+            crouchingInstance.Volume = 0.03f;
+            crouchingInstance.Pitch = 0.25f;
+
+
+            slide = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Slide");
+            slidingInstance = slide.CreateInstance();
+            slidingInstance.IsLooped = false;
+            slidingInstance.Volume = 0.04f;
+
+            
+
 
             Rectangle anim3 = new Rectangle(-110, -65, 240, 160);
             Rectangle anim4 = new Rectangle(0, -50, 140, 130);
 
 
             player.Animations[0] = new AnimatedSprite(playerCrouch, 1, 1, anim3, 0f);
-            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2 , 16 , anim3, 0.02f);
+            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2 , 16 , anim3, 0.03f);
 
             player.Animations[2] = new AnimatedSprite(playerStand, 4,13, anim3,0.017f);
 
-            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.025f);
+            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.03f);
 
             jumpSetAnim[0] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_01_start");
             jumpSetAnim[1] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_02_up");
@@ -212,7 +254,7 @@ namespace RemGame
 
             player.Animations[4] = new AnimatedSprite(jumpSetAnim[0], 1, 1, anim3, 0f);
             player.Animations[5] = new AnimatedSprite(jumpSetAnim[1], 1, 1, anim3, 0f);
-            player.Animations[6] = new AnimatedSprite(jumpSetAnim[2], 1, 3, anim3, 0.5f);
+            player.Animations[6] = new AnimatedSprite(jumpSetAnim[2], 1, 3, anim3, 0.6f);
             player.Animations[7] = new AnimatedSprite(jumpSetAnim[3], 1, 1, anim3, 0f);
             player.Animations[8] = new AnimatedSprite(jumpSetAnim[4], 1, 1, anim3, 0f);
 
@@ -248,7 +290,7 @@ namespace RemGame
             handleInput(gameTime);
 
             currentMouseState = Mouse.GetState();
-            walkingInstance.Volume = 0.02f;
+            walkingInstance.Volume = 0.1f;
 
             closingWall.X++;
 
@@ -268,35 +310,47 @@ namespace RemGame
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
 
-
-            if (!player.IsBending)
-            {
-
                 //walkingInstance.Pitch = 0.0f;
-                if (player.IsMoving && !player.IsJumping)
+                if (player.IsMoving && !player.IsJumping && !player.IsBending && !player.IsSliding)
                 {
                     walkingInstance.Play();
                 }
 
                 else
                 {
-                    walkingInstance.Stop();
+                    walkingInstance.Pause();
                 }
-            }
-            else
-            {
-                walkingInstance.Pitch = -0.5f;
-                walkingInstance.Volume = 0.01f;
-            }
+            
+        
 
             if (player.IsJumping && !isJumpSoundPlayed)
             {
                 isJumpSoundPlayed = true;
-                jumpingInstance.Play();
+                jumpingUpInstance.Play();
             }
 
             if (!player.IsJumping)
                 isJumpSoundPlayed = false;
+
+            if (player.HasLanded && player.PlayLandingSound)
+            {
+                jumpingDownInstance.Play();
+                player.PlayLandingSound = false;
+            }
+
+            if (!player.IsMoving&&!player.IsJumping)
+                idleInstance.Play();
+            else
+                idleInstance.Stop();
+
+            if (player.IsBending)
+                crouchingInstance.Play();
+            else
+                crouchingInstance.Stop();
+
+
+            if (player.IsSliding)
+                slidingInstance.Play();
 
             camLocation = new Vector2(player.Position.X, player.Position.Y - 100);
 
@@ -321,16 +375,22 @@ namespace RemGame
                 player.IsAlive = true;
             }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Escape))
+            {
                 StateManager.PushState(OurGame.EscapeState.Value);
+            }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.P))
             {
                 StateManager.PushState(OurGame.PausedState.Value);
-                soundManager.PauseSong();
+                hallInstance.Stop();
+                MediaPlayer.Pause();
             }
             if (!(StateManager.State == OurGame.PausedState.Value))
-                soundManager.ResumeSong();
+            {
+                hallInstance.Play();
+                MediaPlayer.Resume();
+            }
 
-            previousMouseState = currentMouseState;
+                previousMouseState = currentMouseState;
         }
 
         public override void Draw(GameTime gameTime)

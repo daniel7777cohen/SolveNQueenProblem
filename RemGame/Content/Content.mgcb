@@ -447,29 +447,53 @@
 /processorParam:TextureFormat=Color
 /build:ScreenDisplay/titleIntro.jpg
 
-#begin Sound/FX/Footsteps Brick 1.mp3
+#begin Sound/FX/Level1/Hallway_Atmosphere.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/FX/Footsteps Brick 1.mp3
+/build:Sound/FX/Level1/Hallway_Atmosphere.mp3
 
-#begin Sound/FX/hallWay.mp3
+#begin Sound/FX/Player/Ron_Crouch.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/FX/hallWay.mp3
+/build:Sound/FX/Player/Ron_Crouch.mp3
 
-#begin Sound/FX/Jump.mp3
+#begin Sound/FX/Player/Ron_Footsteps.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/FX/Jump.mp3
+/build:Sound/FX/Player/Ron_Footsteps.mp3
 
-#begin Sound/Music/General Music 1.mp3
+#begin Sound/FX/Player/Ron_Idle.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/FX/Player/Ron_Idle.mp3
+
+#begin Sound/FX/Player/Ron_Jump_Down.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/FX/Player/Ron_Jump_Down.mp3
+
+#begin Sound/FX/Player/Ron_Jump_Up.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/FX/Player/Ron_Jump_Up.mp3
+
+#begin Sound/FX/Player/Ron_Slide.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/FX/Player/Ron_Slide.mp3
+
+#begin Sound/Music/General_Music_1.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Sound/Music/General Music 1.mp3
+/build:Sound/Music/General_Music_1.mp3
 
 #begin Tiles/HUD.png
 /importer:TextureImporter

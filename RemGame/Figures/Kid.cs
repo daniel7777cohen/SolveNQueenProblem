@@ -81,7 +81,9 @@ namespace RemGame
         private float beforeLanding = 0;
         private bool goingDown = false;
         private bool hasLanded = true;
-              
+        private bool playLandingSound = false;
+
+
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 1.3f;        // in seconds
@@ -118,8 +120,10 @@ namespace RemGame
         public int Health { get => health; set => health = value; }
         public bool IsAlive { get => isAlive; set => isAlive = value; }
         public float ActualMovningSpeed { get => actualMovningSpeed; set => actualMovningSpeed = value; }
-        
-        
+        public bool HasLanded { get => hasLanded; set => hasLanded = value; }
+        public bool IsSliding { get => isSliding; set => isSliding = value; }
+        public bool PlayLandingSound { get => playLandingSound; set => playLandingSound = value; }
+
         public Kid(Texture2D hearts ,World world, Texture2D torsoTexture, Texture2D wheelTexture,Texture2D bullet, Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
             this.hearts = hearts;
@@ -196,7 +200,7 @@ namespace RemGame
         {   
             if(!IsBending && !isJumping)
             speed = SPEED;
-            if (!isSliding && !IsJumping)
+            if (!IsSliding && !IsJumping)
             {
                 switch (movement)
                 {
@@ -242,7 +246,7 @@ namespace RemGame
                 liftOff = wheel.Position.Y;
                 wheel.Body.ApplyLinearImpulse(jumpForce);
                 goingDown = false;
-                hasLanded = false;
+                HasLanded = false;
                 previousJump = DateTime.Now;
 
             }
@@ -253,13 +257,13 @@ namespace RemGame
         public void Slide(Movement dir)
         {
             speed = SPEED;
-            if (!isJumping || !isBending)
+            if (!isJumping && !isBending)
             {
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
                     anim = animations[9];
                     startPoint = wheel.Position.X;
-                    isSliding = true;
+                    IsSliding = true;
                     upBody.Body.CollidesWith = Category.None;
                     midBody.Body.CollidesWith = Category.None;
                     if (dir == Movement.Right)
@@ -396,7 +400,7 @@ namespace RemGame
 
         public void bend()
         {
-            if (!isJumping)
+            if (!isJumping && !IsSliding)
             {
                 if (IsMoving)
                 {
@@ -457,7 +461,7 @@ namespace RemGame
                 actualMovningSpeed = upBody.Body.AngularVelocity;
                 //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
 
-                if(!hasLanded)
+                if(!HasLanded && isJumping)
                 {
                     isMoving = true;
 
@@ -472,7 +476,6 @@ namespace RemGame
 
                     }
 
-
                     else if (wheel.Position.Y > liftOff && !goingDown)
                     {
                         goingDown = true;
@@ -480,22 +483,20 @@ namespace RemGame
                         anim = animations[6];
 
                     }
-
                     else if (wheel.Position.Y > beforeLanding)
                     {
                         beforeLanding = wheel.Position.Y;
-                        if (wheel.Position.Y > takeOffPoi - 160)
+                        if (wheel.Position.Y > takeOffPoi - 140)
                             anim = animations[7];
-                        if(wheel.Position.Y > takeOffPoi - 80)
+                        if(wheel.Position.Y > takeOffPoi - 50)
                             anim = animations[8];
                     }
-
                     else
                     {
-
+                        PlayLandingSound = true;
                         anim = animations[2];
                         goingDown = false;
-                        hasLanded = true;
+                        HasLanded = true;
                         isJumping = false;
                         isMoving = false;
                         liftOff = 0;
@@ -505,7 +506,7 @@ namespace RemGame
                 }
 
 
-                if(isSliding)
+                if(IsSliding)
                 {
                     if (wheel.Position.X > startPoint + 100 || wheel.Position.X < startPoint - 100)
                     {
@@ -518,7 +519,7 @@ namespace RemGame
                     }
                     if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450)
                     {
-                        isSliding = false;
+                        IsSliding = false;
                         upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                         midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                     }
@@ -641,7 +642,7 @@ namespace RemGame
                     upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                 }
 
-                if (!isMoving && !IsBending && !isJumping && !isSliding)
+                if (!isMoving && !IsBending && !isJumping && !IsSliding)
                     anim = animations[2];
 
                 Anim.Update(gameTime);
