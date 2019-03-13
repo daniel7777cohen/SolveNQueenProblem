@@ -194,7 +194,7 @@ namespace RemGame
 
         public void Move(Movement movement)
         {   
-            if(!IsBending || !isJumping)
+            if(!IsBending && !isJumping)
             speed = SPEED;
             if (!isSliding && !IsJumping)
             {
@@ -260,7 +260,6 @@ namespace RemGame
                     anim = animations[9];
                     startPoint = wheel.Position.X;
                     isSliding = true;
-                    IsMoving = true;
                     upBody.Body.CollidesWith = Category.None;
                     midBody.Body.CollidesWith = Category.None;
                     if (dir == Movement.Right)
@@ -477,12 +476,14 @@ namespace RemGame
                     else if (wheel.Position.Y > liftOff && !goingDown)
                     {
                         goingDown = true;
+                        beforeLanding = wheel.Position.Y;
                         anim = animations[6];
 
                     }
 
-                    else if (wheel.Position.Y < takeOffPoi -2 || wheel.Position.Y > takeOffPoi + 2)
+                    else if (wheel.Position.Y > beforeLanding)
                     {
+                        beforeLanding = wheel.Position.Y;
                         if (wheel.Position.Y > takeOffPoi - 160)
                             anim = animations[7];
                         if(wheel.Position.Y > takeOffPoi - 80)
@@ -518,7 +519,6 @@ namespace RemGame
                     if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450)
                     {
                         isSliding = false;
-                        isMoving = false;
                         upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                         midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                     }
@@ -568,12 +568,12 @@ namespace RemGame
 
                 if (isJumping)
                 {
-                    if (keyboardState.IsKeyDown(Keys.Right))
+                    if (keyboardState.IsKeyDown(Keys.D))
                     {
                         wheel.Body.ApplyLinearImpulse(new Vector2(0.03f, 0));
                     }
 
-                    else if (keyboardState.IsKeyDown(Keys.Left))
+                    else if (keyboardState.IsKeyDown(Keys.A))
                     {
                         wheel.Body.ApplyLinearImpulse(new Vector2(-0.03f, 0));
                     }
@@ -612,7 +612,8 @@ namespace RemGame
                     Shoot();
 
                 }
-
+                //////////////////////////////////////////SCENE/////////////////////////////////////////////////////////////////////////////
+                /*
                 if (Position.X < 400)
                 {
                     wheel.Body.ApplyLinearImpulse(new Vector2(1, 0));
@@ -624,7 +625,7 @@ namespace RemGame
                 }
                 else
                     showText = false;
-
+                */
 
 
                 if (keyboardState.IsKeyDown(Keys.S))
@@ -692,9 +693,9 @@ namespace RemGame
                     spriteBatch.Draw(hearts, new Vector2(Position.X - 900 + i * 60, Position.Y - 600), Color.White);
                 }
               
-                pv1.Draw(gameTime, spriteBatch);
-                pv2.Draw(gameTime, spriteBatch);
-                pv3.Draw(gameTime, spriteBatch);
+                //pv1.Draw(gameTime, spriteBatch);
+                //pv2.Draw(gameTime, spriteBatch);
+                //pv3.Draw(gameTime, spriteBatch);
           
             }
             else
