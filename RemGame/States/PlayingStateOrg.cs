@@ -17,7 +17,6 @@ namespace RemGame
 
     public sealed class PlayingState : BaseGameState, IPlayingState
     {
-        // private string[] playList = { "General Music 1" };
         SpriteBatch spriteBatch;
 
         private Color _backgroundColor = Color.CornflowerBlue;
@@ -31,6 +30,7 @@ namespace RemGame
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
+        MouseState previousMouseState;
         Texture2D playerCrouch;
         Texture2D playerCrouchWalk;
         Texture2D playerStand;
@@ -41,30 +41,10 @@ namespace RemGame
         SpriteFont font;
         Camera2D cam;
         Vector2 camLocation;
-        /// <summary>
-        /// ///////////////////
-        /// </summary>
-        //PhysicsObject[] plat;
-        Obstacle[] plat;
-        const int maxPlat = 4;
-        /// <summary>
-        /// ///////////////////
-        /// </summary>
+
         Map map;
-        Scrollingbackground[] sc;
-        const int maxLayers = 12;
-        Scrollingbackground Sc1;
-        Scrollingbackground Sc2;
-        Scrollingbackground Sc3;
-        Scrollingbackground Sc4;
-        Scrollingbackground Sc5;
-        Scrollingbackground Sc6;
-        Scrollingbackground Sc7;
-        Scrollingbackground Sc8;
-        Scrollingbackground Sc9;
-        Scrollingbackground Sc10;
-        Scrollingbackground Sc11;
-        Scrollingbackground Sc12;
+
+        Rectangle closingWall;
 
         Texture2D backGround1;
         Texture2D backGround2;
@@ -72,8 +52,15 @@ namespace RemGame
         Texture2D backGround4;
         Texture2D backGround5;
 
+        Rectangle backgroundREC1;
+        Rectangle backgroundREC2;
+        Rectangle backgroundREC3;
+        Rectangle backgroundREC4;
+        Rectangle backgroundREC5;
 
-        //String[] mainMusicPlaylist;
+        Texture2D wall;
+
+
         SoundEffect walking;
         SoundEffect jumping;
         SoundEffect hall;
@@ -116,71 +103,14 @@ namespace RemGame
             cam = new Camera2D(GraphicsDevice);
             world = new World(new Vector2(0, 9.8f));
             map = new Map(world);
-
-            // mainMusicPlaylist = new string[] { "General Music 1" };
-            // soundManager.StartPlayList(mainMusicPlaylist, 0);
-            //soundManager.Play("MonoGame MusicTest - Accordion 1");
-            //soundManager.Play("MonoGame MusicTest - Precussion 1");
+            closingWall = new Rectangle((int)cam.Position.X,0,200,600);
 
             //soundManager.Play("General Music 1");
             font = Content.Load<SpriteFont>("Fonts/Font");
 
             Tile.Content = Content;
             Map.Content = Content;
-            /*
-            map.Generate(new int[,]
-            {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
-                {2,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,2,2},
-                {2,2,0,0,0,0,0,0,0,1,1,1,2,2,2,1,0,0,0,0,2,2},
-                {2,2,0,0,0,0,0,0,1,2,2,2,2,2,2,2,1,0,0,0,2,2},
-                {2,0,0,0,0,0,1,1,2,2,2,2,2,2,2,2,2,1,1,1,2,2},
-                {2,0,0,0,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-                {2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            }, 64,font);
-            */
-            /*
-            map.Generate(new int[,]
-            {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,0,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,1,1,1,0,1,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,0,0,1,0,1,1,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            }, 64, font);
-            */
-            //REM
-            /*
-            map.Generate(new int[,]
-            {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,0,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            }, 64, font);
-            */
-            ////Straight MAP
-            ///
-
-            //14
+           
             map.Generate(new int[,]
             {
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -200,59 +130,21 @@ namespace RemGame
                 {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
             }, 64, font);
 
-            Sc1 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.BoundingRectangle.Left - 1920, -150, 1920, 1200), 0, null);
-            Sc2 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle((int)cam.BoundingRectangle.Left - 1920, 0, 1920, 1080), 2, null);
-            Sc3 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle((int)cam.BoundingRectangle.Left - 1920, 0, 1920, 1080), 2, null);
-            Sc4 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle((int)cam.BoundingRectangle.Left - 1920, 0, 1920, 1080), 0, null);
-            Sc5 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle((int)cam.BoundingRectangle.Left - 1920, 0, 1920, 1080), 0, null);
-            Sc6 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle((int)cam.BoundingRectangle.Left - 1920, 0, 1920, 1080), 4, null);
-            Sc7 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-01_background"), new Rectangle((int)cam.Position.X, -150, 1920, 1200), 0, Sc1);
-            Sc8 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-02_back-A"), new Rectangle((int)cam.Position.X, 0, 1920, 1080), 2, Sc2);
-            Sc9 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-03_back-B"), new Rectangle((int)cam.Position.X, 0, 1920, 1080), 2, Sc3);
-            Sc10 = new Scrollingbackground(Content.Load<Texture2D>("Layers/b-04_ground"), new Rectangle((int)cam.Position.X, 0, 1920, 1080), 0, Sc4);
-            Sc11 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-01_ground-grass"), new Rectangle((int)cam.Position.X, 0, 1920, 1080), 0, Sc5);
-            Sc12 = new Scrollingbackground(Content.Load<Texture2D>("Layers/f-02_front"), new Rectangle((int)cam.Position.X, 0, 1920, 1080), 4, Sc6);
-
-            sc = new Scrollingbackground[maxLayers];
-
-            sc[0] = Sc1;
-            sc[1] = Sc2;
-            sc[2] = Sc3;
-            sc[3] = Sc4;
-            sc[4] = Sc5;
-            sc[5] = Sc6;
-            sc[6] = Sc7;
-            sc[7] = Sc8;
-            sc[8] = Sc9;
-            sc[9] = Sc10;
-            sc[10] = Sc11;
-            sc[11] = Sc12;
+      
             backGround1 = Content.Load<Texture2D>("Layers/level/tmpBack1");
             backGround2 = Content.Load<Texture2D>("Layers/level/tmpBack2");
             backGround3 = Content.Load<Texture2D>("Layers/level/tmpBack3");
             backGround4 = Content.Load<Texture2D>("Layers/level/tmpBack4");
             backGround5 = Content.Load<Texture2D>("Layers/level/tmpBack5");
-            for (int i = 0; i < 6; i++)
-            {
-                sc[i].setRighttwinSc(sc[i + 6]);
-            }
-            /*
 
+            backgroundREC1 = new Rectangle(0, -700, 5693, 1969);
+            backgroundREC2 = new Rectangle(4097, -700, 5693, 1969);
+            backgroundREC3 = new Rectangle(8193, -700, 5693, 1969);
+            backgroundREC4 = new Rectangle(12990, -700, 5693, 1969);
+            backgroundREC5 = new Rectangle(16387, -700, 5693, 1969);
 
-            floor = new Floor(world, Content.Load<Texture2D>("cave_walk"), new Vector2(GraphicsDevice.Viewport.Width * 2, 60));
-            floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height - 60);
+            wall = Content.Load<Texture2D>("Layers/level/closingWall");
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            plat = new Obstacle[maxPlat];
-            /*
-            for (int i = 0; i < maxPlat; i++)
-            {
-                plat[3-i] = new Obstacle(world, Content.Load<Texture2D>("HUD"), new Vector2(70,70),font);
-                plat[3-i].Position = new Vector2(500 + 200 * i, 600 - 45 * i);
-                plat[3-i].Body.BodyType = BodyType.Static;
-            }
-            */
             playerCrouch = Content.Load<Texture2D>("Player/Anim/Ron_Crouch");
             playerCrouchWalk = Content.Load<Texture2D>("Player/Anim/Ron_Crouch_Walk");
             playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
@@ -266,10 +158,9 @@ namespace RemGame
                 Content.Load<Texture2D>("Player/bullet"),
                 new Vector2(60, 60),
                 100,
-                cam.ScreenToWorld(new Vector2(50, 400)), false, font);
+                cam.ScreenToWorld(new Vector2(650, 440)), false, font);
 
 
-            // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
 
             walking = Content.Load<SoundEffect>("Sound/FX/Footsteps Brick 1");
             walkingInstance = walking.CreateInstance();
@@ -282,7 +173,6 @@ namespace RemGame
             jumpingInstance = jumping.CreateInstance();
             jumpingInstance.IsLooped = false;
             jumpingInstance.Volume = 0.01f;
-            //jumpingInstance.Pitch = 0.1f;
 
             Rectangle anim3 = new Rectangle(-110, -65, 240, 160);
             Rectangle anim4 = new Rectangle(0, -50, 140, 130);
@@ -333,19 +223,19 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+            if (closingWall.X + closingWall.Width > player.Position.X)
+                player.IsAlive = false;
 
             handleInput(gameTime);
 
             currentMouseState = Mouse.GetState();
             walkingInstance.Volume = 0.02f;
 
+            closingWall.X++;
 
-            //after componnet list is set THIS can be deleted
-
-
-
-            if (currentMouseState.RightButton == ButtonState.Pressed)
+            if ((currentMouseState.LeftButton == ButtonState.Pressed) && (currentMouseState.RightButton == ButtonState.Pressed ))
             {
+                Console.WriteLine("kinesis!!!!!");
                 // Console.WriteLine(cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)));
                 foreach (Obstacle obj in map.ObstacleTiles)
                 {
@@ -359,21 +249,6 @@ namespace RemGame
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
 
-
-
-
-            if (player.IsMoving && player.ActualMovningSpeed != 0)
-            {
-                //  Console.WriteLine(player.ActualMovningSpeed);
-
-                foreach (var scrolling in sc)
-                {
-                    if (player.Direction == Movement.Right)
-                        scrolling.Update(cam, -1);
-                    else
-                        scrolling.Update(cam, 1);
-                }
-            }
 
             if (!player.IsBending)
             {
@@ -436,24 +311,7 @@ namespace RemGame
             if (!(StateManager.State == OurGame.PausedState.Value))
                 soundManager.ResumeSong();
 
-            /*
-            if (currentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                foreach (Obstacle obj in map.ObstacleTiles)
-                {
-                    Vector2 mouseToWorld = cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y));
-                    if (mouseToWorld.X >= obj.Position.X - 35 && mouseToWorld.X <= obj.Position.X + 35 && mouseToWorld.Y >= obj.Position.Y && mouseToWorld.Y <= obj.Position.Y + 70)
-                        player.Kinesis(obj, currentMouseState);
-
-                }
-            }
-            */
-
-
-
-
-
-
+            previousMouseState = currentMouseState;
         }
 
         public override void Draw(GameTime gameTime)
@@ -461,38 +319,8 @@ namespace RemGame
 
             GraphicsDevice.Clear(_backgroundColor);
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
-            Rectangle backgroundREC1 = new Rectangle(0, -700, 5693, 1969);
-            Rectangle backgroundREC2 = new Rectangle(4097, -700, 5693, 1969);
-            Rectangle backgroundREC3 = new Rectangle(8193, -700, 5693, 1969);
-            Rectangle backgroundREC4 = new Rectangle(12990, -700, 5693, 1969);
-            Rectangle backgroundREC5 = new Rectangle(16387, -700, 5693, 1969);
 
-            //sc[0].Draw(spriteBatch);
-            //sc[6].Draw(spriteBatch);
-            /*
-            for (int i = 1; i < 3; i++)
-            {
-                sc[i].Draw(spriteBatch);
-            }
-            //////////////////////////////////////////////
-            for (int i = 7; i < 9; i++)
-            {
-                sc[i].Draw(spriteBatch);
-
-            }
-            */
-
-            ///////////////////////////////////////
-            ///
             //map.DrawEnemies(gameTime, spriteBatch);
-            map.Update(gameTime);
-
-            //////////////////////////////////////////////
-
-
-            ///////////////////////////////////////////////
-            ///
-
 
             spriteBatch.DrawString(font, cam.Position.X + "/" + cam.Position.Y, new Vector2(cam.Position.X, cam.Position.Y), Color.White);
 
@@ -504,27 +332,13 @@ namespace RemGame
             spriteBatch.Draw(backGround4, backgroundREC4, null, Color.White);
             spriteBatch.Draw(backGround5, backgroundREC5, null, Color.White);
 
+            spriteBatch.Draw(wall, closingWall, null, Color.White);
+
+
             map.DrawEnemies(gameTime, spriteBatch);
 
-            /*
-            for (int i = 3; i <= 5; i++)
 
-            {
-
-                sc[i].Draw(spriteBatch);
-
-            }
-
-            for (int i = 9; i <= 11; i++)
-
-            {
-
-                sc[i].Draw(spriteBatch);
-
-            }
-            */
             //spriteBatch.DrawString(font, "Mouse Position" + cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
-
             //spriteBatch.DrawString(font, "Mouse Position" + cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(cam.Position.X + cam.BoundingRectangle.Width / 2, -cam.Position.Y + cam.BoundingRectangle.Height / 4), Color.White);
 
             foreach (var component in _gameComponents)

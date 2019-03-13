@@ -85,7 +85,7 @@ namespace RemGame
 
         private DateTime previousSlide = DateTime.Now;   // time at which we previously jumped
         private const float slideInterval = 1.3f;        // in seconds
-        private Vector2 slideForce = new Vector2(8, 0); // applied force when jumping
+        private Vector2 slideForce = new Vector2(7, 0); // applied force when jumping
         private float startPoint = 0;
 
         private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
@@ -450,6 +450,7 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+            
             if (isAlive)
             {
                 keyboardState = Keyboard.GetState();
@@ -537,14 +538,14 @@ namespace RemGame
 
                 IsMoving = false;
 
-                if (keyboardState.IsKeyDown(Keys.Left))
+                if (keyboardState.IsKeyDown(Keys.A))
                 {
                     Move(Movement.Left);
                     direction = Movement.Left;
                     IsMoving = true;
 
                 }
-                else if (keyboardState.IsKeyDown(Keys.Right))
+                else if (keyboardState.IsKeyDown(Keys.D))
                 {
                     Move(Movement.Right);
                     direction = Movement.Right;
@@ -581,22 +582,22 @@ namespace RemGame
                 if (keyboardState.IsKeyDown(Keys.LeftShift) && (!prevKeyboardState.IsKeyDown(Keys.LeftShift)))
                 {
 
-                    if (keyboardState.IsKeyDown(Keys.Right))
+                    if (keyboardState.IsKeyDown(Keys.D))
                         Slide(Movement.Right);
 
-                    else if (keyboardState.IsKeyDown(Keys.Left))
+                    else if (keyboardState.IsKeyDown(Keys.A))
                         Slide(Movement.Left);
 
                 }
 
-                if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
+                if (currentMouseState.RightButton == ButtonState.Pressed && !(previousMouseState.RightButton == ButtonState.Pressed))
                 {
                     shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
 
                     //Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
 
                 }
-                if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed))
+                if (currentMouseState.RightButton == ButtonState.Released && (previousMouseState.RightButton == ButtonState.Pressed) && !(previousMouseState.LeftButton == ButtonState.Pressed))
                 {
                     shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
                     Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X), (shootDirection.Y - shootBase.Y));
@@ -604,14 +605,13 @@ namespace RemGame
                         rangedShoot(shootForce * 4);
                 }
 
+                if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed) && !(currentMouseState.RightButton == ButtonState.Pressed))
 
-                if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
+                //if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
                 {
                     Shoot();
 
                 }
-
-
 
                 if (Position.X < 400)
                 {
@@ -627,14 +627,14 @@ namespace RemGame
 
 
 
-                if (keyboardState.IsKeyDown(Keys.Down))
+                if (keyboardState.IsKeyDown(Keys.S))
                 {
                     bend();
                     IsBending = true;
 
                 }
 
-                if (keyboardState.IsKeyUp(Keys.Down) && prevKeyboardState.IsKeyDown(Keys.Down))
+                if (keyboardState.IsKeyUp(Keys.S) && prevKeyboardState.IsKeyDown(Keys.S))
                 {
                     IsBending = false;
                     upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
@@ -679,38 +679,23 @@ namespace RemGame
                 }
                 if (isRangeAttacking && !(shoot.Body.IsDisposed))
                     shoot.Draw(gameTime, spriteBatch);
-
+                /*
                 if (showText)
                 {
 
                     spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
                 }
-
-                //spriteBatch.Begin();
+                */
+                
                 for (int i = 0; i < Health; i++)
                 {
                     spriteBatch.Draw(hearts, new Vector2(Position.X - 900 + i * 60, Position.Y - 600), Color.White);
                 }
-                // spriteBatch.End();
-
-                //pv1.Draw(gameTime, spriteBatch);
-                //pv2.Draw(gameTime, spriteBatch);
-                //pv3.Draw(gameTime, spriteBatch);
-                /*
-                if (IsJumping)
-                {
-                    spriteBatch.DrawString(f, "going up"+liftOff.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
-                    spriteBatch.DrawString(f, "going down" + beforeLanding.ToString(), new Vector2(Position.X + size.X, Position.Y-100), Color.White);
-
-                }
-
-                if (hasLanded)
-                    spriteBatch.DrawString(f, "has landed", new Vector2(Position.X + size.X, Position.Y-200), Color.White);
-                    */
-
-
-
-                //wheel.Draw(gameTime,spriteBatch);
+              
+                pv1.Draw(gameTime, spriteBatch);
+                pv2.Draw(gameTime, spriteBatch);
+                pv3.Draw(gameTime, spriteBatch);
+          
             }
             else
             {
