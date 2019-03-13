@@ -294,7 +294,7 @@ namespace RemGame
             currentMouseState = Mouse.GetState();
             walkingInstance.Volume = 0.1f;
 
-            closingWall.X++;
+            closingWall.X+=4;
 
             if ((currentMouseState.LeftButton == ButtonState.Pressed) && (currentMouseState.RightButton == ButtonState.Pressed ))
             {
