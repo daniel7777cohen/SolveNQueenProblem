@@ -196,33 +196,27 @@ namespace RemGame
         {   
             if(!IsBending || !isJumping)
             speed = SPEED;
-            if (!isSliding)
+            if (!isSliding && !IsJumping)
             {
                 switch (movement)
                 {
                     case Movement.Left:
                         lookRight = false;
                         axis1.MotorSpeed = -MathHelper.TwoPi * speed;
-                        if (!isJumping || !isSliding)
                             anim = animations[3];
                         break;
 
                     case Movement.Right:
                         lookRight = true;
                         axis1.MotorSpeed = MathHelper.TwoPi * speed;
-                        if (!isJumping || !isSliding)
                             anim = animations[3];
                         break;
 
                     case Movement.Stop:
-
-                        if (!isJumping && !isSliding)
-                        {
-                            axis1.MotorSpeed = 0;
-                            axis1.BodyB.ResetDynamics();
-                            axis1.BodyA.ResetDynamics();
-                            upBody.Body.ResetDynamics();
-                        }
+                        axis1.MotorSpeed = 0;
+                        axis1.BodyB.ResetDynamics();
+                        axis1.BodyA.ResetDynamics();
+                        upBody.Body.ResetDynamics();
                         break;
                 }
             }
