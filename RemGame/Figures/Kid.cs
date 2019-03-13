@@ -27,6 +27,9 @@ namespace RemGame
         private float mass;
         private Vector2 position;
 
+        private Vector2 followingPlayerPoint;
+        private bool isFalling = false;
+
         private SpriteFont f;
 
         PhysicsView pv1;
@@ -143,8 +146,10 @@ namespace RemGame
             upBody = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
             upBody.Position = startPosition;
             position = upBody.Position;
+            followingPlayerPoint = position;
 
-            midBody = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
+
+        midBody = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
             midBody.Position = upBody.Position + new Vector2(0, 64);
             // Create the feet of the body
 
@@ -198,7 +203,7 @@ namespace RemGame
 
         public void Move(Movement movement)
         {   
-            if(!IsBending && !isJumping)
+            if(!IsBending && !isJumping && !isFalling)
             speed = SPEED;
             if (!IsSliding && !IsJumping)
             {
@@ -215,12 +220,14 @@ namespace RemGame
                         axis1.MotorSpeed = MathHelper.TwoPi * speed;
                             anim = animations[3];
                         break;
-
+                        
                     case Movement.Stop:
-                        axis1.MotorSpeed = 0;
-                        axis1.BodyB.ResetDynamics();
-                        axis1.BodyA.ResetDynamics();
-                        upBody.Body.ResetDynamics();
+                        
+                            axis1.MotorSpeed = 0;
+                            axis1.BodyB.ResetDynamics();
+                            axis1.BodyA.ResetDynamics();
+                            upBody.Body.ResetDynamics();
+                        
                         break;
                 }
             }
@@ -453,7 +460,12 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
-            
+            if(followingPlayerPoint.Y < upBody.Position.Y)      
+                isFalling = true;
+            else
+                isFalling = false;
+            followingPlayerPoint = upBody.Position;
+
             if (isAlive)
             {
                 keyboardState = Keyboard.GetState();
@@ -500,6 +512,7 @@ namespace RemGame
                         isJumping = false;
                         isMoving = false;
                         liftOff = 0;
+                        beforeLanding = 0;
                     }
 
 
@@ -712,5 +725,7 @@ namespace RemGame
         {
             
         }
+
+
     }
 }

@@ -8,9 +8,7 @@ using FarseerPhysics.Factories;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using XELibrary;
-
-
-
+using Microsoft.Xna.Framework.Media;
 
 namespace RemGame
 {
@@ -31,10 +29,14 @@ namespace RemGame
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
+
         Texture2D playerCrouch;
         Texture2D playerCrouchWalk;
         Texture2D playerStand;
         Texture2D playerWalk;
+        Texture2D[] jumpSetAnim = new Texture2D[5];
+        Texture2D[] slideSetAnim = new Texture2D[3];
+
         SpriteFont font;
         Camera2D cam;
         Vector2 camLocation;
@@ -71,16 +73,25 @@ namespace RemGame
         Texture2D hearts;
 
         //String[] mainMusicPlaylist;
-        SoundEffect walking;
-        SoundEffect jumping;
-        SoundEffect hall;
+        SoundEffect footstep;
+        SoundEffect jump_Up;
+        SoundEffect jump_Down;
+        SoundEffect idle;
+        SoundEffect crouch;
+        SoundEffect slide;
+
+        Song GeneralMusic;
 
         bool isJumpSoundPlayed = false;
 
 
         SoundEffectInstance walkingInstance;
-        SoundEffectInstance jumpingInstance;
-        SoundEffectInstance hallInstance;
+        SoundEffectInstance jumpingUpInstance;
+        SoundEffectInstance jumpingDownInstance;
+        SoundEffectInstance idleInstance;
+        SoundEffectInstance crouchingInstance;
+        SoundEffectInstance slidingInstance;
+
         SoundManager soundManager;
 
         public bool IsRonAlive { get => isRonAlive; set => isRonAlive = value; }
@@ -90,88 +101,25 @@ namespace RemGame
         {
             if (game.Services.GetService(typeof(IMissionOne)) == null)
                 game.Services.AddService(typeof(IMissionOne), this);
-            //soundManager = new SoundManager(game);
-            //soundManager = (ISoundManager)game.Services.GetService(typeof(ISoundManager));
-            //general = new SoundManager(game);
+
         }
 
         protected override void LoadContent()
         {
+            GeneralMusic = Content.Load<Song>("Sound/Music/General_Music_1");
+            MediaPlayer.Volume = 0.09f;
+            MediaPlayer.Play(GeneralMusic);
             hearts = Content.Load<Texture2D>("misc/heart");
-            //soundManager.LoadContent(@"Sound/Music", @"Sound/FX");
-            //soundManager.Play("General Music 1");
-            hall = Content.Load<SoundEffect>("Sound/FX/hallWay");
-            hallInstance = hall.CreateInstance();
-            //hallInstance.Play();
-            hallInstance.Volume = 0.04f;
-            //  general.LoadContent(@"Sounds/Music/", "");
-            //general.Play("General Music 1");
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             cam = new Camera2D(GraphicsDevice);
             world = new World(new Vector2(0, 9.8f));
             map = new Map(world);
-            // mainMusicPlaylist = new string[] { "General Music 1" };
-            // soundManager.StartPlayList(mainMusicPlaylist, 0);
-            //soundManager.Play("MonoGame MusicTest - Accordion 1");
-            //soundManager.Play("MonoGame MusicTest - Precussion 1");
-            //soundManager.Play("General Music 1");
+
             font = Content.Load<SpriteFont>("Fonts/Font");
             Tile.Content = Content;
             Map.Content = Content;
-            /*
-            map.Generate(new int[,]
-            {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
-                {2,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,2,2},
-                {2,2,0,0,0,0,0,0,0,1,1,1,2,2,2,1,0,0,0,0,2,2},
-                {2,2,0,0,0,0,0,0,1,2,2,2,2,2,2,2,1,0,0,0,2,2},
-                {2,0,0,0,0,0,1,1,2,2,2,2,2,2,2,2,2,1,1,1,2,2},
-                {2,0,0,0,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-                {2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            }, 64,font);
-            */
-            /*
-            map.Generate(new int[,]
-            {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,0,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,1,1,1,0,1,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,1,0,0,1,0,1,1,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            }, 64, font);
-            */
-            //REM
-            /*
-            map.Generate(new int[,]
-            {
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,0,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            }, 64, font);
-            */
-            ////Straight MAP
-            ///
-
-            //14
+      
             map.Generate(new int[,]
             {
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -184,7 +132,7 @@ namespace RemGame
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,8,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
                 {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
@@ -217,32 +165,13 @@ namespace RemGame
             sc[9] = Sc10;
             sc[10] = Sc11;
             sc[11] = Sc12;
-            backGround1 = Content.Load<Texture2D>("Layers/level/1");
-            backGround2 = Content.Load<Texture2D>("Layers/level/2");
-            backGround3 = Content.Load<Texture2D>("Layers/level/3");
-            backGround4 = Content.Load<Texture2D>("Layers/level/4");
-            backGround5 = Content.Load<Texture2D>("Layers/level/5");
+
+
             for (int i = 0; i < 6; i++)
             {
                 sc[i].setRighttwinSc(sc[i + 6]);
             }
-            /*
 
-
-            floor = new Floor(world, Content.Load<Texture2D>("cave_walk"), new Vector2(GraphicsDevice.Viewport.Width * 2, 60));
-            floor.Position = new Vector2(0, GraphicsDevice.Viewport.Height - 60);
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            plat = new Obstacle[maxPlat];
-            /*
-            for (int i = 0; i < maxPlat; i++)
-            {
-                plat[3-i] = new Obstacle(world, Content.Load<Texture2D>("HUD"), new Vector2(70,70),font);
-                plat[3-i].Position = new Vector2(500 + 200 * i, 600 - 45 * i);
-                plat[3-i].Body.BodyType = BodyType.Static;
-            }
-            */
 
             player = new Kid(hearts, world,
                  Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
@@ -257,20 +186,52 @@ namespace RemGame
             playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
             playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
 
+            SpriteEffects flip = SpriteEffects.FlipHorizontally;
+
+            player = new Kid(hearts, world,
+                Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
+                Content.Load<Texture2D>("Player/Anim/Ron_Stand"),
+                Content.Load<Texture2D>("Player/bullet"),
+                new Vector2(60, 60),
+                100,
+                cam.ScreenToWorld(new Vector2(650, 440)), false, font);
 
 
-            // player.Position = new Vector2(player.Size.X, GraphicsDevice.Viewport.Height - 87);
 
-            walking = Content.Load<SoundEffect>("Sound/FX/Footsteps Brick 1");
-            walkingInstance = walking.CreateInstance();
+            footstep = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Footsteps");
+            walkingInstance = footstep.CreateInstance();
             walkingInstance.IsLooped = true;
-            walkingInstance.Volume = 0.02f;
+            walkingInstance.Pitch = 0.18f;
 
-            jumping = Content.Load<SoundEffect>("Sound/FX/Jump");
-            jumpingInstance = jumping.CreateInstance();
-            jumpingInstance.IsLooped = false;
-            jumpingInstance.Volume = 0.01f;
-            //jumpingInstance.Pitch = 0.1f;
+
+            jump_Up = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Jump_Up");
+            jumpingUpInstance = jump_Up.CreateInstance();
+            jumpingUpInstance.IsLooped = false;
+            jumpingUpInstance.Volume = 0.02f;
+
+            jump_Down = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Jump_Down");
+            jumpingDownInstance = jump_Down.CreateInstance();
+            jumpingDownInstance.IsLooped = false;
+            jumpingDownInstance.Volume = 0.04f;
+
+            idle = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Idle");
+            idleInstance = idle.CreateInstance();
+            idleInstance.IsLooped = true;
+            idleInstance.Volume = 0.1f;
+            idleInstance.Pitch = 0.3f;
+
+
+            crouch = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Crouch");
+            crouchingInstance = crouch.CreateInstance();
+            crouchingInstance.IsLooped = true;
+            crouchingInstance.Volume = 0.03f;
+            crouchingInstance.Pitch = 0.25f;
+
+
+            slide = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Slide");
+            slidingInstance = slide.CreateInstance();
+            slidingInstance.IsLooped = false;
+            slidingInstance.Volume = 0.04f;
 
 
 
@@ -280,11 +241,32 @@ namespace RemGame
 
 
             player.Animations[0] = new AnimatedSprite(playerCrouch, 1, 1, anim3, 0f);
-            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2, 16, anim3, 0f);
+            player.Animations[1] = new AnimatedSprite(playerCrouchWalk, 2, 16, anim3, 0.03f);
 
             player.Animations[2] = new AnimatedSprite(playerStand, 4, 13, anim3, 0.017f);
 
-            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.017f);
+            player.Animations[3] = new AnimatedSprite(playerWalk, 2, 12, anim3, 0.03f);
+
+            jumpSetAnim[0] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_01_start");
+            jumpSetAnim[1] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_02_up");
+            jumpSetAnim[2] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_03_mid");
+            jumpSetAnim[3] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_04_down");
+            jumpSetAnim[4] = Content.Load<Texture2D>("Player/Anim/Jump/Ron_Jump_05_end");
+
+            player.Animations[4] = new AnimatedSprite(jumpSetAnim[0], 1, 1, anim3, 0f);
+            player.Animations[5] = new AnimatedSprite(jumpSetAnim[1], 1, 1, anim3, 0f);
+            player.Animations[6] = new AnimatedSprite(jumpSetAnim[2], 1, 3, anim3, 0.6f);
+            player.Animations[7] = new AnimatedSprite(jumpSetAnim[3], 1, 1, anim3, 0f);
+            player.Animations[8] = new AnimatedSprite(jumpSetAnim[4], 1, 1, anim3, 0f);
+
+            slideSetAnim[0] = Content.Load<Texture2D>("Player/Anim/Slide/Ron_Slide_01_start");
+            slideSetAnim[1] = Content.Load<Texture2D>("Player/Anim/Slide/Ron_Slide_02_slide");
+            slideSetAnim[2] = Content.Load<Texture2D>("Player/Anim/Slide/Ron_Slide_03_end");
+
+            player.Animations[9] = new AnimatedSprite(slideSetAnim[0], 1, 4, anim3, 0.4f);
+            player.Animations[10] = new AnimatedSprite(slideSetAnim[1], 1, 6, anim3, 0.3f);
+            player.Animations[11] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.4f);
+
 
             map.setPlayerToMap(player);
 
@@ -303,17 +285,17 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+
+
             handleInput(gameTime);
 
             currentMouseState = Mouse.GetState();
+            walkingInstance.Volume = 0.1f;
 
 
-            //after componnet list is set THIS can be deleted
-
-
-
-            if (currentMouseState.RightButton == ButtonState.Pressed)
+            if ((currentMouseState.LeftButton == ButtonState.Pressed) && (currentMouseState.RightButton == ButtonState.Pressed))
             {
+                Console.WriteLine("kinesis!!!!!");
                 // Console.WriteLine(cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)));
                 foreach (Obstacle obj in map.ObstacleTiles)
                 {
@@ -327,8 +309,16 @@ namespace RemGame
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
 
+            //walkingInstance.Pitch = 0.0f;
+            if (player.IsMoving && !player.IsJumping && !player.IsBending && !player.IsSliding)
+            {
+                walkingInstance.Play();
+            }
 
-
+            else
+            {
+                walkingInstance.Pause();
+            }
 
             if (player.IsMoving && player.ActualMovningSpeed != 0)
             {
@@ -343,34 +333,34 @@ namespace RemGame
                 }
             }
 
-            if (!player.IsBending)
-            {
-
-                //walkingInstance.Pitch = 0.0f;
-                if (player.IsMoving && !player.IsJumping)
-                {
-                    walkingInstance.Play();
-                }
-
-                else
-                {
-                    walkingInstance.Stop();
-                }
-            }
-            else
-            {
-                walkingInstance.Pitch = -0.5f;
-                walkingInstance.Volume = 0.01f;
-            }
-
             if (player.IsJumping && !isJumpSoundPlayed)
             {
                 isJumpSoundPlayed = true;
-                jumpingInstance.Play();
+                jumpingUpInstance.Play();
             }
 
             if (!player.IsJumping)
                 isJumpSoundPlayed = false;
+
+            if (player.HasLanded && player.PlayLandingSound)
+            {
+                jumpingDownInstance.Play();
+                player.PlayLandingSound = false;
+            }
+
+            if (!player.IsMoving && !player.IsJumping)
+                idleInstance.Play();
+            else
+                idleInstance.Stop();
+
+            if (player.IsBending)
+                crouchingInstance.Play();
+            else
+                crouchingInstance.Stop();
+
+
+            if (player.IsSliding)
+                slidingInstance.Play();
 
             camLocation = new Vector2(player.Position.X, player.Position.Y - 100);
 
@@ -387,46 +377,42 @@ namespace RemGame
 
         private void handleInput(GameTime gameTime)
         {
-
+            if (!player.IsAlive)
+            {
+                StateManager.PopState();
+                OurGame.Reset();
+                StateManager.PushState(OurGame.StartMenuState.Value);
+                player.IsAlive = true;
+            }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Escape))
+            {
                 StateManager.PushState(OurGame.EscapeState.Value);
+            }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.P))
             {
                 StateManager.PushState(OurGame.PausedState.Value);
-                soundManager.PauseSong();
+
+                MediaPlayer.Pause();
             }
-           // if (!(StateManager.State == OurGame.PausedState.Value))
-               // soundManager.ResumeSong();
-            /*
-            if (currentMouseState.LeftButton == ButtonState.Pressed)
+            if (!(StateManager.State == OurGame.PausedState.Value))
             {
-                foreach (Obstacle obj in map.ObstacleTiles)
-                {
-                    Vector2 mouseToWorld = cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y));
-                    if (mouseToWorld.X >= obj.Position.X - 35 && mouseToWorld.X <= obj.Position.X + 35 && mouseToWorld.Y >= obj.Position.Y && mouseToWorld.Y <= obj.Position.Y + 70)
-                        player.Kinesis(obj, currentMouseState);
-
-                }
+                MediaPlayer.Resume();
             }
-            */
-
-
-
-
-
-
         }
+
+
+
+
+
+
+   
 
         public override void Draw(GameTime gameTime)
         {
 
             GraphicsDevice.Clear(_backgroundColor);
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
-            //Rectangle backgroundREC1 = new Rectangle(0, -700, 5693, 1969);
-            //Rectangle backgroundREC2 = new Rectangle(4097, -700, 5693, 1969);
-            //Rectangle backgroundREC3 = new Rectangle(8193, -700, 5693, 1969);
-            //Rectangle backgroundREC4 = new Rectangle(12990, -700, 5693, 1969);
-            //Rectangle backgroundREC5 = new Rectangle(16387, -700, 5693, 1969);
+
 
             sc[0].Draw(spriteBatch);
             sc[6].Draw(spriteBatch);
@@ -443,32 +429,10 @@ namespace RemGame
             }
             
 
-            ///////////////////////////////////////
-            ///
-            map.Update(gameTime);
-
-
-
-
-            //////////////////////////////////////////////
-
-
-            ///////////////////////////////////////////////
-            ///
-
-
             spriteBatch.DrawString(font, cam.Position.X + "/" + cam.Position.Y, new Vector2(cam.Position.X, cam.Position.Y), Color.White);
 
-            //map.DrawObstacle(gameTime, spriteBatch);
+            map.DrawObstacle(gameTime, spriteBatch);
 
-            //spriteBatch.Draw(backGround1, backgroundREC1, null, Color.White);
-            //spriteBatch.Draw(backGround2, backgroundREC2, null, Color.White);
-            //spriteBatch.Draw(backGround3, backgroundREC3, null, Color.White);
-            //spriteBatch.Draw(backGround4, backgroundREC4, null, Color.White);
-            //spriteBatch.Draw(backGround5, backgroundREC5, null, Color.White);
-
-
-            
             for (int i = 3; i <= 5; i++)
 
             {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Jump_Up.mp3</SourceFile>
-  <SourceTime>2019-03-13T20:05:34.2558009+02:00</SourceTime>
+  <SourceTime>2019-03-13T22:18:59.1239642+02:00</SourceTime>
   <DestFile>C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Sound/FX/Player/Ron_Jump_Up.xnb</DestFile>
-  <DestTime>2019-03-13T22:04:23.1066948+02:00</DestTime>
+  <DestTime>2019-03-13T22:20:37.7038952+02:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2018-12-08T18:35:54+02:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>

@@ -173,11 +173,14 @@ namespace RemGame
                 case Movement.Left:
                     lookingRight = false;
                      axis1.MotorSpeed = -MathHelper.TwoPi * speed;
+                    anim = animations[0];
                     break;
 
                 case Movement.Right:
                     lookingRight = true;
                     axis1.MotorSpeed = MathHelper.TwoPi * speed;
+                    anim = animations[1];
+
                     break;
 
                 case Movement.Stop:
@@ -348,8 +351,8 @@ namespace RemGame
             currentMouseState = Mouse.GetState();
 
             //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
-
-            anim = animations[(int)direction];
+            anim = Animations[0];
+            anim = Animations[(int)direction];
 
             if (isMoving) // apply animation
                 Anim.Update(gameTime);
@@ -458,8 +461,6 @@ namespace RemGame
 
                     }
 
-
-
                     else
                     {
                         Move(Movement.Stop);
@@ -468,14 +469,6 @@ namespace RemGame
             }
             
             
-                //}
-            /*
-                if (keyboardState.IsKeyUp(Keys.Down)&& prevKeyboardState.IsKeyDown(Keys.Down))
-                {
-                    //torso.Body.Enabled = true;
-
-                }
-                */
                 if(isMeleAttacking)
                 mele.Update(gameTime);
                 
@@ -496,10 +489,10 @@ namespace RemGame
             Rectangle dest = torso.physicsObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
-            if(!torso.Body.IsDisposed)
-            anim.Draw(spriteBatch, dest, torso.Body,false);
-            //pv1.Draw(gameTime, spriteBatch);
-            //pv2.Draw(gameTime, spriteBatch);
+            if(!torso.Body.IsDisposed&& anim!=null)
+                anim.Draw(spriteBatch, dest, torso.Body,false);
+            pv1.Draw(gameTime, spriteBatch);
+            pv2.Draw(gameTime, spriteBatch);
 
             if (isMeleAttacking && !(mele.Body.IsDisposed))
                 mele.Draw(gameTime, spriteBatch);
