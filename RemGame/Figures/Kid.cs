@@ -560,12 +560,17 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+
             walkingInstance.Volume = 0.1f;
 
-            if (followingPlayerPoint.Y < upBody.Position.Y)      
+            if (followingPlayerPoint.Y < upBody.Position.Y)
                 isFalling = true;
             else
                 isFalling = false;
+
+            if (isFalling == true && upBody.Position.Y >1300)
+               isAlive = false;
+
             followingPlayerPoint = upBody.Position;
 
             if (isAlive)

@@ -13,12 +13,12 @@ namespace RemGame
 {
     class Map
     {
-        // private List<CollisionTiles> collisionTiles = new List<CollisionTiles>();
+        //private List<CollisionTiles> collisionTiles = new List<CollisionTiles>();
         private List<Tile> collisionTiles = new List<Tile>();
         private List<Obstacle> obstacleTiles = new List<Obstacle>();
         private List<Enemy> enemies = new List<Enemy>();
         private Kid player;
-
+        private int enemies_counter = 0;
         private int width, height;
         private World world;
         public Texture2D texture;
@@ -28,6 +28,7 @@ namespace RemGame
         public bool Finished_tutorial { get => finished_tutorial; set => finished_tutorial = value; }
 
         //public List<CollisionTiles> CollisionTiles { get => collisionTiles; }
+        public int Enemies_counter { get => enemies_counter; set => enemies_counter = value; }
 
 
 
@@ -79,7 +80,9 @@ namespace RemGame
                     {
                         Ground ground = new Ground(world, texture, new Vector2(64, 64), font);
                         ground.Position = new Vector2(x * size, y * size);
+
                         //ObstacleTiles.Add(ground);
+
 
                     }
                     else if (number == 2)//locker
@@ -121,7 +124,13 @@ namespace RemGame
                         //ObstacleTiles.Add(chair);
 
                     }
-                   
+                   else if(number ==7)
+                    {
+                        Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
+                        obs.Position = new Vector2(x*size, y * size);
+                        ObstacleTiles.Add(obs);
+
+                    }
                     else if (number == 8)//enemy
                     {
                         r = new Random();
@@ -132,6 +141,7 @@ namespace RemGame
                         new Vector2(x * size, y * size), false, font, rInt);
                      
                         enemies.Add(en);
+                        enemies_counter++;
                     }
 
                     width = (x + 1) * size;
@@ -144,8 +154,11 @@ namespace RemGame
         public void Update(GameTime gameTime)
         {
             foreach (Enemy en in enemies)
+            {
                 en.Update(gameTime, player.Position, player.IsAlive);
-
+                if (en.Health == 0)
+                    enemies_counter--;
+            }
         }
 
         public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)
