@@ -20,13 +20,12 @@ namespace RemGame
     {
         private static ContentManager content;
         Random random;
-        /// <summary>
+
         bool pingPong = false;
         bool Ghost = false;
-        /// </summary>
+
         private int health = 5;
         private World world;
-        private Texture2D texture;
         private Vector2 size;
         private float mass;
         private Vector2 position;
@@ -44,17 +43,6 @@ namespace RemGame
         private const float walkInterval = 3.0f;        // in seconds
 
         private static Random r = new Random();
-        /*
-                /// <tmp>
-                private PhysicsObject mele;
-                private PhysicsObject shoot;
-
-                Vector2 shootBase;
-                Vector2 shootDirection;
-                Texture2D shootTexture;
-                /// <tmp>
-                /// 
-       */
 
         private PhysicsView pv1;
         private PhysicsView pv2;
@@ -104,9 +92,6 @@ namespace RemGame
             this.world = world;
             this.size = size;
             this.mass = mass / 2.0f;
-            //shootTexture = bullet;
-
-
 
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
@@ -116,14 +101,10 @@ namespace RemGame
             torso = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
             position = torso.Position;
-
             lastPosition = position;
 
-            //r = new Random();
             int rInt = r.Next(192, 320);
-
-            distance = rInt;
-            
+            distance = rInt; 
             oldDistance = distance;
 
             
@@ -133,15 +114,8 @@ namespace RemGame
 
             wheel.Body.Friction = 16.0f;
 
-            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
-            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
-
-            shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
-
-
             // Create a joint to keep the torso upright
             JointFactory.CreateAngleJoint(world, torso.Body, new Body(world));
-
 
             // Connect the feet to the torso
             axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, wheel.Body, Vector2.Zero);
@@ -149,13 +123,6 @@ namespace RemGame
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0;
             axis1.MaxMotorTorque = 10;
-
-            //mele = new PhysicsObject(world, bullet, 30, 1);
-            //mele.Body.Mass = 1.5f;
-
-            //shoot = new PhysicsObject(world, shootTexture, 30, 1);
-            pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
-            pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
 
             torso.Body.CollisionCategories = Category.Cat20;
             wheel.Body.CollisionCategories = Category.Cat21;
@@ -166,6 +133,14 @@ namespace RemGame
 
             torso.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
+
+            pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
+            pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
+
+            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
+            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
+
+            shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
 
         }
         public static ContentManager Content { protected get => content; set => content = value; }
@@ -233,8 +208,6 @@ namespace RemGame
             random = new Random();
             double randomInterval = (random.NextDouble() * shootInterval + 1);
             
-
-            Console.WriteLine(randomInterval);
             if ((DateTime.Now - previousShoot).TotalSeconds >= randomInterval && !Ghost)
             {
                 isMeleAttacking = true;
@@ -290,43 +263,7 @@ namespace RemGame
             return true;
 
         }
-
-        public void Kinesis(Obstacle obj, MouseState currentMouseState)
-        {
-            obj.KinesisOn = true;
-
-            if (obj.Position.Y > 0)
-            {
-                if (currentMouseState.RightButton == ButtonState.Pressed)
-                {
-                    obj.Body.BodyType = BodyType.Dynamic;
-                    //obj.Body.Mass = 0.0f;
-                    obj.Body.GravityScale = 0;
-                    obj.Body.ApplyForce(new Vector2(0, -4.0f));
-                }
-                else
-                {
-
-                    //obj.Body.Mass = 0;
-                    //obj.Body.ResetDynamics();
-                    //obj.Body.BodyType = BodyType.Static;
-                }
-            }
-            else
-            {
-                obj.Body.ResetDynamics();
-                obj.Body.GravityScale = 1;
-                //obj.Body.Mass = 0.0f;
-                //obj.Body.Mass = 9.8f;
-                if (currentMouseState.RightButton == ButtonState.Pressed)
-                {
-                    //obj.Body.BodyType = BodyType.Static;
-                    //obj.Body.ApplyForce(new Vector2(4.0f, 0));
-                    //obj.Body.BodyType = BodyType.Static;
-                }
-            }
-            obj.KinesisOn = false;
-        }
+     
 
         public void bent()
         {
@@ -379,8 +316,6 @@ namespace RemGame
                     speed = SPEED;
                     int dir = 0;
                     isBackToLastPos = false;
-                    Console.WriteLine(position);
-                    Console.WriteLine(playerPosition);
                 
                         if (playerPosition.X < Position.X - 150 )
                         {
@@ -468,8 +403,6 @@ namespace RemGame
                 if(isMeleAttacking)
                 mele.Update(gameTime);
                 
-                if(!isPlayerAlive)
-
             previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
