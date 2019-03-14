@@ -70,7 +70,7 @@ namespace RemGame
 
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 2.0f;
+        private const float SPEED = 3.0f;
         private float walkTracker = 0;
 
 
