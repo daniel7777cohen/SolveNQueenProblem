@@ -61,6 +61,7 @@
     <Compile Include="States\OptionsMenuState.cs" />
     <Compile Include="States\PausedState.cs" />
     <Compile Include="States\PlayingStateOrg.cs" />
+    <Compile Include="States\GenericMission.cs" />
     <Compile Include="States\StartMenuState.cs" />
     <Compile Include="States\TitleIntroState.cs" />
     <Compile Include="Utils\AnimatedSprite.cs" />

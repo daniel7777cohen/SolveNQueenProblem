@@ -87,8 +87,6 @@ namespace RemGame
         private int health = 8;
         private bool isAlive = true;
         private const float SPEED = 2.0f;
-        private float walkTracker = 0;
-
 
         private float speed = SPEED;
         private float actualMovningSpeed=0;
@@ -207,7 +205,6 @@ namespace RemGame
             // Create the feet("Engine") of the body
             wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
             wheel.Position = midBody.Position + new Vector2(0, 64);
-            walkTracker = wheel.Position.X;
 
             upBody.Body.Friction = 50.0f;
             midBody.Body.Friction = 50.0f;
@@ -328,6 +325,7 @@ namespace RemGame
         {   
             if(!IsBending && !isJumping )
             speed = SPEED;
+
             if (!IsSliding && !IsJumping )
             {
                 switch (movement)
@@ -353,7 +351,6 @@ namespace RemGame
                             ResetPlayerDynamics();
                         break;
                 }
-                walkTracker = wheel.Body.Position.X;
 
             }
         }
@@ -595,6 +592,8 @@ namespace RemGame
                 currentMouseState = Mouse.GetState();
                 actualMovningSpeed = upBody.Body.AngularVelocity;
 
+
+                ///////////Check for falling
                 if (upBody.Position.Y > followingPlayerPoint.Y && !isJumping)
                     isFalling = true;
                 else
@@ -605,7 +604,7 @@ namespace RemGame
 
                 followingPlayerPoint = upBody.Position;
 
-                //////////////////////Jump Detector
+                //////////////////////Jump Animation ///////////////////
                 if (!HasLanded && isJumping)
                 {
 
@@ -649,7 +648,7 @@ namespace RemGame
 
                 }
 
-                //////////////////////Slide Detector
+                //////////////////////Slide Animation//////////////////////////////
                 if (IsSliding)
                 {
                     if (wheel.Position.X == slideTracker || wheel.Position.X < slideTracker && direction == Movement.Right || wheel.Position.X > slideTracker && direction == Movement.Left)
@@ -694,6 +693,8 @@ namespace RemGame
                 
                 ////////////////////////Key Mangment///////////////////////////////////////////
                 /////Movments
+                ///
+                ///Move Right
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
                     if(direction == Movement.Right)
@@ -704,6 +705,8 @@ namespace RemGame
                     IsMoving = true;
 
                 }
+
+                ///Move Left
                 else if (keyboardState.IsKeyDown(Keys.D))
                 {
                     if (direction == Movement.Left)
@@ -714,19 +717,19 @@ namespace RemGame
                     IsMoving = true;
 
                 }
+                ///No Moving
                 else
                 {
                     IsMoving = false;
                     Move(Movement.Stop);
 
                 }
-
-                //if statment should changed
+                ///Jump
                 if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
                     Jump();
                 }
-
+                ///Move While jump
                 if (isJumping)
                 {
                     if (keyboardState.IsKeyDown(Keys.D))
@@ -740,6 +743,7 @@ namespace RemGame
                     }
                 }
 
+                ///Slide
                 if (keyboardState.IsKeyDown(Keys.LeftShift) && (!prevKeyboardState.IsKeyDown(Keys.LeftShift)))
                 {
 
@@ -750,14 +754,14 @@ namespace RemGame
                         Slide(Movement.Left);
 
                 }
-
+                ///Bend
                 if (keyboardState.IsKeyDown(Keys.S))
                 {
                     bend();
                     IsBending = true;
 
                 }
-
+                ///Check for leaving bend pose
                 if (keyboardState.IsKeyUp(Keys.S) && prevKeyboardState.IsKeyDown(Keys.S))
                 {
                     IsBending = false;
@@ -765,13 +769,14 @@ namespace RemGame
                 }
 
                 /////////Actions///////////////////////
+                ///Ranged Shot
+                ///Calculate Direction For Shooting
                 if (currentMouseState.RightButton == ButtonState.Pressed && !(previousMouseState.RightButton == ButtonState.Pressed))
                 {
                     shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
 
-                    //Console.WriteLine("start: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-
                 }
+                ///Calculate Motion Vector For Shooting
                 if (currentMouseState.RightButton == ButtonState.Released && (previousMouseState.RightButton == ButtonState.Pressed) && !(previousMouseState.LeftButton == ButtonState.Pressed))
                 {
                     shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
@@ -779,16 +784,14 @@ namespace RemGame
                     if (shootForce.X > 5 || shootForce.X < -5 || shootForce.Y > 5 || shootForce.Y < -5)
                         rangedShoot(shootForce * 4);
                 }
-
+                ///Sraight Shot / might change to Mele
                 if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed) && !(currentMouseState.RightButton == ButtonState.Pressed))
 
-                //if (keyboardState.IsKeyDown(Keys.LeftControl) && !(prevKeyboardState.IsKeyDown(Keys.LeftControl)))
                 {
                     Shoot();
-
                 }
 
-                /////////////player EFFECTS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////Sound Effects///////////////////////////////////////////////////////////////////
                 if (IsMoving && !IsJumping && !IsBending && !IsSliding)
                 {
                     walkingInstance.Play();
@@ -852,8 +855,6 @@ namespace RemGame
                     anim = animations[(int)Animation.Idle];
 
                 Anim.Update(gameTime);
-
-                
 
                 previousMouseState = currentMouseState;
                 prevKeyboardState = keyboardState;
@@ -926,6 +927,7 @@ namespace RemGame
             midBody.Body.ResetDynamics();
             wheel.Body.ResetDynamics();
         }
+
         public static void MyDelay(int seconds)
         {
             
