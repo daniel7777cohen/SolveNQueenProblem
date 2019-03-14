@@ -38,7 +38,7 @@ namespace RemGame
         public IEscapeState EscapeState;
         public IPausedState PausedState;
         public IOptionsMenuState OptionsMenuState;
-
+        public IGameOverState GameOverState;
         public bool EnableSoundFx { get; set; }
         public bool EnableMusic { get; set; }
 
@@ -74,6 +74,7 @@ namespace RemGame
             PlayingState = new PlayingState(this);
             Mission1 = new Mission1(this);
             EscapeState = new EscapeState(this);
+            GameOverState = new GameOverState(this);
             EnableSoundFx = true;
             EnableMusic = true;
 
@@ -110,9 +111,7 @@ namespace RemGame
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load sounds
-            string musicPath = @"Sound/Music/";
-            string fxPath = @"Sound/FX/";
+            
 
             //soundManager.LoadContent(musicPath, fxPath);
         }
