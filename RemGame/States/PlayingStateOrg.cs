@@ -134,7 +134,7 @@ namespace RemGame
             player = new Kid(world,
                 new Vector2(60, 60),
                 100,
-                cam.ScreenToWorld(new Vector2(650, 440)), false, font);
+                cam.ScreenToWorld(new Vector2(650, 400)), false, font);
 
             map.setPlayerToMap(player);
 
