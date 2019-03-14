@@ -211,8 +211,8 @@ namespace RemGame
             axis1 = JointFactory.CreateRevoluteJoint(world, midBody.Body, wheel.Body, Vector2.Zero);
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
-            axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque = 3.0f;
+            axis1.MotorSpeed = 6.0f;
+            axis1.MaxMotorTorque = 5.0f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
             //axis2 = JointFactory.CreateAngleJoint(world,upBody.Body,midBody.Body);
@@ -295,7 +295,7 @@ namespace RemGame
 
             Animations[9] = new AnimatedSprite(slideSetAnim[0], 1, 4, anim3, 0.4f);
             Animations[10] = new AnimatedSprite(slideSetAnim[1], 1, 6, anim3, 0.3f);
-            Animations[11] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.4f);
+            Animations[11] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.6f);
 
 
             pv1 = new PhysicsView(upBody.Body, upBody.Position, upBody.Size, f);
@@ -313,6 +313,7 @@ namespace RemGame
                 switch (movement)
                 {
                     case Movement.Left:
+
                         lookRight = false;
                         axis1.MotorSpeed = -MathHelper.TwoPi * speed;
                         anim = animations[3];
@@ -641,11 +642,12 @@ namespace RemGame
                     {
                         anim = animations[11];
                     }
-                    if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450 || slideOver)
+                    if (wheel.Position.X > startPoint + 500 || wheel.Position.X < startPoint - 500 || slideOver)
                     {
                         IsSliding = false;
                         slideOver = true;
-                        ResetPlayerDynamics();
+                        upBody.Body.ResetDynamics();
+
                         upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                         midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                     }
@@ -665,11 +667,13 @@ namespace RemGame
 
                 IsMoving = false;
 
-                if((keyboardState.IsKeyDown(Keys.A) && prevKeyboardState.IsKeyDown(Keys.D)) || (keyboardState.IsKeyDown(Keys.D) && prevKeyboardState.IsKeyDown(Keys.A)))
-                    ResetPlayerDynamics();
+                
 
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
+                    if(direction == Movement.Right)
+                        ResetPlayerDynamics();
+
                     Move(Movement.Left);
                     direction = Movement.Left;
                     IsMoving = true;
@@ -677,6 +681,9 @@ namespace RemGame
                 }
                 else if (keyboardState.IsKeyDown(Keys.D))
                 {
+                    if (direction == Movement.Left)
+                        ResetPlayerDynamics();
+
                     Move(Movement.Right);
                     direction = Movement.Right;
                     IsMoving = true;
@@ -784,6 +791,8 @@ namespace RemGame
                     Shoot();
 
                 }
+
+
                 //////////////////////////////////////////SCENE/////////////////////////////////////////////////////////////////////////////
                 /*
                 if (Position.X < 400)
