@@ -2,18 +2,21 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using XELibrary;
 
 namespace RemGame
 {
-    public sealed class OptionsMenuState : BaseGameState, IOptionsMenuState
+    public sealed class OptionsMenuState : BaseGameState, IOptionsMenuState,IPlayingState
     {
        private  Boolean music = false;
         private Texture2D texture;
 
         private SpriteFont font;
         private int selected;
+        private int music_Counter=0;
+        private int effects_counter = 0;
         private string[] entries = 
         {
             "Sound FX",
@@ -56,15 +59,34 @@ namespace RemGame
             {
                 switch (selected)
                 {
-                    case 0:
-                        OurGame.EnableSoundFx = !OurGame.EnableSoundFx;
-                        values[0] = OurGame.EnableSoundFx ? "ON" : "OFF";
-
-                        break;
                     case 1:
-                        OurGame.EnableMusic = !OurGame.EnableMusic;
-                        values[1] = OurGame.EnableMusic ? "ON" : "OFF";
-
+                        music_Counter++;
+                        if (music_Counter % 2!= 0)
+                        {
+                            OurGame.EnableMusic = false;
+                            values[1] = "OFF";
+                            MediaPlayer.Pause();
+                        }
+                        else
+                        {
+                            OurGame.EnableMusic = true;
+                            values[1] = "ON";
+                            MediaPlayer.Resume();
+                                
+                        }
+                        break;
+                    case 0:
+                        effects_counter++;
+                        if (effects_counter % 2 != 0)
+                        {
+                            OurGame.EnableSoundFx = false;
+                            values[0] = "OFF";
+                        }
+                        else
+                        {
+                            OurGame.EnableSoundFx = true ;
+                            values[0] = "ON";
+                        }
                         break;
                     case 2:
                         StateManager.PopState();
