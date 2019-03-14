@@ -127,23 +127,15 @@ namespace RemGame
                         r = new Random();
                         int rInt = r.Next(192, 320);
                         Enemy en = new Enemy(world,
-                        Content.Load<Texture2D>("Player/playerLeft"),
-                        Content.Load<Texture2D>("Player/playerRight"),
-                        Content.Load<Texture2D>("Player/bullet"),
                         new Vector2(96, 96),
                         100,
                         new Vector2(x * size, y * size), false, font, rInt);
-                        en.Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4, new Rectangle(0, 0, 0, 0), 0.0f);
-                        en.Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, 0, 0, 0), 0.0f);
+                     
                         enemies.Add(en);
                     }
 
                     width = (x + 1) * size;
                     height = (y + 1) * size;
-
-
-
-
 
                 }
             }
@@ -161,7 +153,6 @@ namespace RemGame
             // foreach (CollisionTiles tile in collisionTiles)
             foreach (Obstacle ob in ObstacleTiles)
                 ob.Draw(gameTime, spriteBatch);
-
 
         }
 

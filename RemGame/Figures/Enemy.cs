@@ -12,11 +12,13 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Dynamics.Contacts;
+using Microsoft.Xna.Framework.Content;
 
 namespace RemGame
 {
     class Enemy 
     {
+        private static ContentManager content;
         Random random;
         /// <summary>
         bool pingPong = false;
@@ -96,20 +98,21 @@ namespace RemGame
         Texture2D shootTexture;
 
 
-        public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance)
+        public Enemy(World world,Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance)
         {
             this.world = world;
             this.size = size;
-            this.texture = torsoTexture;
             this.mass = mass / 2.0f;
             //shootTexture = bullet;
+
+
 
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
             float wheelSize = size.X;
 
             // Create the torso
-            torso = new PhysicsObject(world, torsoTexture, torsoSize.X, mass / 2.0f);
+            torso = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
             position = torso.Position;
 
@@ -122,12 +125,18 @@ namespace RemGame
             
             oldDistance = distance;
 
-            shootTexture = bullet;
+            
             // Create the feet of the body
-            wheel = new PhysicsObject(world, torsoTexture, wheelSize, mass / 2.0f);
+            wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
             wheel.Position = torso.Position + new Vector2(0, torsoSize.X / 2);
 
             wheel.Body.Friction = 16.0f;
+
+            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerLeft"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
+            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
+
+            shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
+
 
             // Create a joint to keep the torso upright
             JointFactory.CreateAngleJoint(world, torso.Body, new Body(world));
@@ -158,7 +167,7 @@ namespace RemGame
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
 
         }
-
+        public static ContentManager Content { protected get => content; set => content = value; }
         public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
         public AnimatedSprite Anim { get => anim; set => anim = value; }
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
@@ -189,14 +198,7 @@ namespace RemGame
             }
         }
         
-        //private bool dispose()
-        //{
-        //isAttacking = false;
-        //  return true;
-        //}
-        /// <summary>
-        /// /////////////////////////////////////////////////////////Abillities////////////////////////////////////////////////////////
-        /// </summary>
+
         public void Jump()
 
         {
@@ -239,8 +241,6 @@ namespace RemGame
                 mele.Body.CollisionCategories = Category.Cat30;
                 mele.Body.CollidesWith = Category.Cat10 | Category.Cat11 | Category.Cat1;
                 
-                //mele.Body.CollidesWith = Category.Cat1;
-
                 mele.Body.Mass = 1.0f;
                 mele.Body.IgnoreGravity = true;
                 mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y);
@@ -250,7 +250,6 @@ namespace RemGame
                 else
                     dir = -1;
                 mele.Body.ApplyLinearImpulse(new Vector2(10*dir, 0));
-                //mele.Body.FixtureList[0].OnCollision = dispose;
                 if (isPlayerAlive)
                     mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
                 previousShoot = DateTime.Now;
@@ -264,13 +263,9 @@ namespace RemGame
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             
-            //Console.WriteLine("Mele_OnCollision");
-
             isMeleAttacking = false;
-            //mele.Body.Enabled = false;
             mele.Body.Dispose();
             return true;
-        
 
         }
         
@@ -281,12 +276,9 @@ namespace RemGame
                     if (health > 0)
                     {
                         health--;
-                       // Console.WriteLine(health);
                     }
                     else
                     {
-                        //torso.Body.Enabled = false;
-                        //wheel.Body.Enabled = false;
                         torso.Body.Dispose();
                         wheel.Body.Dispose();
 
@@ -350,7 +342,6 @@ namespace RemGame
             keyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-            //bentPosition = new Vector2(torso.Position.X,torso.Position.Y-10);
             anim = Animations[0];
             anim = Animations[(int)direction];
 
@@ -440,7 +431,6 @@ namespace RemGame
                     //torso.Body.OnCollision += OnCollisionEventHandler()             
                     if (!(pingPong) && Position.X <= lastPosition.X + distance - size.X / 2 && !(Ghost))
                     {
-                        //Console.WriteLine("RIGHT")
                         Move(Movement.Right);
                         isMoving = true;
                         direction = Movement.Right;
@@ -491,8 +481,8 @@ namespace RemGame
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
             if(!torso.Body.IsDisposed&& anim!=null)
                 anim.Draw(spriteBatch, dest, torso.Body,false);
-            pv1.Draw(gameTime, spriteBatch);
-            pv2.Draw(gameTime, spriteBatch);
+            //pv1.Draw(gameTime, spriteBatch);
+            //pv2.Draw(gameTime, spriteBatch);
 
             if (isMeleAttacking && !(mele.Body.IsDisposed))
                 mele.Draw(gameTime, spriteBatch);
