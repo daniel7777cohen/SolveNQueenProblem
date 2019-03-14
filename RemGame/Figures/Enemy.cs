@@ -94,6 +94,7 @@ namespace RemGame
         MouseState previousMouseState = Mouse.GetState();
 
         Texture2D shootTexture;
+        public int Health { get => health; set => health = value; }
 
 
         public Enemy(World world, Texture2D torsoTexture, Texture2D wheelTexture, Texture2D bullet, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance)

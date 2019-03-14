@@ -460,6 +460,8 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+            if (isFalling == true && upBody.Position.Y >1300)
+               isAlive = false;
             if(followingPlayerPoint.Y < upBody.Position.Y)      
                 isFalling = true;
             else
