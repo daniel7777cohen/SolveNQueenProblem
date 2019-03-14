@@ -18,7 +18,7 @@ namespace RemGame
         private List<Obstacle> obstacleTiles = new List<Obstacle>();
         private List<Enemy> enemies = new List<Enemy>();
         private Kid player;
-        private int enemies_counter = 0;
+        private int enemies_counter = 2;
         private int width, height;
         private World world;
         public Texture2D texture;
@@ -141,7 +141,6 @@ namespace RemGame
                         new Vector2(x * size, y * size), false, font, rInt);
                      
                         enemies.Add(en);
-                        enemies_counter++;
                     }
 
                     width = (x + 1) * size;
@@ -157,8 +156,12 @@ namespace RemGame
             {
                 en.Update(gameTime, player.Position, player.IsAlive);
                 if (en.Health == 0)
+                {
                     enemies_counter--;
+                }
             }
+            enemies.RemoveAll(Enemy => Enemy.Health == 0);
+
         }
 
         public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)

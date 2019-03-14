@@ -39,6 +39,7 @@ namespace RemGame
         public IPausedState PausedState;
         public IOptionsMenuState OptionsMenuState;
         public IGameOverState GameOverState;
+        public IMissionCompleteState MissionCompleteState;
         public bool EnableSoundFx { get; set; }
         public bool EnableMusic { get; set; }
 
@@ -75,6 +76,7 @@ namespace RemGame
             Mission1 = new Mission1(this);
             EscapeState = new EscapeState(this);
             GameOverState = new GameOverState(this);
+            MissionCompleteState = new MissionCompleteState(this);
             EnableSoundFx = true;
             EnableMusic = true;
 
@@ -90,6 +92,8 @@ namespace RemGame
             PlayingState = new PlayingState(this);
             Mission1 = new Mission1(this);
             EscapeState = new EscapeState(this);
+            GameOverState = new GameOverState(this);
+            MissionCompleteState = new MissionCompleteState(this);
         }
         protected override void Initialize()
         {
