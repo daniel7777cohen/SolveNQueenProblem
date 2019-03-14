@@ -46,7 +46,9 @@ namespace RemGame
         private PhysicsObject shot;
         private List<PhysicsObject> shotList = new List<PhysicsObject>();
 
-        private PhysicsObject shoot;
+        private PhysicsObject rangedShot;
+        private List<PhysicsObject> rangedShotList = new List<PhysicsObject>();
+
 
         Vector2 shootBase;
         Vector2 shootDirection;
@@ -63,7 +65,7 @@ namespace RemGame
 
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 2.0f;
+        private const float SPEED = 3.0f;
 
         private float speed = SPEED;
         private float actualMovningSpeed=0;
@@ -92,6 +94,8 @@ namespace RemGame
         private const float slideInterval = 1.3f;        // in seconds
         private Vector2 slideForce = new Vector2(7, 0); // applied force when jumping
         private float startPoint = 0;
+        private float slideTracker = 0;
+        private bool slideOver = true;
 
         private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
         private const float shootInterval = 0.3f;        // in seconds
@@ -269,7 +273,9 @@ namespace RemGame
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
                     anim = animations[9];
+                    slideOver = false;
                     startPoint = wheel.Position.X;
+                    slideTracker = startPoint;
                     IsSliding = true;
                     upBody.Body.CollidesWith = Category.None;
                     midBody.Body.CollidesWith = Category.None;
@@ -337,31 +343,48 @@ namespace RemGame
         public void rangedShoot(Vector2 shootForce)
         {
             isRangeAttacking = true;
-            shoot = new PhysicsObject(world, shootTexture, 30, 1);
-            shoot.Body.IgnoreCollisionWith(upBody.Body);
-            shoot.Body.IgnoreCollisionWith(wheel.Body);
+            rangedShot = new PhysicsObject(world, shootTexture, 30, 1);
+            rangedShot.Body.IgnoreCollisionWith(upBody.Body);
+            rangedShot.Body.IgnoreCollisionWith(wheel.Body);
 
             //Console.WriteLine("end: " + currentMouseState.Position.X + " " + currentMouseState.Position.Y);
-            shoot.Position = new Vector2(upBody.Position.X + upBody.Size.X / 2, upBody.Position.Y + upBody.Size.Y / 2);
-            shoot.Body.Mass = 2.0f;
-            shoot.Body.ApplyForce(shootForce);
-            shoot.Body.OnCollision += new OnCollisionEventHandler(Shoot_OnCollision);
+            rangedShot.Position = new Vector2(upBody.Position.X + upBody.Size.X / 2, upBody.Position.Y + upBody.Size.Y / 2);
+            rangedShot.Body.Mass = 2.0f;
+            rangedShot.Body.ApplyForce(shootForce);
+            rangedShot.Body.OnCollision += new OnCollisionEventHandler(Shoot_OnCollision);
+            rangedShotList.Add(rangedShot);
 
         }
         bool Shoot_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+            /*
             if (fixtureB.CollisionCategories == Category.Cat20 || fixtureB.CollisionCategories == Category.Cat21)
             {
                 
                 isRangeAttacking = false;
                 //shoot.Body.Enabled = false;
-                shoot.Body.Dispose();
+                rangedShot.Body.Dispose();
                 return true;
             }
             else
             {
                 return true;
             }
+            */
+            PhysicsObject tmp = null;
+            foreach (PhysicsObject p in rangedShotList)
+            {
+                if (p.Body.BodyId == fixtureA.Body.BodyId)
+                    tmp = p;
+            }
+
+            if (tmp != null)
+            {
+                rangedShotList.Remove(tmp);
+                tmp.Body.Dispose();
+            }
+
+            return true;
         }
 
         public void Kinesis(Obstacle obj,MouseState currentMouseState)
@@ -521,6 +544,8 @@ namespace RemGame
 
                 if(IsSliding)
                 {
+                    if (wheel.Position.X == slideTracker || wheel.Position.X < slideTracker)
+                        slideOver = true;
                     if (wheel.Position.X > startPoint + 100 || wheel.Position.X < startPoint - 100)
                     {
                         anim = animations[10];
@@ -530,25 +555,32 @@ namespace RemGame
                     {
                         anim = animations[11];
                     }
-                    if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450)
+                    if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450 || slideOver)
                     {
                         IsSliding = false;
+                        slideOver = true;
                         upBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                         midBody.Body.CollidesWith = Category.Cat1 | Category.Cat30;
                     }
-
-                 }
+                    slideTracker = wheel.Position.X;
+                }
 
 
                 foreach (PhysicsObject s in shotList)
                 {
                     s.Update(gameTime);
                 }
-                
+
+                foreach (PhysicsObject r in rangedShotList)
+                {
+                    r.Update(gameTime);
+                }
+
+
 
                 //if (IsMoving) // apply animation
                 //else //player will appear as standing with frame [1] from the atlas.
-                  //  Anim.CurrentFrame = 1;
+                //  Anim.CurrentFrame = 1;
 
                 IsMoving = false;
 
@@ -692,8 +724,17 @@ namespace RemGame
                 {
                     s.Draw(gameTime, spriteBatch);
                 }
-                if (isRangeAttacking && !(shoot.Body.IsDisposed))
-                    shoot.Draw(gameTime, spriteBatch);
+
+                foreach (PhysicsObject r in rangedShotList)
+                {
+                    r.Draw(gameTime, spriteBatch);
+                }
+
+                /*NEED TO BE DELTED
+                if (isRangeAttacking && !(rangedShot.Body.IsDisposed))
+                    rangedShot.Draw(gameTime, spriteBatch);
+                    */
+
                 /*
                 if (showText)
                 {

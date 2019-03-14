@@ -7,26 +7,26 @@ using XELibrary;
 
 namespace RemGame
 {
-    public sealed class EscapeState : BaseGameState, IEscapeState
+    public sealed class GameOverState : BaseGameState, IGameOverState
     {
+        private Boolean music = false;
         private Texture2D texture;
 
         private SpriteFont font;
         private int selected;
         private string[] entries =
         {
-            "Resume Match",
-            "Options",
-            "Back To Main Menu"
+            "Retry Tutorial",
+            "Quit"
         };
 
-        
 
-        public EscapeState(Game game)
+
+        public GameOverState(Game game)
             : base(game)
         {
-            if (game.Services.GetService(typeof(IEscapeState)) == null)
-                game.Services.AddService(typeof(IEscapeState), this);
+            if (game.Services.GetService(typeof(IGameOverState)) == null)
+                game.Services.AddService(typeof(IGameOverState), this);
 
             selected = 0;
         }
@@ -34,34 +34,22 @@ namespace RemGame
         public override void Update(GameTime gameTime)
         {
 
-            if (Input.KeyboardHandler.WasKeyPressed(Keys.Down))
-            {
-                selected++;
-                if (selected > 2)
-                    selected = 2;
-            }
-            if (Input.KeyboardHandler.WasKeyPressed(Keys.Up))
-            {
-                selected--;
-                if (selected < 0)
-                    selected = 0;
-            }
+            if (Input.KeyboardHandler.WasKeyPressed(Keys.Up) && selected == 1)
+                selected = 0;
+            if (Input.KeyboardHandler.WasKeyPressed(Keys.Down) && selected == 0)
+                selected = 1;
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Enter))
             {
-                if(selected ==0)
-                StateManager.PopState();
-                else if (selected == 1)
+                if (selected == 0)
                 {
-                    StateManager.PushState(OurGame.OptionsMenuState.Value);
+                    StateManager.PopState();
+                    StateManager.PushState(OurGame.PlayingState.Value);
                 }
-                else if(selected == 2)
+                else
                 {
                     StateManager.PopState();
-                    StateManager.PopState();
-                    OurGame.Reset();
                     StateManager.PushState(OurGame.StartMenuState.Value);
                 }
-
             }
 
             base.Update(gameTime);

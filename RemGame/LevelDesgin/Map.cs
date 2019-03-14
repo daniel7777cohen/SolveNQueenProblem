@@ -79,7 +79,7 @@ namespace RemGame
                     {
                         Ground ground = new Ground(world, texture, new Vector2(64, 64), font);
                         ground.Position = new Vector2(x * size, y * size);
-                       // ObstacleTiles.Add(ground);
+                        //ObstacleTiles.Add(ground);
 
                     }
                     else if (number == 2)//locker
@@ -167,7 +167,6 @@ namespace RemGame
 
         public void DrawEnemies(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
 
             foreach (Enemy en in enemies)
                 en.Draw(gameTime, spriteBatch);
