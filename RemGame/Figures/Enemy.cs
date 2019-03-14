@@ -373,35 +373,40 @@ namespace RemGame
             }
 
             if (!torso.Body.IsDisposed) {
-                if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200 && isPlayerAlive)
+                
+                    if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200 && isPlayerAlive &&(playerPosition.Y < position.Y + size.X * 2 && playerPosition.Y + 3 * size.X > position.Y))
                 {
                     speed = SPEED;
                     int dir = 0;
                     isBackToLastPos = false;
-                    if (playerPosition.X < Position.X - 150)
-                    {
-                        Move(Movement.Left);
-                        isMoving = true;
-                        direction = Movement.Left;
-                        this.meleAttack();
+                    Console.WriteLine(position);
+                    Console.WriteLine(playerPosition);
+                
+                        if (playerPosition.X < Position.X - 150 )
+                        {
+                            Move(Movement.Left);
+                            isMoving = true;
+                            direction = Movement.Left;
+                            this.meleAttack();
 
+                        }
+                        else if (playerPosition.X > Position.X + 150)
+                        {
+                            Move(Movement.Right);
+                            isMoving = true;
+                            direction = Movement.Right;
+                            this.meleAttack();
+
+                        }
+
+                        else
+                        {
+                            Move(Movement.Stop);
+                            this.meleAttack();
+                        }
+                    
                     }
-                    else if (playerPosition.X > Position.X + 150)
-                    {
-                        Move(Movement.Right);
-                        isMoving = true;
-                        direction = Movement.Right;
-                        this.meleAttack();
-
-                    }
-
-                    else
-                    {
-                        Move(Movement.Stop);
-                        this.meleAttack();
-                    }
-
-                }
+                
                 else if (!isBackToLastPos)
                 {
                     speed = 0.2f;
