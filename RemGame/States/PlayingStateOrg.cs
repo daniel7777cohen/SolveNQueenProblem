@@ -187,8 +187,9 @@ namespace RemGame
         private void handleInput(GameTime gameTime)
         {
 
-             if(map.Enemies_counter==2)
-               closingWall.X+=4;
+             //if(map.Enemies_counter==2)
+              // closingWall.X+=4;
+
             if (map.Enemies_counter == 0)
             {
                 StateManager.PopState();
