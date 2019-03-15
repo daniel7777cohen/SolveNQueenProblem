@@ -789,14 +789,14 @@ namespace RemGame
                     if (shootForce.X > 5 || shootForce.X < -5 || shootForce.Y > 5 || shootForce.Y < -5)
                         rangedShoot(shootForce * 4);
                 }
-                /*
+
                 ///Sraight Shot / might change to Mele
                 if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed) && !(currentMouseState.RightButton == ButtonState.Pressed))
 
                 {
                     Shoot();
                 }
-                */
+
                 ///////////////////////////////////////////////////////////////Sound Effects///////////////////////////////////////////////////////////////////
                 if (IsMoving && !IsJumping && !IsBending && !IsSliding)
                 {

@@ -38,6 +38,13 @@ namespace RemGame
         Map map;
 
         Rectangle closingWall;
+        DateTime deathTimer;
+        float deathInterval = 2.0f;
+
+        DateTime missionComplete;
+        bool isMissionComplete = false;
+        float missionCompleteInterval = 2.0f;
+
 
         Texture2D backGround1;
         Texture2D backGround2;
@@ -128,12 +135,13 @@ namespace RemGame
             backGround3 = Content.Load<Texture2D>("Layers/level/tmpBack3");
             backGround4 = Content.Load<Texture2D>("Layers/level/tmpBack4");
             backGround5 = Content.Load<Texture2D>("Layers/level/tmpBack5");
-
+            
             backgroundREC1 = new Rectangle(0, -700, 5693, 1969);
             backgroundREC2 = new Rectangle(4097, -700, 5693, 1969);
             backgroundREC3 = new Rectangle(8193, -700, 5693, 1969);
             backgroundREC4 = new Rectangle(12990, -700, 5693, 1969);
             backgroundREC5 = new Rectangle(16387, -700, 5693, 1969);
+            
 
             wall = Content.Load<Texture2D>("Layers/level/closingWall");
             closingWall = new Rectangle((int)cam.Position.X, 0, 200, 600);
@@ -156,8 +164,13 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
-            if (closingWall.X + closingWall.Width +20 > player.Position.X)
+            if (closingWall.X + closingWall.Width + 20 > player.Position.X)
+            {
+                if(player.IsAlive)
+                    deathTimer = DateTime.Now;
+
                 player.IsAlive = false;
+            }
 
             handleInput(gameTime);
             currentMouseState = Mouse.GetState();
@@ -196,20 +209,35 @@ namespace RemGame
         {
 
 
-             //if(map.Enemies_counter==2)
-              // closingWall.X+=4;
+             if(map.Enemies_counter==2)
+              closingWall.X+=4;
 
             if (map.Enemies_counter == 0)
             {
-                StateManager.PopState();
-                StateManager.PushState(OurGame.MissionCompleteState.Value);
+                if (!isMissionComplete)
+                {
+                    missionComplete = DateTime.Now;
+                    isMissionComplete = true;
+                }
+
+                if ((DateTime.Now - deathTimer).TotalSeconds >= deathInterval)
+                {
+                    StateManager.PopState();
+                    StateManager.PushState(OurGame.MissionCompleteState.Value);
+                }
             }
             if (!player.IsAlive)
             {
-                StateManager.PopState();
-                OurGame.Reset();
-                StateManager.PushState(OurGame.GameOverState.Value);
-                player.IsAlive = true;
+                if ((DateTime.Now - deathTimer).TotalSeconds >= deathInterval)
+                {
+
+                    StateManager.PopState();
+                    OurGame.Reset();
+                    StateManager.PushState(OurGame.GameOverState.Value);
+                    player.IsAlive = true;
+                    //deathTimer = DateTime.Now;
+                }
+
             }
             if (Input.KeyboardHandler.WasKeyPressed(Keys.Escape))
             {
