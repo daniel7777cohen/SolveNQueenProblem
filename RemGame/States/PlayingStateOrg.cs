@@ -123,17 +123,17 @@ namespace RemGame
             }, 64, font);
 
 
-            backGround1 = Content.Load<Texture2D>("Layers/level/level_01_A");
-            backGround2 = Content.Load<Texture2D>("Layers/level/level_01_B");
-            backGround3 = Content.Load<Texture2D>("Layers/level/level_01_C");
-            backGround4 = Content.Load<Texture2D>("Layers/level/level_01_D");
-            backGround5 = Content.Load<Texture2D>("Layers/level/level_01_E");
+            backGround1 = Content.Load<Texture2D>("Layers/level/1");
+            backGround2 = Content.Load<Texture2D>("Layers/level/2");
+            backGround3 = Content.Load<Texture2D>("Layers/level/3");
+            backGround4 = Content.Load<Texture2D>("Layers/level/4");
+            backGround5 = Content.Load<Texture2D>("Layers/level/5");
 
             backgroundREC1 = new Rectangle(0, -700, 5693, 1969);
-            backgroundREC2 = new Rectangle(3840, -700, 5693, 1969);
-            backgroundREC3 = new Rectangle(7680, -700, 5693, 1969);
-            backgroundREC4 = new Rectangle(11520, -700, 5693, 1969);
-            backgroundREC5 = new Rectangle(15360, -700, 5693, 1969);
+            backgroundREC2 = new Rectangle(4097, -700, 5693, 1969);
+            backgroundREC3 = new Rectangle(8193, -700, 5693, 1969);
+            backgroundREC4 = new Rectangle(12990, -700, 5693, 1969);
+            backgroundREC5 = new Rectangle(16387, -700, 5693, 1969);
 
             wall = Content.Load<Texture2D>("Layers/level/closingWall");
             closingWall = new Rectangle((int)cam.Position.X, 0, 200, 600);
