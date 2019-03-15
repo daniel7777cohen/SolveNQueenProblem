@@ -222,7 +222,7 @@ namespace RemGame
                     isMissionComplete = true;
                 }
 
-                if ((DateTime.Now - deathTimer).TotalSeconds >= deathInterval)
+                if ((DateTime.Now - missionComplete).TotalSeconds >= missionCompleteInterval)
                 {
                     StateManager.PopState();
                     StateManager.PushState(OurGame.MissionCompleteState.Value);
