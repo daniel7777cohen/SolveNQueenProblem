@@ -129,7 +129,15 @@ namespace RemGame
                         Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
                         obs.Position = new Vector2(x*size, y * size);
                         ObstacleTiles.Add(obs);
-
+                        obs.KinesisOn = false;
+                    }
+                    else if(number ==9)
+                    {
+                        Obstacle obs2 = new Obstacle(world, texture, new Vector2(64, 64), font);
+                        obs2.Position = new Vector2(x * size, y * size);
+                        ObstacleTiles.Add(obs2);
+                        obs2.KinesisOn = true;
+                        
                     }
                     else if (number == 8)//enemy
                     {

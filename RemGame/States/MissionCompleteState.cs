@@ -15,8 +15,7 @@ namespace RemGame
         private int selected;
         private string[] entries =
         {
-            "Well Done, Tutorial Completed. " +
-            "Press Enter To Go Back To Main Menu"
+            "Well Done, Tutorial Completed. " 
         };
 
 
