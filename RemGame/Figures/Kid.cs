@@ -86,7 +86,10 @@ namespace RemGame
       
         private int health = 8;
         private bool isAlive = true;
-        private const float SPEED = 2.0f;
+
+        private const float SPEED = 3.0f;
+        private float walkTracker = 0;
+
 
         private float speed = SPEED;
         private float actualMovningSpeed=0;
@@ -233,7 +236,7 @@ namespace RemGame
             axis1.CollideConnected = false;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque = 4.0f;
+            axis1.MaxMotorTorque = 3.0f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
 
@@ -476,6 +479,8 @@ namespace RemGame
         {
             isRangeAttacking = true;
             rangedShot = new PhysicsObject(world, shootTexture, 20, 1);
+            rangedShot.Body.CollisionCategories = Category.Cat28;
+            rangedShot.Body.CollidesWith = Category.Cat20 | Category.Cat21 | Category.Cat1;
             rangedShot.Body.IgnoreCollisionWith(upBody.Body);
             rangedShot.Body.IgnoreCollisionWith(wheel.Body);
 
@@ -771,26 +776,27 @@ namespace RemGame
                 /////////Actions///////////////////////
                 ///Ranged Shot
                 ///Calculate Direction For Shooting
-                if (currentMouseState.RightButton == ButtonState.Pressed && !(previousMouseState.RightButton == ButtonState.Pressed))
+                if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed))
                 {
                     shootDirection = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
 
                 }
                 ///Calculate Motion Vector For Shooting
-                if (currentMouseState.RightButton == ButtonState.Released && (previousMouseState.RightButton == ButtonState.Pressed) && !(previousMouseState.LeftButton == ButtonState.Pressed))
+                if (currentMouseState.LeftButton == ButtonState.Released && (previousMouseState.LeftButton == ButtonState.Pressed) && !(previousMouseState.LeftButton == ButtonState.Pressed))
                 {
                     shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
                     Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X), (shootDirection.Y - shootBase.Y));
                     if (shootForce.X > 5 || shootForce.X < -5 || shootForce.Y > 5 || shootForce.Y < -5)
                         rangedShoot(shootForce * 4);
                 }
+                /*
                 ///Sraight Shot / might change to Mele
                 if (currentMouseState.LeftButton == ButtonState.Pressed && !(previousMouseState.LeftButton == ButtonState.Pressed) && !(currentMouseState.RightButton == ButtonState.Pressed))
 
                 {
                     Shoot();
                 }
-
+                */
                 ///////////////////////////////////////////////////////////////Sound Effects///////////////////////////////////////////////////////////////////
                 if (IsMoving && !IsJumping && !IsBending && !IsSliding)
                 {

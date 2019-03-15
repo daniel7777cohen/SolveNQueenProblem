@@ -9,14 +9,14 @@ namespace RemGame
 {
     public class MissionCompleteState : BaseGameState, IMissionCompleteState
     {
-        private Boolean music = false;
         private Texture2D texture;
 
         private SpriteFont font;
         private int selected;
         private string[] entries =
         {
-            "Well Done, Tutorial Completed. Press Enter To Go Back To Main Menu",
+            "Well Done, Tutorial Completed. " +
+            "Press Enter To Go Back To Main Menu"
         };
 
 
