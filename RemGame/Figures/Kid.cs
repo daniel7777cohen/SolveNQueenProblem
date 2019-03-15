@@ -783,7 +783,7 @@ namespace RemGame
 
                 }
                 ///Calculate Motion Vector For Shooting
-                if (currentMouseState.RightButton == ButtonState.Released && (previousMouseState.RightButton == ButtonState.Pressed) && !(previousMouseState.RightButton == ButtonState.Pressed))
+                if (currentMouseState.RightButton == ButtonState.Released && (previousMouseState.RightButton == ButtonState.Pressed))
                 {
                     shootBase = new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y);
                     Vector2 shootForce = new Vector2((shootDirection.X - shootBase.X), (shootDirection.Y - shootBase.Y));
