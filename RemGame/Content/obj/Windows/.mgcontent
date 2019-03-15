@@ -4,54 +4,54 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Arial.spritefont</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-01_background.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-02_back-A.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-03_back-B.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-04_ground.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grass.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grss.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-02_front.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/closingWall.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack1.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack2.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack3.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack4.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/tmpBack5.jpeg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/misc/heart.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_01_start.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_02_up.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_03_mid.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_04_down.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_05_end.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_01_start.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_02_slide.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_03_end.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/bullet.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerLeft.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerRight.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/optionsMenu.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/pause.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/resumeOResc.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/startMenu.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/titleIntro.jpg</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Level1/Hallway_Atmosphere.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Crouch.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Footsteps.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Idle.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Jump_Down.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Jump_Up.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/FX/Player/Ron_Slide.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/Music/General_Music_1.mp3</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/HUD.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile1.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Fonts/Arial.spritefont</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-01_background.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-02_back-A.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-03_back-B.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/b-04_ground.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/f-01_ground-grass.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/f-01_ground-grss.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/f-02_front.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/1.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/2.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/3.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/4.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/5.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/closingWall.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/misc/heart.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_01_start.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_02_up.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_03_mid.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_04_down.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_05_end.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_01_start.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_02_slide.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_03_end.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/bullet.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/playerLeft.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/playerRight.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/optionsMenu.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/pause.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/resumeOResc.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/startMenu.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/titleIntro.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Level1/Hallway_Atmosphere.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Player/Ron_Crouch.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Player/Ron_Footsteps.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Player/Ron_Idle.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Player/Ron_Jump_Down.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Player/Ron_Jump_Up.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/FX/Player/Ron_Slide.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Sound/Music/General_Music_1.mp3</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/HUD.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/tile1.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

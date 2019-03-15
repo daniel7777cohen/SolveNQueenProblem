@@ -48,7 +48,7 @@ namespace RemGame
 
         private Vector2 followingPlayerPoint;
         private bool isFalling = false;
-
+        private bool firstMove = false;
         private SpriteFont f;
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace RemGame
         public bool IsSliding { get => isSliding; set => isSliding = value; }
         public bool PlayLandingSound { get => playLandingSound; set => playLandingSound = value; }
         public static ContentManager Content { protected get => content; set => content = value; }
-
+        public bool FirstMove { get => firstMove; set => firstMove = value; }
         public Kid(World world,Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
             this.world = world;
@@ -514,8 +514,8 @@ namespace RemGame
 
         public void Kinesis(Obstacle obj,MouseState currentMouseState)
         {
-            obj.KinesisOn = true;
-
+            
+           if( obj.KinesisOn == true)
             if (obj.Position.Y > 0 )
             {
                 if (currentMouseState.RightButton == ButtonState.Pressed)
@@ -550,7 +550,7 @@ namespace RemGame
                     //obj.Body.BodyType = BodyType.Static;
                 }
             }
-            obj.KinesisOn = false;
+            //obj.KinesisOn = false;
         }
 
 
@@ -720,6 +720,7 @@ namespace RemGame
                     Move(Movement.Right);
                     direction = Movement.Right;
                     IsMoving = true;
+                    firstMove = true;
 
                 }
                 ///No Moving
