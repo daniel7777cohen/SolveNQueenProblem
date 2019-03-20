@@ -87,7 +87,7 @@ namespace RemGame
         private int health = 8;
         private bool isAlive = true;
 
-        private const float SPEED = 3.0f;
+        private const float SPEED = 2.0f;
         private float walkTracker = 0;
 
 
@@ -518,7 +518,7 @@ namespace RemGame
            if( obj.KinesisOn == true)
             if (obj.Position.Y > 0 )
             {
-                if (currentMouseState.RightButton == ButtonState.Pressed)
+                if (currentMouseState.RightButton == ButtonState.Pressed && currentMouseState.LeftButton == ButtonState.Pressed)
                 {
                     obj.Body.CollidesWith = Category.None; 
                     obj.Body.BodyType = BodyType.Dynamic;

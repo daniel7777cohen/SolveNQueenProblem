@@ -104,7 +104,7 @@ namespace RemGame
 
         protected override void BeginRun()
         {
-            stateManager.ChangeState(TitleIntroState.Value);
+            stateManager.ChangeState(StartMenuState.Value);
             IsMouseVisible = true;
 
             base.Initialize();
