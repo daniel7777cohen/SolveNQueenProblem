@@ -526,8 +526,7 @@ namespace RemGame
                     obj.Body.GravityScale = 0.1f;
                     obj.Body.Rotation = 0.1f;
                     obj.Body.ApplyForce(new Vector2(0, -6.0f));
-                    
-                    
+
                 }
                 else
                 {
