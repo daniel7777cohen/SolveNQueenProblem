@@ -2,14 +2,16 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace RemGame
 {
     public sealed class StartMenuState : BaseGameState, IStartMenuState
     {
         private Texture2D texture;
-
         private SpriteFont font;
+        private Song generalMusic;
+
         private int selected;
         private string[] entries =
         {
@@ -25,6 +27,16 @@ namespace RemGame
             if (game.Services.GetService(typeof(IStartMenuState)) == null)
                 game.Services.AddService(typeof(IStartMenuState), this);
             selected = 0;
+
+        }
+
+        protected override void LoadContent()
+        {
+            texture = Content.Load<Texture2D>(@"ScreenDisplay\startMenu");
+            font = Content.Load<SpriteFont>(@"Fonts\Arial");
+            generalMusic = Content.Load<Song>(@"Sound/Music/General_Music_1");
+            MediaPlayer.Play(generalMusic);
+
         }
 
         public override void Update(GameTime gameTime)
@@ -55,6 +67,7 @@ namespace RemGame
                         if (StateManager.ContainsState(OurGame.PlayingState.Value))
                             StateManager.PopState();
                         else // Starting a new game.
+                            MediaPlayer.Stop();
                             StateManager.ChangeState(OurGame.PlayingState.Value);
 
                         break;
@@ -64,11 +77,11 @@ namespace RemGame
                             StateManager.PopState();
                         else // Starting a new game.
                         {
-                            
+
                             StateManager.ChangeState(OurGame.Mission1.Value);
                         }
                         break;
-                
+
                     case 2:
                         StateManager.PushState(OurGame.OptionsMenuState.Value);
                         break;
@@ -81,11 +94,6 @@ namespace RemGame
             base.Update(gameTime);
         }
 
-        protected override void LoadContent()
-        {
-            texture = Content.Load<Texture2D>(@"ScreenDisplay\startMenu");
-            font = Content.Load<SpriteFont>(@"Fonts\Arial");
-        }
 
         public override void Draw(GameTime gameTime)
         {

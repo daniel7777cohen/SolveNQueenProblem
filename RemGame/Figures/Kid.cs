@@ -102,6 +102,9 @@ namespace RemGame
         private Movement direction = Movement.Right;
         private bool lookRight = true;
 
+        private Vector2 cameraToFollow;
+
+
         private bool showText = false;
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
@@ -183,6 +186,9 @@ namespace RemGame
         public bool PlayLandingSound { get => playLandingSound; set => playLandingSound = value; }
         public static ContentManager Content { protected get => content; set => content = value; }
         public bool FirstMove { get => firstMove; set => firstMove = value; }
+        public Vector2 CameraToFollow { get => cameraToFollow; set => cameraToFollow = value; }
+        public Texture2D Hearts { get => hearts; set => hearts = value; }
+
         public Kid(World world,Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
             this.world = world;
@@ -208,6 +214,9 @@ namespace RemGame
             // Create the feet("Engine") of the body
             wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
             wheel.Position = midBody.Position + new Vector2(0, 64);
+
+            cameraToFollow = new Vector2(position.X+100,position.Y-50);
+
 
             upBody.Body.Friction = 50.0f;
             midBody.Body.Friction = 50.0f;
@@ -243,7 +252,7 @@ namespace RemGame
             axis2.CollideConnected = true;
 
             ////Art Init
-            hearts = Content.Load<Texture2D>("misc/heart");
+            Hearts = Content.Load<Texture2D>("misc/heart");
             shootTexture = Content.Load<Texture2D>("Player/bullet");
 
             playerCrouch = Content.Load<Texture2D>("Player/Anim/Ron_Crouch");
@@ -595,7 +604,18 @@ namespace RemGame
                 keyboardState = Keyboard.GetState();
                 currentMouseState = Mouse.GetState();
                 actualMovningSpeed = upBody.Body.AngularVelocity;
+                //set the coordinates for camera to follow              
+                Vector2 moveTo = Position - cameraToFollow;
+                Vector2 fixedPosition;
 
+                if (!IsBending)
+                    fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y);
+                else
+                     fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y+80);
+
+                cameraToFollow += fixedPosition * (float)gameTime.ElapsedGameTime.TotalSeconds*2;
+              
+                
 
                 ///////////Check for falling
                 if (upBody.Position.Y > followingPlayerPoint.Y && !isJumping)
@@ -798,14 +818,14 @@ namespace RemGame
                 }
 
                 ///////////////////////////////////////////////////////////////Sound Effects///////////////////////////////////////////////////////////////////
-                if (IsMoving && !IsJumping && !IsBending && !IsSliding)
+                if (direction != Movement.Stop && isMoving)
                 {
                     walkingInstance.Play();
                 }
 
                 else
                 {
-                    walkingInstance.Pause();
+                    walkingInstance.Stop();
                 }
 
                 if (IsJumping && !isJumpSoundPlayed)
@@ -906,12 +926,7 @@ namespace RemGame
                     spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
                 }
                 */
-                
-                for (int i = 0; i < Health; i++)
-                {
-                    spriteBatch.Draw(hearts, new Vector2(Position.X - 900 + i * 60, Position.Y - 600), Color.White);
-                }
-              
+            
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
                 //pv3.Draw(gameTime, spriteBatch);
@@ -921,7 +936,7 @@ namespace RemGame
             {
                 
                 //needs to add a while loop for waiting 5 seconds before exiting to StartMenu
-                spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
+               // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
 

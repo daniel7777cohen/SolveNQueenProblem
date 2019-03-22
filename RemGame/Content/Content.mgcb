@@ -495,6 +495,12 @@
 /processorParam:Quality=Best
 /build:Sound/Music/General_Music_1.mp3
 
+#begin Sound/Music/Level1/Level_1 - Music_1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sound/Music/Level1/Level_1 - Music_1.mp3
+
 #begin Tiles/HUD.png
 /importer:TextureImporter
 /processor:TextureProcessor
