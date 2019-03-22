@@ -295,7 +295,7 @@ namespace RemGame
             slidingInstance.IsLooped = false;
             slidingInstance.Volume = 0.04f;
 
-            Rectangle anim3 = new Rectangle(-110, -65, 200, 160);
+            Rectangle anim3 = new Rectangle(-100, -65, 200, 160);
             Rectangle anim4 = new Rectangle(0, -50, 140, 130);
 
 
