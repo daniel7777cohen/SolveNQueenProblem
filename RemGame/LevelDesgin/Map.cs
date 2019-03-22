@@ -89,7 +89,7 @@ namespace RemGame
                     {
                         Locker locker = new Locker(world, texture, new Vector2(64, 64), font);
                         locker.Position = new Vector2(x * size, y * size);
-                       // ObstacleTiles.Add(locker);
+                        //ObstacleTiles.Add(locker);
 
                     }
                     else if (number == 3)//door
