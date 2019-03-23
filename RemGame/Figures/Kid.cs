@@ -218,9 +218,9 @@ namespace RemGame
             cameraToFollow = new Vector2(position.X+100,position.Y-50);
 
 
-            upBody.Body.Friction = 50.0f;
-            midBody.Body.Friction = 50.0f;
-            wheel.Body.Friction = 50.0f;
+            upBody.Body.Friction = 20.0f;
+            midBody.Body.Friction = 20.0f;
+            wheel.Body.Friction = 20.0f;
 
             
             // Create a joint to keep the torso upright
@@ -239,10 +239,10 @@ namespace RemGame
             midBody.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
 
-            direction = Movement.Right;
+            //direction = Movement.Right;
             
             axis1 = JointFactory.CreateRevoluteJoint(world, midBody.Body, wheel.Body, Vector2.Zero);
-            axis1.CollideConnected = false;
+            axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
             axis1.MaxMotorTorque = 3.0f;
@@ -334,8 +334,10 @@ namespace RemGame
 
         ///////////////////////////////////////////////////////////Abillities////////////////////////////////////////////////////////
         public void Move(Movement movement)
-        {   
-            if(!IsBending && !isJumping )
+        {
+            axis1.MotorEnabled = true;
+
+            if (!IsBending && !isJumping )
             speed = SPEED;
 
             if (!IsSliding && !IsJumping )
@@ -357,10 +359,10 @@ namespace RemGame
                         break;
                         
                     case Movement.Stop:
-                        
                         axis1.MotorSpeed = 0;
-                        if(!isFalling)
-                            ResetPlayerDynamics();
+                        axis1.MotorEnabled = false;
+                        if (!isFalling)
+                           ResetPlayerDynamics();
                         break;
                 }
 
@@ -596,7 +598,6 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
-            
             walkingInstance.Volume = 0.1f;
 
             if (isAlive)
@@ -721,7 +722,7 @@ namespace RemGame
                 ///Move Right
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    if(direction == Movement.Right)
+                    if(direction == Movement.Right && !isJumping)
                         ResetPlayerDynamics();
 
                     Move(Movement.Left);
@@ -733,7 +734,7 @@ namespace RemGame
                 ///Move Left
                 else if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (direction == Movement.Left)
+                    if (direction == Movement.Left && !isJumping)
                         ResetPlayerDynamics();
 
                     Move(Movement.Right);
@@ -944,9 +945,9 @@ namespace RemGame
 
         public void ResetPlayerDynamics()
         {
-            upBody.Body.ResetDynamics();
-            midBody.Body.ResetDynamics();
             wheel.Body.ResetDynamics();
+            midBody.Body.ResetDynamics();
+            upBody.Body.ResetDynamics();
         }
 
         public static void MyDelay(int seconds)
