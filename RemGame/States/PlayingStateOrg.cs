@@ -174,7 +174,6 @@ namespace RemGame
                 new Vector2(60, 60),
                 100,
                 cam.ScreenToWorld(new Vector2(950, 400)), false, font);
-
             hearts = Content.Load<Texture2D>("misc/heart");
 
 
@@ -190,6 +189,7 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+            
             currentMouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
 

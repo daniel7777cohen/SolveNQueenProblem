@@ -360,9 +360,18 @@ namespace RemGame
                         
                     case Movement.Stop:
                         axis1.MotorSpeed = 0;
-                        axis1.MotorEnabled = false;
+                        axis1.MotorEnabled = false;                       
                         if (!isFalling)
-                           ResetPlayerDynamics();
+                        {  
+                            ResetPlayerDynamics();
+                        }
+                        else if(firstMove)
+                            anim = animations[(int)Animation.JumpEnd];
+                        else
+                            anim = animations[(int)Animation.Idle];
+
+
+
                         break;
                 }
 
@@ -413,7 +422,7 @@ namespace RemGame
                         wheel.Body.ApplyLinearImpulse(slideForce);
                         slideForce.X = slideForce.X * -1;
                     }
-
+                    wheel.Body.Friction = 20.0f;
                     previousSlide = DateTime.Now;
                 }
             }
@@ -604,16 +613,14 @@ namespace RemGame
 
             if (isAlive)
             {
+               
                 keyboardState = Keyboard.GetState();
                 currentMouseState = Mouse.GetState();
                 actualMovningSpeed = upBody.Body.AngularVelocity;
                 //set the coordinates for camera to follow              
                 Vector2 moveTo = Position - cameraToFollow;
                 Vector2 fixedPosition;
-                
-                wheel.Body.Friction = 20.0f;
-                midBody.Body.Friction = 20.0f;
-                upBody.Body.Friction = 20.0f;
+ 
                 
                 if (!IsBending)
                     fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y);
@@ -623,14 +630,14 @@ namespace RemGame
                 cameraToFollow += fixedPosition * (float)gameTime.ElapsedGameTime.TotalSeconds*2;
 
 
-
                 ///////////Check for falling
-                if (upBody.Position.Y > followingPlayerPoint.Y && !isJumping)
+                if (followingPlayerPoint.Y+1 < upBody.Position.Y && !isSliding && !isJumping  || !firstMove)
                 {
-                        isFalling = true;
+                    isFalling = true;
+
                 }
 
-                else
+                else 
                     isFalling = false;
 
                 if (isFalling == true && upBody.Position.Y > 1300)
@@ -688,6 +695,7 @@ namespace RemGame
                     if (wheel.Position.X == slideTracker || wheel.Position.X < slideTracker && direction == Movement.Right || wheel.Position.X > slideTracker && direction == Movement.Left)
                     {
                         slideOver = true;
+                        wheel.Body.Friction = 5.0f;
                         ResetPlayerDynamics();
                     }
                     if (wheel.Position.X > startPoint + 100 || wheel.Position.X < startPoint - 100)
@@ -710,9 +718,9 @@ namespace RemGame
                     }
                     slideTracker = wheel.Position.X;
                 }
-
+                
                 IsMoving = false;
-            
+               
 
                 ////////////////////////Key Mangment///////////////////////////////////////////
                 /////Movments
@@ -738,7 +746,8 @@ namespace RemGame
                     Move(Movement.Right);
                     direction = Movement.Right;
                     IsMoving = true;
-                    firstMove = true;
+                    if(!firstMove)
+                        firstMove = true;
 
                 }
                 ///No Moving
@@ -746,35 +755,36 @@ namespace RemGame
                 {
                     IsMoving = false;
                     Move(Movement.Stop);
-
                 }
                 ///Jump
                 if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
-               
-                        Jump();
-                    
+                    Jump();                  
                 }
                 ///Move While jump
                 ///
                  
                 if (isJumping)
                 {
-
                     if (keyboardState.IsKeyDown(Keys.D))
                     {
                         if(wheel.Body.LinearVelocity.X < 4.0f)
-                            wheel.Body.ApplyLinearImpulse(new Vector2(0.08f, 0));
-                        if(wheel.Body.LinearVelocity.X < 0.5f)
-                            wheel.Body.ApplyForce(new Vector2(0, 7.0f));
+                            wheel.Body.ApplyLinearImpulse(new Vector2(0.07f, 0));
+                        if (wheel.Body.LinearVelocity.X < 1.0f)
+                        {
+                            axis1.MotorEnabled = false;
+                            wheel.Body.ApplyForce(new Vector2(0, 1.0f));
+                        }
                     }
 
                     if (keyboardState.IsKeyDown(Keys.A))
                     {
                         if (wheel.Body.LinearVelocity.X > -4.0f)
-                            wheel.Body.ApplyLinearImpulse(new Vector2(-0.08f, 0));
-                        if (wheel.Body.LinearVelocity.X > -0.5f)
-                            wheel.Body.ApplyForce(new Vector2(0, 7.0f));
+                            wheel.Body.ApplyLinearImpulse(new Vector2(-0.07f, 0));
+                        if (wheel.Body.LinearVelocity.X > -1.0f) { 
+                            axis1.MotorEnabled = false;
+                            wheel.Body.ApplyForce(new Vector2(0, 1.0f));
+                        }
                     }
                 }
           
@@ -899,14 +909,13 @@ namespace RemGame
                 }
 
 
-                if (!isMoving && !IsBending && !isJumping && !IsSliding)
+                if (!isMoving && !IsBending && !isJumping && !IsSliding && !isFalling)
                     anim = animations[(int)Animation.Idle];
 
                 Anim.Update(gameTime);
 
                 previousMouseState = currentMouseState;
                 prevKeyboardState = keyboardState;
-
 
             }
             else
@@ -920,12 +929,12 @@ namespace RemGame
             {
                 //upBody.Draw(gameTime, spriteBatch);
                 Rectangle dest = upBody.physicsObjRecToDraw();
-                dest.Height = dest.Height+(int)wheel.Size.Y/2;
-                dest.Y = dest.Y + (int)wheel.Size.Y/2;
+                dest.Height = dest.Height + (int)wheel.Size.Y / 2;
+                dest.Y = dest.Y + (int)wheel.Size.Y / 2;
                 if (Anim != null)
                 {
-                    if(direction == Movement.Right)
-                        Anim.Draw(spriteBatch, dest, upBody.Body,false);
+                    if (direction == Movement.Right)
+                        Anim.Draw(spriteBatch, dest, upBody.Body, false);
                     else
                         Anim.Draw(spriteBatch, dest, upBody.Body, true);
 
@@ -948,19 +957,23 @@ namespace RemGame
                     spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
                 }
                 */
-            
+
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
                 //pv3.Draw(gameTime, spriteBatch);
-          
+
             }
             else
             {
-                
+
                 //needs to add a while loop for waiting 5 seconds before exiting to StartMenu
-               // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
+                // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
+            if(anim!=null)
+            spriteBatch.DrawString(f, Anim.Texture.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.LightYellow);
+            spriteBatch.DrawString(f, wheel.Body.LinearVelocity.X.ToString(), new Vector2(Position.X + size.X, Position.Y+50), Color.LightYellow);
+
 
         }
 

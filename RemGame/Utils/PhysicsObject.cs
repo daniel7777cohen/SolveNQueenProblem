@@ -23,7 +23,6 @@ namespace RemGame
         private float radius;
         private World world;
         private bool kinesisOn = false;
-        private bool inAir = false;
 
         public PhysicsObject(World world, Texture2D texture, float diameter, float mass)
         {
@@ -44,7 +43,6 @@ namespace RemGame
         public Vector2 Size { get => size; set => size = value; }
         public Vector2 Position { get => body.Position * CoordinateHelper.unitToPixel; set => body.Position = value * CoordinateHelper.pixelToUnit; }
         public bool KinesisOn { get => kinesisOn; set => kinesisOn = value; }
-        public bool InAir { get => inAir; set => inAir = value; }
 
         public Rectangle physicsObjRecToDraw()
         {
