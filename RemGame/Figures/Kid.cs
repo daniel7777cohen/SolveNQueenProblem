@@ -108,7 +108,7 @@ namespace RemGame
         private bool showText = false;
 
         private DateTime previousJump = DateTime.Now;   // time at which we previously jumped
-        private const float jumpInterval = 0.9f;        // in seconds
+        private const float jumpInterval = 0.4f;        // in seconds
         private Vector2 jumpForce = new Vector2(0, -5); // applied force when jumping
         private float takeOffPoi = 0;
         private float liftOff = 0;
@@ -126,10 +126,10 @@ namespace RemGame
         private float slideTracker = 0;
         private bool slideOver = true;
 
-        private DateTime previousShoot = DateTime.Now;   // time at which we previously jumped
+        private DateTime previousShoot = DateTime.Now;   
         private const float shootInterval = 0.3f;        // in seconds
 
-        private DateTime previousBend = DateTime.Now;   // time at which we previously jumped
+        private DateTime previousBend = DateTime.Now;   
         private const float bendInterval = 0.1f;        // in seconds
 
         /// <summary>
@@ -218,9 +218,9 @@ namespace RemGame
             cameraToFollow = new Vector2(position.X+100,position.Y-50);
 
 
-            upBody.Body.Friction = 20.0f;
-            midBody.Body.Friction = 20.0f;
-            wheel.Body.Friction = 20.0f;
+            upBody.Body.Friction = 5.0f;
+            midBody.Body.Friction = 5.0f;
+            wheel.Body.Friction = 5.0f;
 
             
             // Create a joint to keep the torso upright
@@ -245,7 +245,7 @@ namespace RemGame
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0.0f;
-            axis1.MaxMotorTorque = 3.0f;
+            axis1.MaxMotorTorque = 3.5f;
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
 
@@ -324,7 +324,7 @@ namespace RemGame
 
             Animations[(int)Animation.SlideStart] = new AnimatedSprite(slideSetAnim[0], 1, 4, anim3, 0.4f);
             Animations[(int)Animation.SlideIn] = new AnimatedSprite(slideSetAnim[1], 1, 6, anim3, 0.3f);
-            Animations[(int)Animation.SlideEnd] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.6f);
+            Animations[(int)Animation.SlideEnd] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.4f);
 
 
             pv1 = new PhysicsView(upBody.Body, upBody.Position, upBody.Size, f);
@@ -380,7 +380,9 @@ namespace RemGame
                 isJumping = true;
                 takeOffPoi = wheel.Position.Y;
                 liftOff = wheel.Position.Y;
-                wheel.Body.ApplyLinearImpulse(jumpForce);
+    
+                wheel.Body.ApplyLinearImpulse(jumpForce * new Vector2(0, 1));
+
                 goingDown = false;
                 HasLanded = false;
                 previousJump = DateTime.Now;
@@ -608,19 +610,26 @@ namespace RemGame
                 //set the coordinates for camera to follow              
                 Vector2 moveTo = Position - cameraToFollow;
                 Vector2 fixedPosition;
-
+                
+                wheel.Body.Friction = 20.0f;
+                midBody.Body.Friction = 20.0f;
+                upBody.Body.Friction = 20.0f;
+                
                 if (!IsBending)
                     fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y);
                 else
                      fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y+80);
 
                 cameraToFollow += fixedPosition * (float)gameTime.ElapsedGameTime.TotalSeconds*2;
-              
-                
+
+
 
                 ///////////Check for falling
                 if (upBody.Position.Y > followingPlayerPoint.Y && !isJumping)
-                    isFalling = true;
+                {
+                        isFalling = true;
+                }
+
                 else
                     isFalling = false;
 
@@ -690,7 +699,7 @@ namespace RemGame
                     {
                         anim = animations[(int)Animation.SlideEnd];
                     }
-                    if (wheel.Position.X > startPoint + 500 || wheel.Position.X < startPoint - 500 || slideOver)
+                    if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450 || slideOver)
                     {
                         IsSliding = false;
                         slideOver = true;
@@ -702,20 +711,9 @@ namespace RemGame
                     slideTracker = wheel.Position.X;
                 }
 
-
-                foreach (PhysicsObject s in shotList)
-                {
-                    s.Update(gameTime);
-                }
-
-                foreach (PhysicsObject r in rangedShotList)
-                {
-                    r.Update(gameTime);
-                }
-
                 IsMoving = false;
+            
 
-                
                 ////////////////////////Key Mangment///////////////////////////////////////////
                 /////Movments
                 ///
@@ -753,22 +751,36 @@ namespace RemGame
                 ///Jump
                 if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
-                    Jump();
+               
+                        Jump();
+                    
                 }
                 ///Move While jump
+                ///
+                 
                 if (isJumping)
                 {
+
                     if (keyboardState.IsKeyDown(Keys.D))
                     {
-                        wheel.Body.ApplyLinearImpulse(new Vector2(0.03f, 0));
+                        if(wheel.Body.LinearVelocity.X < 4.0f)
+                            wheel.Body.ApplyLinearImpulse(new Vector2(0.08f, 0));
+                        if(wheel.Body.LinearVelocity.X < 0.5f)
+                            wheel.Body.ApplyForce(new Vector2(0, 7.0f));
                     }
 
-                    else if (keyboardState.IsKeyDown(Keys.A))
+                    if (keyboardState.IsKeyDown(Keys.A))
                     {
-                        wheel.Body.ApplyLinearImpulse(new Vector2(-0.03f, 0));
+                        if (wheel.Body.LinearVelocity.X > -4.0f)
+                            wheel.Body.ApplyLinearImpulse(new Vector2(-0.08f, 0));
+                        if (wheel.Body.LinearVelocity.X > -0.5f)
+                            wheel.Body.ApplyForce(new Vector2(0, 7.0f));
                     }
                 }
+          
+              
 
+                
                 ///Slide
                 if (keyboardState.IsKeyDown(Keys.LeftShift) && (!prevKeyboardState.IsKeyDown(Keys.LeftShift)))
                 {
@@ -876,7 +888,16 @@ namespace RemGame
                 */
 
 
-                
+                foreach (PhysicsObject s in shotList)
+                {
+                    s.Update(gameTime);
+                }
+
+                foreach (PhysicsObject r in rangedShotList)
+                {
+                    r.Update(gameTime);
+                }
+
 
                 if (!isMoving && !IsBending && !isJumping && !IsSliding)
                     anim = animations[(int)Animation.Idle];
