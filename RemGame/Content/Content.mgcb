@@ -183,6 +183,18 @@
 /processorParam:TextureFormat=Color
 /build:Layers/level/level_01_E.jpg
 
+#begin misc/HealthBar.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:misc/HealthBar.jpg
+
 #begin misc/heart.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -386,6 +398,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ScreenDisplay/cave_walk.png
+
+#begin ScreenDisplay/forest_shot.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ScreenDisplay/forest_shot.jpg
+
+#begin ScreenDisplay/main_menu_Fixed.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ScreenDisplay/main_menu_Fixed.jpg
 
 #begin ScreenDisplay/optionsMenu.png
 /importer:TextureImporter

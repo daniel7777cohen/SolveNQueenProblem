@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using MonoGame.Extended;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Joints;
@@ -40,7 +40,7 @@ namespace RemGame
         private static ContentManager content;
 
         private bool GameOver = false;
-
+        private HealthBar health_bar;
         private World world;
         private Vector2 size;
         private float mass;
@@ -82,7 +82,6 @@ namespace RemGame
         private bool isRangeAttacking = false;
 
         Texture2D shootTexture;
-        Texture2D hearts;
       
         private int health = 8;
         private bool isAlive = true;
@@ -137,7 +136,7 @@ namespace RemGame
         /// </summary>
         private AnimatedSprite anim = null;
         private AnimatedSprite[] animations = new AnimatedSprite[12];
-
+        private Camera2D cam;
         Texture2D playerCrouch;
         Texture2D playerCrouchWalk;
         Texture2D playerStand;
@@ -187,10 +186,12 @@ namespace RemGame
         public static ContentManager Content { protected get => content; set => content = value; }
         public bool FirstMove { get => firstMove; set => firstMove = value; }
         public Vector2 CameraToFollow { get => cameraToFollow; set => cameraToFollow = value; }
-        public Texture2D Hearts { get => hearts; set => hearts = value; }
+        public HealthBar HealthBar { get => health_bar; set => health_bar = value; }
 
-        public Kid(World world,Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
+        public Kid(Camera2D cam,World world,Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
+            this.cam = cam;
+            health_bar = new HealthBar(content);
             this.world = world;
             this.size = size;
             this.mass = mass / 4.0f;
@@ -252,7 +253,6 @@ namespace RemGame
             axis2.CollideConnected = true;
 
             ////Art Init
-            Hearts = Content.Load<Texture2D>("misc/heart");
             shootTexture = Content.Load<Texture2D>("Player/bullet");
 
             playerCrouch = Content.Load<Texture2D>("Player/Anim/Ron_Crouch");
@@ -581,17 +581,15 @@ namespace RemGame
             
             if (fixtureB.CollisionCategories == Category.Cat30)
             {
-                if (Health > 0)
+                if (HealthBar.getRectangle.Width > 0)
                 {
-                    Health--;
-
+                    HealthBar.decrease(40);
                 }
-                if (Health == 0)
+                if (HealthBar.getRectangle.Width <= 0)
                 {
                     IsAlive = false;
                     upBody.Body.Enabled = false;
                     upBody.Body.Enabled = false;
-                    Health = 8;
                 }
             }
         
@@ -948,11 +946,11 @@ namespace RemGame
                     spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
                 }
                 */
-            
+
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
                 //pv3.Draw(gameTime, spriteBatch);
-          
+
             }
             else
             {

@@ -19,6 +19,7 @@
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/level_01_C.jpg</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/level_01_D.jpg</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Layers/level/level_01_E.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/misc/HealthBar.jpg</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/misc/heart.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_01_start.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_02_up.png</File>
@@ -36,6 +37,8 @@
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/playerLeft.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Player/playerRight.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/forest_shot.jpg</File>
+    <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/main_menu_Fixed.jpg</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/optionsMenu.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/pause.png</File>
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/ScreenDisplay/resumeOResc.jpg</File>
@@ -55,6 +58,9 @@
     <File>C:/Users/danie/OneDrive/מסמכים/Visual Studio 2013/Projects/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
