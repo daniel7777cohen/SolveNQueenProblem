@@ -340,7 +340,7 @@ namespace RemGame
             if (!IsBending && !isJumping )
             speed = SPEED;
 
-            if (!IsSliding && !IsJumping )
+            if (!IsSliding && !IsJumping)
             {
                 switch (movement)
                 {
@@ -365,13 +365,11 @@ namespace RemGame
                         {  
                             ResetPlayerDynamics();
                         }
-                        else if(firstMove)
+
+                        if(firstMove)
                             anim = animations[(int)Animation.JumpEnd];
                         else
                             anim = animations[(int)Animation.Idle];
-
-
-
                         break;
                 }
 
@@ -754,6 +752,9 @@ namespace RemGame
                     IsMoving = false;
                     Move(Movement.Stop);
                 }
+                if(isFalling)
+                    Move(Movement.Stop);
+
                 ///Jump
                 if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
@@ -968,6 +969,7 @@ namespace RemGame
                 // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
+            spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
 
 
         }
