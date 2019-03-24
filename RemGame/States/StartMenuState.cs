@@ -32,7 +32,7 @@ namespace RemGame
 
         protected override void LoadContent()
         {
-            texture = Content.Load<Texture2D>(@"ScreenDisplay\startMenu");
+            texture = Content.Load<Texture2D>(@"ScreenDisplay\forest_shot");
             font = Content.Load<SpriteFont>(@"Fonts\Arial");
             generalMusic = Content.Load<Song>(@"Sound/Music/General_Music_1");
             MediaPlayer.Play(generalMusic);
@@ -118,7 +118,7 @@ namespace RemGame
                 }
                 else
                 {
-                    color = Color.Blue;
+                    color = Color.LightGoldenrodYellow;
                     scale = 1;
                 }
 

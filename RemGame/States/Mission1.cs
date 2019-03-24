@@ -136,7 +136,7 @@ namespace RemGame
             }
 
 
-            player = new Kid(world,
+            player = new Kid(cam,world,
                 new Vector2(60, 60),
                 100,
                 cam.ScreenToWorld(new Vector2(650, 440)), false, font);
