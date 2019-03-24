@@ -968,9 +968,6 @@ namespace RemGame
                 // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
-            if(anim!=null)
-            spriteBatch.DrawString(f, Anim.Texture.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.LightYellow);
-            spriteBatch.DrawString(f, wheel.Body.LinearVelocity.X.ToString(), new Vector2(Position.X + size.X, Position.Y+50), Color.LightYellow);
 
 
         }

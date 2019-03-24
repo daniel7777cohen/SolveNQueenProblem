@@ -53,12 +53,8 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/Music/General_Music_1.mp3</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Sound/Music/Level1/Level_1 - Music_1.mp3</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/HUD.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile1.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/tile2.jpg</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

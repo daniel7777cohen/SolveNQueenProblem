@@ -205,6 +205,7 @@ namespace RemGame
 
             if (closingWall.X + closingWall.Width + 20 > player.Position.X)
             {
+                player.HealthBar.decrease(6);
                 if(player.IsAlive)
                     deathTimer = DateTime.Now;
 
