@@ -113,7 +113,7 @@ namespace RemGame
                 {
                     double time = gameTime.TotalGameTime.TotalSeconds;
                     float pulsate = (float)Math.Sin(time * 12) + 1;
-                    color = Color.White;
+                    color = Color.YellowGreen;
                     scale = 1 + pulsate * 0.05f;
                 }
                 else
