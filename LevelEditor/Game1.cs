@@ -44,6 +44,8 @@ namespace LevelEditor
             rows = y / 64;
             cols = x / 64;
             grid = new int[y, x];
+
+            tmpBullet = Content.Load<Texture2D>("tmp\bullet");
             // TODO: use this.Content to load your game content here
         }
 
