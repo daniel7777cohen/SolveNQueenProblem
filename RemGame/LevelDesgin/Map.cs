@@ -13,10 +13,13 @@ namespace RemGame
 {
     class Map
     {
+
+
         //private List<CollisionTiles> collisionTiles = new List<CollisionTiles>();
         private List<Tile> collisionTiles = new List<Tile>();
         private List<Obstacle> obstacleTiles = new List<Obstacle>();
         private List<Enemy> enemies = new List<Enemy>();
+
         private Kid player;
         private int enemies_counter = 2;
         private int width, height;
@@ -44,7 +47,8 @@ namespace RemGame
         public int Height { get => height; }
         public static ContentManager Content { protected get => content; set => content = value; }
         public List<Obstacle> ObstacleTiles { get => obstacleTiles; set => obstacleTiles = value; }
-        internal List<Enemy> Enemies { get => enemies; set => enemies = value; }
+        public List<Enemy> Enemies { get => enemies; set => enemies = value; }
+       
 
         public void setPlayerToMap(Kid player)
         {
@@ -60,7 +64,6 @@ namespace RemGame
                 {
                     number = map[y, x];
                     texture = Content.Load<Texture2D>("Tiles/HUD");
-
 
                     //if (number > 0 && number <= 2)
                     //{
@@ -80,16 +83,15 @@ namespace RemGame
                     {
                         Ground ground = new Ground(world, texture, new Vector2(64, 64), font);
                         ground.Position = new Vector2(x * size, y * size);
-
-                        //ObstacleTiles.Add(ground);
-
+                        ObstacleTiles.Add(ground);
 
                     }
                     else if (number == 2)//locker
                     {
                         Locker locker = new Locker(world, texture, new Vector2(64, 64), font);
                         locker.Position = new Vector2(x * size, y * size);
-                        //ObstacleTiles.Add(locker);
+                        ObstacleTiles.Add(locker);
+
 
                     }
                     else if (number == 3)//door
@@ -101,43 +103,43 @@ namespace RemGame
                         if (number == 2)
                             obs.Body.CollisionCategories = Category.Cat30;
                             */
-                        // ObstacleTiles.Add(door);
+                        ObstacleTiles.Add(door);
                     }
                     else if (number == 4)//bag
                     {
                         Bag bag = new Bag(world, texture, new Vector2(64, 64), font);
                         bag.Position = new Vector2(x * size, y * size);
-                        //ObstacleTiles.Add(bag);
+                        ObstacleTiles.Add(bag);
 
                     }
                     else if (number == 5)//table
                     {
                         Table table = new Table(world, texture, new Vector2(64, 64), font);
                         table.Position = new Vector2(x * size, y * size);
-                        //ObstacleTiles.Add(table);
+                        ObstacleTiles.Add(table);
 
                     }
                     else if (number == 6)//chair
                     {
                         Chair chair = new Chair(world, texture, new Vector2(64, 64), font);
                         chair.Position = new Vector2(x * size, y * size);
-                        //ObstacleTiles.Add(chair);
+                        ObstacleTiles.Add(chair);
 
                     }
-                   else if(number ==7)
+                    else if (number == 7)
                     {
                         Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
-                        obs.Position = new Vector2(x*size, y * size);
+                        obs.Position = new Vector2(x * size, y * size);
                         ObstacleTiles.Add(obs);
                         obs.KinesisOn = false;
                     }
-                    else if(number ==9)
+                    else if (number == 9)
                     {
                         Obstacle obs2 = new Obstacle(world, texture, new Vector2(64, 64), font);
                         obs2.Position = new Vector2(x * size, y * size);
                         ObstacleTiles.Add(obs2);
                         obs2.KinesisOn = true;
-                        
+
                     }
                     else if (number == 8)//enemy
                     {
@@ -147,8 +149,8 @@ namespace RemGame
                         new Vector2(96, 96),
                         100,
                         new Vector2(x * size, y * size), false, font, rInt);
-                     
-                        enemies.Add(en);
+
+                        Enemies.Add(en);
                     }
 
                     width = (x + 1) * size;
@@ -156,34 +158,70 @@ namespace RemGame
 
                 }
             }
+
         }
 
         public void Update(GameTime gameTime)
         {
-            foreach (Enemy en in enemies)
+            player.GridLocation = new Point((int)player.Position.X / 64, (int)player.Position.Y / 64);
+
+            foreach (Enemy en in Enemies)
             {
+
                 en.Update(gameTime, player.Position, player.IsAlive);
+                Point enemeyGridLocation = new Point((int)en.Position.X / 64, (int)en.Position.Y / 64);
+                en.GridLocation = enemeyGridLocation;
                 if (en.Health == 0)
                 {
                     enemies_counter--;
                 }
             }
-            enemies.RemoveAll(Enemy => Enemy.Health == 0);
+            Enemies.RemoveAll(Enemy => Enemy.Health == 0);
+
+            foreach (Obstacle ob in obstacleTiles)
+            {
+                Point obstacleGridLocation = new Point((int)ob.Position.X / 64, (int)ob.Position.Y / 64);
+                if (ob.Position.X / 64 > (int)ob.Position.X / 64)
+                {
+                    obstacleGridLocation.X++;
+                }
+                 if (ob.Position.Y / 64 > (int)ob.Position.Y / 64)
+                {
+                    obstacleGridLocation.Y++;
+
+                }
+              
+                ob.GridLocation = obstacleGridLocation;
+                
+            }
 
         }
 
+        public void DrawGrid(GameTime gameTime, int[,] gameMap, SpriteBatch spriteBatch, SpriteFont f)
+        {
+            for (int x = 0; x < gameMap.GetLength(1); x++)
+            {
+                for (int y = 0; y < gameMap.GetLength(0); y++)
+                {
+                    spriteBatch.DrawString(f, x + " / " + y, new Vector2(x * 64, y * 64), Color.White);
+                }
+
+            }
+        }
+    
+
+
         public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            // foreach (CollisionTiles tile in collisionTiles)
             foreach (Obstacle ob in ObstacleTiles)
-                ob.Draw(gameTime, spriteBatch);
+                ob.Draw(gameTime, spriteBatch);          
 
         }
 
         public void DrawEnemies(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
-            foreach (Enemy en in enemies)
+            foreach (Enemy en in Enemies)
                 en.Draw(gameTime, spriteBatch);
         }
 

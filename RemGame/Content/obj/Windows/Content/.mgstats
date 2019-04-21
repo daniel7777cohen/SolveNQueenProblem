@@ -1,6 +1,6 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Arial.spritefont","C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Fonts/Arial.xnb","FontDescriptionProcessor","SpriteFontContent",2008,267281,0.4453326
-"C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont","C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2065,70673,0.0239352
+"C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont","C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2065,21521,0.2413553
 "C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-01_background.jpg","C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Layers/b-01_background.xnb","TextureProcessor","Texture2DContent",1327090,8294485,0.2545556
 "C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-02_back-A.png","C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Layers/b-02_back-A.xnb","TextureProcessor","Texture2DContent",1487089,8294485,0.2154236
 "C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-03_back-B.png","C:/Users/ben11/source/repos/RemGame/RemGame/Content/bin/Windows/Content/Layers/b-03_back-B.xnb","TextureProcessor","Texture2DContent",1519797,8294485,0.2104386

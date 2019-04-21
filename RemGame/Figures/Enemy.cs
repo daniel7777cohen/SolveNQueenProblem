@@ -30,6 +30,8 @@ namespace RemGame
         private float mass;
         private Vector2 position;
         private Vector2 lastPosition;
+        private Point gridLocation;
+
         private int distance;
         private int oldDistance;
 
@@ -150,6 +152,7 @@ namespace RemGame
         internal Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
         public int Distance { get => distance; set => distance = value; }
+        public Point GridLocation { get => gridLocation; set => gridLocation = value; }
 
         public void Move(Movement movement)
         {

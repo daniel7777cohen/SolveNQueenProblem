@@ -22,6 +22,11 @@ namespace RemGame
         private bool kinesisOn = false;
         private bool inAir = false;
         private PhysicsView p;
+        private SpriteFont f;
+
+
+        private Point gridLocation;
+
 
         public Obstacle(World world, Texture2D texture, Vector2 size,SpriteFont font)
         {
@@ -30,6 +35,7 @@ namespace RemGame
             this.texture = texture;
             p = new PhysicsView(body,body.Position,size,font);
             body.CollisionCategories = Category.Cat1;
+            f = font;
         }
 
         public Body Body { get => body; set => body = value; }
@@ -38,6 +44,7 @@ namespace RemGame
         public Vector2 Position { get => body.Position * CoordinateHelper.unitToPixel; set => body.Position = value * CoordinateHelper.pixelToUnit; }
         public bool KinesisOn { get => kinesisOn; set => kinesisOn = value; }
         public bool InAir { get => inAir; set => inAir = value; }
+        public Point GridLocation { get => gridLocation; set => gridLocation = value; }
 
         public Rectangle physicsObjRecToDraw()
         {
@@ -76,7 +83,8 @@ namespace RemGame
            );
             //spriteBatch.Draw(texture, destination, null, Color.White);
             spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
-            p.Draw(gameTime,spriteBatch);
+            //p.Draw(gameTime,spriteBatch);
+
         }
     }
 }

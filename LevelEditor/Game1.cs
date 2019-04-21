@@ -28,8 +28,12 @@ namespace LevelEditor
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            x = 560;
+            y = 400;
+            sumGrid = x * y;
+            rows = y / 64;
+            cols = x / 64;
+            grid = new int[y, x];
             base.Initialize();
         }
 
@@ -38,14 +42,9 @@ namespace LevelEditor
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            x = 560;
-            y = 400;
-            sumGrid = x * y;
-            rows = y / 64;
-            cols = x / 64;
-            grid = new int[y, x];
+         
 
-            tmpBullet = Content.Load<Texture2D>("tmp\bullet");
+            tmpBullet = Content.Load<Texture2D>("tmp/bullet");
             // TODO: use this.Content to load your game content here
         }
 
@@ -60,7 +59,7 @@ namespace LevelEditor
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            /*
             for (int y = 0; y < rows; y++)
             {
                 for (int x = 0; x < cols; x++)
@@ -68,6 +67,7 @@ namespace LevelEditor
                     grid[y*64,x*64] = 
                 }
             }
+            */
                     base.Update(gameTime);
         }
 
@@ -75,8 +75,19 @@ namespace LevelEditor
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
 
-            // TODO: Add your drawing code here
+
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    Rectangle pos = new Rectangle(x * 64, y * 64, 64, 64);
+                    spriteBatch.Draw(tmpBullet, pos, Color.Blue);
+                }
+            }
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

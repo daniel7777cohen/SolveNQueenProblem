@@ -45,6 +45,7 @@ namespace RemGame
         private Vector2 size;
         private float mass;
         private Vector2 position;
+        private Point gridLocation;
 
         private Vector2 followingPlayerPoint;
         private bool isFalling = false;
@@ -187,6 +188,8 @@ namespace RemGame
         public bool FirstMove { get => firstMove; set => firstMove = value; }
         public Vector2 CameraToFollow { get => cameraToFollow; set => cameraToFollow = value; }
         public HealthBar HealthBar { get => health_bar; set => health_bar = value; }
+        public Vector2 Position1 { get => position; set => position = value; }
+        public Point GridLocation { get => gridLocation; set => gridLocation = value; }
 
         public Kid(Camera2D cam,World world,Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
         {
@@ -205,8 +208,8 @@ namespace RemGame
             // Create the upper body
             upBody = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
             upBody.Position = startPosition;
-            position = upBody.Position;
-            followingPlayerPoint = position;
+            Position1 = upBody.Position;
+            followingPlayerPoint = Position1;
 
             // Create the midlle body
             midBody = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
@@ -216,8 +219,7 @@ namespace RemGame
             wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
             wheel.Position = midBody.Position + new Vector2(0, 64);
 
-            cameraToFollow = new Vector2(position.X+100,position.Y-50);
-
+            cameraToFollow = new Vector2(Position1.X+100,Position1.Y-50);
 
             upBody.Body.Friction = 5.0f;
             midBody.Body.Friction = 5.0f;
@@ -956,6 +958,7 @@ namespace RemGame
                     spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
                 }
                 */
+                //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
@@ -969,7 +972,7 @@ namespace RemGame
                 // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
-            spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
+            //spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
 
 
         }
