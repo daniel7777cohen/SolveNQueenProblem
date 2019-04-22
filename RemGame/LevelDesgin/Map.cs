@@ -14,7 +14,7 @@ namespace RemGame
     class Map
     {
 
-
+        private int[,] grid;
         //private List<CollisionTiles> collisionTiles = new List<CollisionTiles>();
         private List<Tile> collisionTiles = new List<Tile>();
         private List<Obstacle> obstacleTiles = new List<Obstacle>();
@@ -33,6 +33,10 @@ namespace RemGame
         //public List<CollisionTiles> CollisionTiles { get => collisionTiles; }
         public int Enemies_counter { get => enemies_counter; set => enemies_counter = value; }
 
+        /// delete font
+        private SpriteFont font;
+        /// 
+     
 
 
         public Map(World world)
@@ -48,7 +52,7 @@ namespace RemGame
         public static ContentManager Content { protected get => content; set => content = value; }
         public List<Obstacle> ObstacleTiles { get => obstacleTiles; set => obstacleTiles = value; }
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
-       
+
 
         public void setPlayerToMap(Kid player)
         {
@@ -57,6 +61,9 @@ namespace RemGame
 
         public void Generate(int[,] map, int size, SpriteFont font)
         {
+            /////delete font//////
+            this.font = font;
+
             int number = 0;
             for (int x = 0; x < map.GetLength(1); x++)
             {
@@ -126,12 +133,14 @@ namespace RemGame
                         ObstacleTiles.Add(chair);
 
                     }
-                    else if (number == 7)
+                    else if (number == 7)//platfomr which is not floor
                     {
                         Obstacle obs = new Obstacle(world, texture, new Vector2(64, 64), font);
                         obs.Position = new Vector2(x * size, y * size);
                         ObstacleTiles.Add(obs);
                         obs.KinesisOn = false;
+                        obs.Body.CollisionCategories = Category.Cat7;
+
                     }
                     else if (number == 9)
                     {
@@ -148,7 +157,7 @@ namespace RemGame
                         Enemy en = new Enemy(world,
                         new Vector2(96, 96),
                         100,
-                        new Vector2(x * size, y * size), false, font, rInt);
+                        new Vector2(x * size, y * size), false, font, rInt,this);
 
                         Enemies.Add(en);
                     }
@@ -158,6 +167,7 @@ namespace RemGame
 
                 }
             }
+            grid = map;
 
         }
 
@@ -185,14 +195,14 @@ namespace RemGame
                 {
                     obstacleGridLocation.X++;
                 }
-                 if (ob.Position.Y / 64 > (int)ob.Position.Y / 64)
+                if (ob.Position.Y / 64 > (int)ob.Position.Y / 64)
                 {
                     obstacleGridLocation.Y++;
 
                 }
-              
+
                 ob.GridLocation = obstacleGridLocation;
-                
+
             }
 
         }
@@ -208,21 +218,26 @@ namespace RemGame
 
             }
         }
-    
+
 
 
         public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (Obstacle ob in ObstacleTiles)
-                ob.Draw(gameTime, spriteBatch);          
-
+                ob.Draw(gameTime, spriteBatch);
+             
         }
 
         public void DrawEnemies(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
             foreach (Enemy en in Enemies)
-                en.Draw(gameTime, spriteBatch);
+                en.Draw(gameTime, spriteBatch,font);
+        }
+
+        public int getGridObject(int x,int y)
+        {
+            return grid[y, x];
         }
 
 

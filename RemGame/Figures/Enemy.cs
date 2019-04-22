@@ -26,6 +26,7 @@ namespace RemGame
 
         private int health = 5;
         private World world;
+        private Map map;
         private Vector2 size;
         private float mass;
         private Vector2 position;
@@ -61,6 +62,8 @@ namespace RemGame
         private bool isBackToLastPos = true;
         private Movement direction = Movement.Right;
         private bool lookingRight = true;
+        private bool collideRight = false;
+        private bool collideLeft = false;
 
 
 
@@ -89,9 +92,10 @@ namespace RemGame
         public int Health { get => health; set => health = value; }
 
 
-        public Enemy(World world,Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance)
+        public Enemy(World world,Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f,int newDistance,Map map)
         {
             this.world = world;
+            this.map = map;
             this.size = size;
             this.mass = mass / 2.0f;
 
@@ -109,7 +113,6 @@ namespace RemGame
             distance = rInt; 
             oldDistance = distance;
 
-            
             // Create the feet of the body
             wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
             wheel.Position = torso.Position + new Vector2(0, torsoSize.X / 2);
@@ -129,9 +132,10 @@ namespace RemGame
             torso.Body.CollisionCategories = Category.Cat20;
             wheel.Body.CollisionCategories = Category.Cat21;
 
-            torso.Body.CollidesWith = Category.Cat1 | Category.Cat28;
-            wheel.Body.CollidesWith = Category.Cat1 | Category.Cat28;
+            torso.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+            wheel.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
 
+            torso.Body.OnCollision += new OnCollisionEventHandler(Platform_OnCollision);
 
             torso.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
@@ -176,6 +180,8 @@ namespace RemGame
                     break;
             }
         }
+
+
         
 
         public void Jump()
@@ -235,6 +241,28 @@ namespace RemGame
             else
             isAttacking = false;
             
+        }
+
+        bool Platform_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        {
+            if (fixtureB.CollisionCategories == Category.Cat7)
+            {
+                if (direction == Movement.Right)
+                {
+                    collideRight = true;
+                    
+                }
+                else
+                {
+                    collideLeft = true;
+
+                }
+
+                return true;
+            }
+
+            return false;
+
         }
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
@@ -313,11 +341,25 @@ namespace RemGame
             }
 
             if (!torso.Body.IsDisposed) {
-                
-                    if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200 && isPlayerAlive &&(playerPosition.Y < position.Y + size.X * 2 && playerPosition.Y + 3 * size.X > position.Y))
+                if (gridLocation.X > 3 && gridLocation.Y >3)
+                for (int i = 1; i <= 2; i++)
                 {
+                    if (map.getGridObject(gridLocation.X + i, gridLocation.Y) == 7 || map.getGridObject(gridLocation.X + i, gridLocation.Y + 1) == 7 || map.getGridObject(gridLocation.X + i, gridLocation.Y - 1) == 7)
+                    {
+                        collideRight = true;
+                    }
+                    if (map.getGridObject(gridLocation.X - i, gridLocation.Y) == 7 || map.getGridObject(gridLocation.X - i, gridLocation.Y + 1) == 7 || map.getGridObject(gridLocation.X - i, gridLocation.Y - 1) == 7)
+                    {
+                        collideLeft = true;
+                    }
+
+                }
+
+                int dir = 0;
+                if (playerPosition.X > Position.X - 200 && playerPosition.X < Position.X + 200 && isPlayerAlive &&(playerPosition.Y < position.Y + size.X * 2 && playerPosition.Y + 3 * size.X > position.Y))
+                    {
                     speed = SPEED;
-                    int dir = 0;
+                    
                     isBackToLastPos = false;
                 
                         if (playerPosition.X < Position.X - 150 )
@@ -347,6 +389,7 @@ namespace RemGame
                 
                 else if (!isBackToLastPos)
                 {
+
                     speed = 0.2f;
                     if (lastPosition.X + 4 < Position.X)
                     {
@@ -366,29 +409,35 @@ namespace RemGame
                         Move(Movement.Stop);
                         isBackToLastPos = true;
                     }
+
+                    
                 }
                 else if (isBackToLastPos)
                 {
 
                     speed = SPEED;
 
-                    //torso.Body.OnCollision += OnCollisionEventHandler()             
-                    if (!(pingPong) && Position.X <= lastPosition.X + distance - size.X / 2 && !(Ghost))
+                    if (!(pingPong) && Position.X <= lastPosition.X + distance - size.X / 2 && !(Ghost)&&!collideRight)
                     {
-                        Move(Movement.Right);
-                        isMoving = true;
-                        direction = Movement.Right;
-
+                        
+                            Move(Movement.Right);
+                            isMoving = true;
+                            direction = Movement.Right;
+                        
                     }
 
                     else if (!(Ghost))
                     {
                         pingPong = true;
-                        if (pingPong && Position.X >= lastPosition.X + size.X / 2 - distance)
+                        if (pingPong && Position.X >= lastPosition.X + size.X / 2 - distance &&!collideLeft)
+
                         {
-                            Move(Movement.Left);
-                            isMoving = true;
-                            direction = Movement.Left;
+                            
+                                Move(Movement.Left);
+                                isMoving = true;
+                                direction = Movement.Left;
+
+                            
                         }
                         else
                             pingPong = false;
@@ -399,22 +448,23 @@ namespace RemGame
                     {
                         Move(Movement.Stop);
                     }
+                    collideLeft = false;
+                    collideRight = false;
                 }
+                
             }
-            
-            
-                if(isMeleAttacking)
+
+            if (isMeleAttacking)
                 mele.Update(gameTime);
                 
             previousMouseState = currentMouseState;
             prevKeyboardState = keyboardState;
 
         }
-
-   
+  
         //needs to be changed
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch,SpriteFont font)
         {
 
             //torso.Draw(gameTime,spriteBatch);
@@ -430,6 +480,34 @@ namespace RemGame
                 mele.Draw(gameTime, spriteBatch);
 
             //wheel.Draw(gameTime,spriteBatch);
+
+            //////////////////////////////////////////FOR CHEACKING ENEMY INDICATORS OF SORRUNDING////////////////////////////////////
+            if (gridLocation.X > 5)
+            {
+                Console.WriteLine(gridLocation);
+                //Console.WriteLine("looking to the right:");
+                for (int i = 1; i <= 2; i++)
+                {
+                    if (map.getGridObject(gridLocation.X + i, gridLocation.Y) == 7 || map.getGridObject(gridLocation.X + i, gridLocation.Y+1) == 7 || map.getGridObject(gridLocation.X + i, gridLocation.Y - 1) == 7)
+                    {
+                        spriteBatch.DrawString(font, "COLLISION RIGHT", new Vector2(gridLocation.X*64 , gridLocation.Y*64 + 40), Color.White);
+                        collideRight = true;
+                        // Console.Write("COLLISION RIGHT");
+                    }
+
+                }
+               //Console.WriteLine("looking to the left:");
+                for (int i = 1; i <= 4; i++)
+                {
+                    if (map.getGridObject(gridLocation.X - i, gridLocation.Y) == 7)
+                    {
+                       // Console.Write("COLLISION Left");
+                    }
+                    //Console.WriteLine("looking at index: " + (gridLocation.X - i) + " " + map.getGridObject(gridLocation.X - i, gridLocation.Y));
+
+                }
+            }
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
 
 
