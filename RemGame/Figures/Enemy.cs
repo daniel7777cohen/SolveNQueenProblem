@@ -303,7 +303,7 @@ namespace RemGame
         }
 
 
-
+        /*
         public void Update(GameTime gameTime,Vector2 playerPosition, bool PlayerAlive)
         {
             if (!PlayerAlive)
@@ -461,7 +461,7 @@ namespace RemGame
             prevKeyboardState = keyboardState;
 
         }
-  
+  */
         //needs to be changed
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch,SpriteFont font)
