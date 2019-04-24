@@ -247,10 +247,14 @@ namespace RemGame
             axis1 = JointFactory.CreateRevoluteJoint(world, midBody.Body, wheel.Body, Vector2.Zero);
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
-            axis1.MotorSpeed = 0.0f;
+            axis1.MotorSpeed = 20.0f;
             axis1.MaxMotorTorque = 3.5f;
+            axis1.BodyB.Friction = 5.0f;
+            axis1.BodyA.Friction = 5.0f;
+            
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
+            axis2.BodyA.Friction = 5.0f;
 
             axis2.CollideConnected = true;
 
@@ -760,13 +764,16 @@ namespace RemGame
                 ///Jump
                 if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
+                    if(!IsSliding)
                     Jump();                  
                 }
                 ///Move While jump
                 ///
-                 
+
                 if (isJumping)
                 {
+                   
+
                     if (keyboardState.IsKeyDown(Keys.D))
                     {
                         if(wheel.Body.LinearVelocity.X < 4.0f)
@@ -929,7 +936,7 @@ namespace RemGame
             if (!GameOver)
             {
                 //upBody.Draw(gameTime, spriteBatch);
-                Rectangle dest = upBody.physicsObjRecToDraw();
+                Rectangle dest = upBody.physicsCircleObjRecToDraw();
                 dest.Height = dest.Height + (int)wheel.Size.Y / 2;
                 dest.Y = dest.Y + (int)wheel.Size.Y / 2;
                 if (Anim != null)
@@ -960,9 +967,9 @@ namespace RemGame
                 */
                 //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
-                //pv1.Draw(gameTime, spriteBatch);
-                //pv2.Draw(gameTime, spriteBatch);
-                //pv3.Draw(gameTime, spriteBatch);
+                pv1.Draw(gameTime, spriteBatch);
+                pv2.Draw(gameTime, spriteBatch);
+                pv3.Draw(gameTime, spriteBatch);
 
             }
             else

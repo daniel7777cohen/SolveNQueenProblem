@@ -23,12 +23,13 @@ namespace RemGame
         private bool inAir = false;
         private PhysicsView p;
         private SpriteFont f;
+        private bool passable;
 
 
         private Point gridLocation;
 
 
-        public Obstacle(World world, Texture2D texture, Vector2 size,SpriteFont font)
+        public Obstacle(World world, Texture2D texture, Vector2 size,SpriteFont font,bool passable)
         {
             body = BodyFactory.CreateRectangle(world, size.X * CoordinateHelper.pixelToUnit, size.Y * CoordinateHelper.pixelToUnit, 1);
             this.size = size;
@@ -36,6 +37,7 @@ namespace RemGame
             p = new PhysicsView(body,body.Position,size,font);
             body.CollisionCategories = Category.Cat1;
             f = font;
+            this.passable = passable;
         }
 
         public Body Body { get => body; set => body = value; }
@@ -45,6 +47,7 @@ namespace RemGame
         public bool KinesisOn { get => kinesisOn; set => kinesisOn = value; }
         public bool InAir { get => inAir; set => inAir = value; }
         public Point GridLocation { get => gridLocation; set => gridLocation = value; }
+        public bool Passable { get => passable;}
 
         public Rectangle physicsObjRecToDraw()
         {
@@ -60,7 +63,7 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
-            if (this.Position.Y < 0)
+            if (this.Position.Y < -300)
             {
                 //Console.WriteLine(this.Position.Y);
                 //this.Body.BodyType = BodyType.Static;

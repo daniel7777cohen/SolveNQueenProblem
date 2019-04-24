@@ -46,7 +46,7 @@
     <Compile Include="LevelDesgin\Chair.cs" />
     <Compile Include="LevelDesgin\Door.cs" />
     <Compile Include="LevelDesgin\Ground.cs" />
-    <Compile Include="LevelDesgin\HealthBar.cs" />
+    <Compile Include="Utils\HealthBar.cs" />
     <Compile Include="LevelDesgin\Locker.cs" />
     <Compile Include="LevelDesgin\Table.cs" />
     <Compile Include="States\BaseGameState.cs" />
@@ -55,7 +55,7 @@
     <Compile Include="States\GameOverState.cs" />
     <Compile Include="States\GameStateInterfaces.cs" />
     <Compile Include="LevelDesgin\Map.cs" />
-    <Compile Include="LevelDesgin\ScrollingBackground.cs" />
+    <Compile Include="Utils\ScrollingBackground.cs" />
     <Compile Include="LevelDesgin\Tile.cs" />
     <Compile Include="States\Mission1.cs" />
     <Compile Include="States\MissionCompleteState.cs" />
@@ -70,7 +70,6 @@
     <Compile Include="Component.cs" />
     <Compile Include="Utils\CoordinateHelper.cs" />
     <Compile Include="Figures\Enemy.cs" />
-    <Compile Include="LevelDesgin\Floor.cs" />
     <Compile Include="Figures\Kid.cs" />
     <Compile Include="LevelDesgin\Obstacle.cs" />
     <Compile Include="Utils\ISoundManager.cs" />

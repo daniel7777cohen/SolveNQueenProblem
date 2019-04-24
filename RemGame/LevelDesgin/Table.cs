@@ -15,7 +15,7 @@ namespace RemGame
 {
     class Table : Obstacle
     {
-        public Table(World world, Texture2D texture, Vector2 size, SpriteFont font) : base(world, texture, size, font)
+        public Table(World world, Texture2D texture, Vector2 size, SpriteFont font,bool passable) : base(world, texture, size, font, passable)
         {
 
         }
