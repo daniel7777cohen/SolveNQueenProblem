@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E7B44044-2307-46B9-9410-2D146BA14E58}</ProjectGuid>
+    <ProjectGuid>{1AC03D54-4274-47DF-B0BC-7EEEBE2D2697}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RemGame</RootNamespace>
-    <AssemblyName>RemGame</AssemblyName>
+    <RootNamespace>Game2</RootNamespace>
+    <AssemblyName>Game2</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -41,44 +41,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Figures\Shot.cs" />
-    <Compile Include="LevelDesgin\Bag.cs" />
-    <Compile Include="LevelDesgin\Chair.cs" />
-    <Compile Include="LevelDesgin\Door.cs" />
-    <Compile Include="LevelDesgin\Ground.cs" />
-    <Compile Include="Utils\HealthBar.cs" />
-    <Compile Include="LevelDesgin\Locker.cs" />
-    <Compile Include="LevelDesgin\Table.cs" />
-    <Compile Include="States\BaseGameState.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="States\EscapeState.cs" />
-    <Compile Include="States\GameOverState.cs" />
-    <Compile Include="States\GameStateInterfaces.cs" />
-    <Compile Include="LevelDesgin\Map.cs" />
-    <Compile Include="Utils\ScrollingBackground.cs" />
-    <Compile Include="LevelDesgin\Tile.cs" />
-    <Compile Include="States\Mission1.cs" />
-    <Compile Include="States\MissionCompleteState.cs" />
-    <Compile Include="States\OptionsMenuState.cs" />
-    <Compile Include="States\PausedState.cs" />
-    <Compile Include="States\PlayingStateOrg.cs" />
-    <Compile Include="States\GenericMission.cs" />
-    <Compile Include="States\StartMenuState.cs" />
-    <Compile Include="States\TitleIntroState.cs" />
-    <Compile Include="Utils\AnimatedSprite.cs" />
-    <Compile Include="Button.cs" />
-    <Compile Include="Component.cs" />
-    <Compile Include="Utils\CoordinateHelper.cs" />
-    <Compile Include="Figures\Enemy.cs" />
-    <Compile Include="Figures\Kid.cs" />
-    <Compile Include="LevelDesgin\Obstacle.cs" />
-    <Compile Include="Utils\ISoundManager.cs" />
-    <Compile Include="Utils\PhysicsObject.cs" />
-    <Compile Include="Utils\PhysicsView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Figures\RangedShoot.cs" />
-    <Compile Include="Utils\SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -101,21 +66,6 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Farseer\Farseer.csproj">
-      <Project>{0b03b2d6-bcdb-4e07-aafa-4ef84ea6a31b}</Project>
-      <Name>Farseer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LevelDesignerGui\LevelDesignerGui.csproj">
-      <Project>{bfe6ad84-9f92-4aea-a356-838a83102875}</Project>
-      <Name>LevelDesignerGui</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XELibrary\XELibrary.csproj">
-      <Project>{623010cd-3e24-4f0e-9eae-922dad230975}</Project>
-      <Name>XELibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

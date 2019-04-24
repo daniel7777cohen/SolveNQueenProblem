@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer", "Farseer\Farseer.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XELibrary", "XELibrary\XELibrary.csproj", "{623010CD-3E24-4F0E-9EAE-922DAD230975}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditor", "LevelEditor\LevelEditor.csproj", "{F62EA31E-2117-4613-B5E9-B67F39DF01C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelDesignerGui", "LevelDesignerGui\LevelDesignerGui.csproj", "{BFE6AD84-9F92-4AEA-A356-838A83102875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,12 +42,12 @@ Global
 		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|Any CPU.Build.0 = Release|Any CPU
 		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|x86.ActiveCfg = Release|Any CPU
 		{623010CD-3E24-4F0E-9EAE-922DAD230975}.Release|x86.Build.0 = Release|Any CPU
-		{F62EA31E-2117-4613-B5E9-B67F39DF01C8}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F62EA31E-2117-4613-B5E9-B67F39DF01C8}.Debug|x86.ActiveCfg = Debug|x86
-		{F62EA31E-2117-4613-B5E9-B67F39DF01C8}.Debug|x86.Build.0 = Debug|x86
-		{F62EA31E-2117-4613-B5E9-B67F39DF01C8}.Release|Any CPU.ActiveCfg = Release|x86
-		{F62EA31E-2117-4613-B5E9-B67F39DF01C8}.Release|x86.ActiveCfg = Release|x86
-		{F62EA31E-2117-4613-B5E9-B67F39DF01C8}.Release|x86.Build.0 = Release|x86
+		{BFE6AD84-9F92-4AEA-A356-838A83102875}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BFE6AD84-9F92-4AEA-A356-838A83102875}.Debug|x86.ActiveCfg = Debug|x86
+		{BFE6AD84-9F92-4AEA-A356-838A83102875}.Debug|x86.Build.0 = Debug|x86
+		{BFE6AD84-9F92-4AEA-A356-838A83102875}.Release|Any CPU.ActiveCfg = Release|x86
+		{BFE6AD84-9F92-4AEA-A356-838A83102875}.Release|x86.ActiveCfg = Release|x86
+		{BFE6AD84-9F92-4AEA-A356-838A83102875}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
