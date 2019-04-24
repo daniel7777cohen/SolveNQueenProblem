@@ -77,3 +77,4 @@ C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer
 C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.csproj.CopyComplete
 C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.dll
 C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\Farseer\obj\Debug\Farseer.pdb
+C:\Users\ben11\source\repos\RemGame\Farseer\bin\Debug\MonoGame.Framework.xml

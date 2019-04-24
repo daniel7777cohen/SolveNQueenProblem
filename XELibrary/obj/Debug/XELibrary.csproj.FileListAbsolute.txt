@@ -40,3 +40,23 @@ C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\XELibra
 C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\XELibrary\obj\Debug\XELibrary.csproj.CopyComplete
 C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\XELibrary\obj\Debug\XELibrary.dll
 C:\Users\danie\OneDrive\מסמכים\Visual Studio 2013\Projects\RemGame\XELibrary\obj\Debug\XELibrary.pdb
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\XELibrary.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\XELibrary.pdb
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.DXGI.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.Direct3D11.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.MediaFoundation.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.Direct2D1.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.XAudio2.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\MonoGame.Framework.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.DXGI.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.Direct3D11.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.MediaFoundation.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.Direct2D1.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\bin\Debug\SharpDX.XAudio2.xml
+C:\Users\ben11\source\repos\RemGame\XELibrary\obj\Debug\XELibrary.csprojAssemblyReference.cache
+C:\Users\ben11\source\repos\RemGame\XELibrary\obj\Debug\XELibrary.csproj.CoreCompileInputs.cache
+C:\Users\ben11\source\repos\RemGame\XELibrary\obj\Debug\XELibrary.csproj.CopyComplete
+C:\Users\ben11\source\repos\RemGame\XELibrary\obj\Debug\XELibrary.dll
+C:\Users\ben11\source\repos\RemGame\XELibrary\obj\Debug\XELibrary.pdb
