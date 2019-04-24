@@ -24,7 +24,6 @@ namespace RemGame
         World world;
         Kid player;
         Enemy DemoEnemy;
-        Floor floor;
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;
@@ -75,7 +74,13 @@ namespace RemGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
             cam = new Camera2D(GraphicsDevice);
             world = new World(new Vector2(0, 9.8f));
-            map = new Map(world);
+
+            player = new Kid(cam, world,
+            new Vector2(60, 60),
+            100,
+            cam.ScreenToWorld(new Vector2(650, 440)), false, font);
+
+            map = new Map(world,player);
 
             font = Content.Load<SpriteFont>("Fonts/Font");
             Tile.Content = Content;
@@ -134,14 +139,6 @@ namespace RemGame
             {
                 sc[i].setRighttwinSc(sc[i + 6]);
             }
-
-
-            player = new Kid(cam,world,
-                new Vector2(60, 60),
-                100,
-                cam.ScreenToWorld(new Vector2(650, 440)), false, font);
-
-            map.setPlayerToMap(player);
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

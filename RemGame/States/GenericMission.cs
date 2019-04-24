@@ -24,7 +24,6 @@ namespace RemGame
         World world;
         Kid player;
         Enemy DemoEnemy;
-        Floor floor;
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
         MouseState currentMouseState;

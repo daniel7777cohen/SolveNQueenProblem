@@ -44,11 +44,22 @@ namespace RemGame
         public Vector2 Position { get => body.Position * CoordinateHelper.unitToPixel; set => body.Position = value * CoordinateHelper.pixelToUnit; }
         public bool KinesisOn { get => kinesisOn; set => kinesisOn = value; }
 
-        public Rectangle physicsObjRecToDraw()
+        public Rectangle physicsRectnagleObjRecToDraw()
         {
             Rectangle destination = new Rectangle
             (
-                (int)Position.X - (int)radius,
+                (int)Position.X - (int)radius*2,
+                (int)Position.Y,
+                (int)Size.X,
+                (int)Size.Y
+            );
+            return destination;
+        }
+        public Rectangle physicsCircleObjRecToDraw()
+        {
+            Rectangle destination = new Rectangle
+            (
+                (int)Position.X - (int)radius/2,
                 (int)Position.Y,
                 (int)Size.X,
                 (int)Size.Y
@@ -84,6 +95,8 @@ namespace RemGame
             spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width/2, texture.Height/2), SpriteEffects.None, 0);
             
         }
+
+        
     }
 }
 
