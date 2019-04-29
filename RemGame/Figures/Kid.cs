@@ -42,6 +42,7 @@ namespace RemGame
         private bool GameOver = false;
         private HealthBar health_bar;
         private World world;
+        private Map map;
         private Vector2 size;
         private float mass;
         private Vector2 position;
@@ -196,6 +197,7 @@ namespace RemGame
             this.cam = cam;
             health_bar = new HealthBar(content);
             this.world = world;
+            this.map = map;
             this.size = size;
             this.mass = mass / 4.0f;
             this.f = f;
@@ -221,9 +223,9 @@ namespace RemGame
 
             cameraToFollow = new Vector2(Position1.X+100,Position1.Y-50);
 
-            upBody.Body.Friction = 5.0f;
-            midBody.Body.Friction = 5.0f;
-            wheel.Body.Friction = 5.0f;
+            upBody.Body.Friction = 1.0f;
+            midBody.Body.Friction = 1.0f;
+            wheel.Body.Friction = 2.0f;
 
             
             // Create a joint to keep the torso upright
@@ -249,12 +251,10 @@ namespace RemGame
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 20.0f;
             axis1.MaxMotorTorque = 3.5f;
-            axis1.BodyB.Friction = 5.0f;
-            axis1.BodyA.Friction = 5.0f;
+            
             
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
-            axis2.BodyA.Friction = 5.0f;
 
             axis2.CollideConnected = true;
 
@@ -366,9 +366,9 @@ namespace RemGame
                         
                     case Movement.Stop:
                         axis1.MotorSpeed = 0;
-                        axis1.MotorEnabled = false;                       
+                        //axis1.MotorEnabled = false;                       
                         if (!isFalling)
-                        {  
+                        {
                             ResetPlayerDynamics();
                         }
 
@@ -411,6 +411,8 @@ namespace RemGame
             {
                 if ((DateTime.Now - previousSlide).TotalSeconds >= slideInterval)
                 {
+                    ResetPlayerDynamics();
+
                     anim = animations[(int)Animation.SlideStart];
                     slideOver = false;
                     startPoint = wheel.Position.X;
@@ -611,8 +613,7 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
-            walkingInstance.Volume = 0.1f;
-
+            walkingInstance.Volume = 0.1f;          
             if (isAlive)
             {
                
@@ -633,14 +634,17 @@ namespace RemGame
 
 
                 ///////////Check for falling
-                if (followingPlayerPoint.Y+1 < upBody.Position.Y && !isSliding && !isJumping  || !firstMove)
+                
+                if ((followingPlayerPoint.Y+1.0 < upBody.Position.Y && !isSliding || !firstMove))
                 {
                     isFalling = true;
 
                 }
+              
 
                 else 
                     isFalling = false;
+                    
 
                 if (isFalling == true && upBody.Position.Y > 1300)
                     isAlive = false;
@@ -658,6 +662,8 @@ namespace RemGame
                         if (wheel.Position.Y <= takeOffPoi - 60)
                         {
                             anim = animations[(int)Animation.JumpUp];
+                            isFalling = true;
+
                         }
 
                     }
@@ -697,7 +703,6 @@ namespace RemGame
                     if (wheel.Position.X == slideTracker || wheel.Position.X < slideTracker && direction == Movement.Right || wheel.Position.X > slideTracker && direction == Movement.Left)
                     {
                         slideOver = true;
-                        wheel.Body.Friction = 5.0f;
                         ResetPlayerDynamics();
                     }
                     if (wheel.Position.X > startPoint + 100 || wheel.Position.X < startPoint - 100)
@@ -709,7 +714,7 @@ namespace RemGame
                     {
                         anim = animations[(int)Animation.SlideEnd];
                     }
-                    if (wheel.Position.X > startPoint + 450 || wheel.Position.X < startPoint - 450 || slideOver)
+                    if (wheel.Position.X > startPoint + 400 || wheel.Position.X < startPoint - 400 || slideOver)
                     {
                         IsSliding = false;
                         slideOver = true;
@@ -720,7 +725,10 @@ namespace RemGame
                     }
                     slideTracker = wheel.Position.X;
                 }
-                
+                else
+                    wheel.Body.Friction = 2.0f;
+
+
                 IsMoving = false;
                
 
@@ -758,6 +766,7 @@ namespace RemGame
                     IsMoving = false;
                     Move(Movement.Stop);
                 }
+
                 if(isFalling)
                     Move(Movement.Stop);
 
@@ -967,9 +976,9 @@ namespace RemGame
                 */
                 //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
-                pv1.Draw(gameTime, spriteBatch);
-                pv2.Draw(gameTime, spriteBatch);
-                pv3.Draw(gameTime, spriteBatch);
+                //pv1.Draw(gameTime, spriteBatch);
+                //pv2.Draw(gameTime, spriteBatch);
+                //pv3.Draw(gameTime, spriteBatch);
 
             }
             else
@@ -979,7 +988,9 @@ namespace RemGame
                 // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
-            //spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y), Color.White);
+            spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y+20), Color.White);
+            if(map!=null)
+            spriteBatch.DrawString(f,  "tile : "+ map.getGridObject(gridLocation.X,gridLocation.Y+3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
 
 
         }
@@ -994,6 +1005,22 @@ namespace RemGame
         public static void MyDelay(int seconds)
         {
             
+        }
+
+        public void setMap(Map map)
+        {
+            this.map = map;
+        }
+
+        public void checkForFalling()
+        {
+            if (!isJumping && !isSliding && map.getGridObject(gridLocation.X, gridLocation.Y + 4) == 0)
+            {
+                isFalling = true;
+            }
+            else
+                isFalling = false;
+
         }
 
 

@@ -55,6 +55,7 @@ namespace RemGame
 
         //public List<CollisionTiles> CollisionTiles { get => collisionTiles; }
         public int Enemies_counter { get => enemies_counter; set => enemies_counter = value; }
+        public int[,] Grid { get => grid;}
 
         public void Generate(int[,] map, int size, SpriteFont font)
         {
@@ -161,16 +162,14 @@ namespace RemGame
                     }
                     else if (number == 8)//enemy
                     {
-                        Console.WriteLine("x: " + x + " y: " + y);
-                        Point startLocationGrid = new Point(y, x);
+                        Point startLocationGrid = new Point(x, y+2);
                         r = new Random();
                         int rInt = r.Next(192, 320);
                         Enemy en = new Enemy(world,
                         new Vector2(96, 96),
                         100,
-                        new Vector2(y * 64, x * 64 - 600),startLocationGrid,10, font, rInt, this,player);
-                        Point enemeyGridLocation = new Point(scaleToGrid(en.Position.X / 64.0f), (int)en.Position.Y / 64);
-                        en.GridLocation = enemeyGridLocation;                       
+                        new Vector2(x * 64+size/2, y * 64),startLocationGrid,10, font, rInt, this,player);
+                        en.GridLocation = startLocationGrid;                       
                         Enemies.Add(en);
                     }
                     else if (number == 9)
@@ -203,8 +202,8 @@ namespace RemGame
             foreach (Enemy en in Enemies)
             {
 
-                en.Update(gameTime, player.Position, player.IsAlive);
-                Point enemeyGridLocation = new Point(scaleToGrid(en.Position.X / 64), scaleToGrid(en.Position.Y / 64));
+                en.Update(gameTime, player.Position, player.IsAlive,20);
+                Point enemeyGridLocation = new Point(scaleToGrid(en.Position.X / 64), ((int)en.Position.Y / 64) +2);
                 en.GridLocation = enemeyGridLocation;
                 if (en.Health == 0)
                 {
@@ -246,7 +245,6 @@ namespace RemGame
         }
 
 
-
         public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (Obstacle ob in ObstacleTiles)
@@ -264,25 +262,28 @@ namespace RemGame
         public int getGridObject(int x,int y)
         {
             if (x > 0 && y > 0)
-                return grid[x, y];
+                return Grid[y, x];
             else
-                return 0;
+                return 100;
         }
 
         public bool isPassable(int x, int y)
         {
-            if (passableDict.TryGetValue(grid[x, y], out bool check))
+            if (x > 0 && y > 0)
             {
-                if (check)
-                    return true;
-                else
-                    return false;
+                if (passableDict.TryGetValue(Grid[y, x], out bool check))
+                {
+                    if (check)
+                        return true;
+                    else
+                        return false;
+                }
             }
-            else
-            {
+            
+            
                 return false;
 
-            }
+            
 
         }
 
