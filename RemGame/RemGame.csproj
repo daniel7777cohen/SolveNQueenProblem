@@ -46,7 +46,7 @@
     <Compile Include="LevelDesgin\Chair.cs" />
     <Compile Include="LevelDesgin\Door.cs" />
     <Compile Include="LevelDesgin\Ground.cs" />
-    <Compile Include="Utils\HealthBar.cs" />
+    <Compile Include="Figures\HealthBar.cs" />
     <Compile Include="LevelDesgin\Locker.cs" />
     <Compile Include="LevelDesgin\Table.cs" />
     <Compile Include="States\BaseGameState.cs" />
@@ -64,23 +64,19 @@
     <Compile Include="States\OptionsMenuState.cs" />
     <Compile Include="States\PausedState.cs" />
     <Compile Include="States\PlayingStateOrg.cs" />
-    <Compile Include="States\GenericMission.cs" />
     <Compile Include="States\StartMenuState.cs" />
     <Compile Include="States\TitleIntroState.cs" />
     <Compile Include="Utils\AnimatedSprite.cs" />
-    <Compile Include="Button.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Utils\CoordinateHelper.cs" />
     <Compile Include="Figures\Enemy.cs" />
     <Compile Include="Figures\Kid.cs" />
     <Compile Include="LevelDesgin\Obstacle.cs" />
-    <Compile Include="Utils\ISoundManager.cs" />
     <Compile Include="Utils\PhysicsObject.cs" />
     <Compile Include="Utils\PhysicsView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Figures\RangedShoot.cs" />
-    <Compile Include="Utils\SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

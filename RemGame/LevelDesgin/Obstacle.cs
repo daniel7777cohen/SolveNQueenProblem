@@ -65,11 +65,8 @@ namespace RemGame
         {
             if (this.Position.Y < -300)
             {
-                //Console.WriteLine(this.Position.Y);
-                //this.Body.BodyType = BodyType.Static;
-                this.Body.Enabled = false;
 
-                //this.Body.GravityScale = 1;
+                this.Body.Enabled = false;
 
             }
         }

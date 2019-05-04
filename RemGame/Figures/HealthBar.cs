@@ -19,7 +19,6 @@ namespace RemGame
         private Texture2D texture;
         private Rectangle rectangle;
         public Rectangle getRectangle { get => rectangle; set => rectangle = value; }
-        public static ContentManager Content;
         public HealthBar(ContentManager Content)
         {
             texture = Content.Load<Texture2D>("misc/HealthBar");
@@ -33,8 +32,7 @@ namespace RemGame
         public void Draw(SpriteBatch spriteBatch,Camera2D cam)
         {
  
-            spriteBatch.Draw(texture, new Vector2(cam.Position.X, cam.Position.Y),rectangle,Color.White);
-          
+            spriteBatch.Draw(texture, new Vector2(cam.Position.X, cam.Position.Y),rectangle,Color.White); 
            
         }
 

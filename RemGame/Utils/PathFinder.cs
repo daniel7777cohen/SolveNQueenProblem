@@ -12,11 +12,14 @@ namespace RemGame
         private enum NodeStatus { Open, Closed };
         private static Map pathMap;
 
-
         private static Dictionary<Vector2, NodeStatus> nodeStatus =
             new Dictionary<Vector2, NodeStatus>();
 
         private const int CostStraight = 10;
+        private const int CostGoDownPlatform = 5;
+        private const int CostGoUpPlatform = 5;
+
+
 
         private static List<PathNode> openList = new List<PathNode>();
 
@@ -43,8 +46,9 @@ namespace RemGame
 
         static private List<PathNode> FindAdjacentNodes(
     PathNode currentNode,
-    PathNode endNode)
+    PathNode endNode, String heuristicCalc)
         {
+            
             List<PathNode> adjacentNodes = new List<PathNode>();
 
             int X = currentNode.GridX;
@@ -56,36 +60,42 @@ namespace RemGame
                         currentNode,
                         endNode,
                         new Vector2(X - 1, Y),
-                        CostStraight + currentNode.DirectCost));
+                        CostStraight + currentNode.DirectCost, heuristicCalc));
             }
         
 
-            if ((X < 49) && (pathMap.isPassable(X + 1, Y)))
+            if ((X > 0) && (pathMap.isPassable(X + 1, Y)))
             {
+               // if(pathMap.isPassable(X + 1, Y))
                 adjacentNodes.Add(new PathNode(
                         currentNode,
                         endNode,
                         new Vector2(X + 1, Y),
-                        CostStraight + currentNode.DirectCost));
-            }
+                        CostStraight + currentNode.DirectCost, heuristicCalc));
+                
 
-            if ((Y > 0) && (pathMap.isPassable(X, Y - 1)))
+            }
+            
+
+            if ((Y > 0) && (!pathMap.isPassable(X+1, Y)))
             {
                 adjacentNodes.Add(new PathNode(
                     currentNode,
                     endNode,
                     new Vector2(X, Y - 1),
-                    CostStraight + currentNode.DirectCost));
+                    CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
+                
             }
 
 
-            if ((Y < 49) && (pathMap.isPassable(X, Y + 1)))
+            if ((Y > 0 ) && (pathMap.isPassable(X + 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
             {
                 adjacentNodes.Add(new PathNode(
                     currentNode,
                     endNode,
-                    new Vector2(X, Y + 1),
-                    CostStraight + currentNode.DirectCost));
+                    new Vector2(X+1 , Y + 1),
+                    CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
+
             }
 
             return adjacentNodes;
@@ -101,8 +111,9 @@ namespace RemGame
 
         static public List<Vector2> FindPath(
             Vector2 startTile,
-            Vector2 endTile)
+            Vector2 endTile,String heuristicCalc)
         {
+            
             if (!pathMap.isPassable((int)endTile.X,(int)endTile.Y) ||
                 !pathMap.isPassable((int)startTile.X, (int)startTile.Y))
             {
@@ -116,8 +127,8 @@ namespace RemGame
             PathNode startNode;
             PathNode endNode;
 
-            endNode = new PathNode(null, null, endTile, 0);
-            startNode = new PathNode(null, endNode, startTile, 0);
+            endNode = new PathNode(null, null, endTile, 0, heuristicCalc);
+            startNode = new PathNode(null, endNode, startTile, 0, heuristicCalc);
 
             AddNodeToOpenList(startNode);
 
@@ -141,7 +152,7 @@ namespace RemGame
 
                 foreach (
                     PathNode possibleNode in
-                    FindAdjacentNodes(currentNode, endNode))
+                    FindAdjacentNodes(currentNode, endNode, heuristicCalc))
                 {
                     if (nodeStatus.ContainsKey(possibleNode.GridLocation))
                     {

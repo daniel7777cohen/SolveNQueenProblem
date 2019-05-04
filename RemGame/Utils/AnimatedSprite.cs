@@ -57,11 +57,8 @@ namespace RemGame
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
 
 
-            ///// adjust measures is neccesery!/////////////////////////////////////////
             Rectangle destinationRectangle = new Rectangle (destination.X+scale.X,destination.Y+scale.Y,destination.Width+scale.Width,destination.Height+scale.Height);
-
-            //spriteBatch.Draw(texture, destination, null, Color.White, body.Rotation, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), SpriteEffects.None, 0);
-            //spriteBatch.Draw(Texture, destination, sourceRectangle, Color.White, body.Rotation, new Vector2(width / 2.0f, height / 3.0f), SpriteEffects.None, 0);
+            //case figures tun left - > flip animation side.
             if(toLeft)
                 spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, null, 0.0f, null, Color.White, flip, 0.0f);
             else

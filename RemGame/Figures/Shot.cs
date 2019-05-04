@@ -8,5 +8,6 @@ namespace RemGame.Figures
 {
     class Shot
     {
+        //...................
     }
 }

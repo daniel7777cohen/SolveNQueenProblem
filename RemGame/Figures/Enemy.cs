@@ -19,8 +19,17 @@ namespace RemGame
     /// ///////////////EDit///////////////////////////////////////////////////
     /// </summary>
     /// ///////////////////////////////////////////////////////////////////////////
+    /// 
+    enum Movement
+    {
+        Left,
+        Right,
+        Jump,
+        Stop
+    }
     class Enemy
     {
+
         public enum Mode { Idle, Patrol, WalkToPlayer, Attack, Evade }// what mode of behavior the monster AI is using 
         private int itrator = 0;
         private static ContentManager content;
@@ -89,6 +98,11 @@ namespace RemGame
         private float evasionLuck;
 
         List<Vector2> path;
+        private Vector2[] patrolGridPath;
+        private Vector2[] playerGridPath;
+
+        Texture2D gridColor;
+
 
 
 
@@ -119,12 +133,6 @@ namespace RemGame
         private AnimatedSprite anim;
         private AnimatedSprite[] animations = new AnimatedSprite[2];
 
-
-        KeyboardState keyboardState;
-        KeyboardState prevKeyboardState = Keyboard.GetState();
-
-        MouseState currentMouseState;
-        MouseState previousMouseState = Mouse.GetState();
 
         Texture2D shootTexture;
 
@@ -195,7 +203,7 @@ namespace RemGame
         public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
         public AnimatedSprite Anim { get => anim; set => anim = value; }
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
-        internal Movement Direction { get => direction; set => direction = value; }
+        public Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => torso.Position; }
         public int Distance { get => distance; set => distance = value; }
         public Point GridLocation { get => gridLocation; set => gridLocation = value; }
@@ -329,27 +337,70 @@ namespace RemGame
         public void Update(GameTime gameTime, Vector2 playerPosition, bool PlayerAlive, int patrolbound)
         {
 
+            bool reached = false;
 
-            bool reached =false;
-            
-            //PathFinder.FindPath(gridLocation.ToVector2(), new Vector2(gridLocation.X + 20, gridLocation.Y));
-            Vector2[] gridpath = null;
+            if (gridLocation == startLocationGrid)
+                PathFinder.SetMap(map);
+
             if (itrator == 0)
             {
-                PathFinder.SetMap(map);
-                gridpath = findpath();
+                patrolGridPath = findPathToPatrol();
             }
-            if (gridpath != null)
+            if (player.GridLocation != null)
+                playerGridPath = findPathToPlayer();
+
+            if (patrolGridPath != null)
             {
-                if (itrator == gridpath.Length - 1)
+                if (itrator == patrolGridPath.Length - 1)
                 {
                     itrator = 0;
                 }
-                if (gridpath[itrator].Y == gridLocation.Y && map.isPassable((int)gridpath[itrator].X + 1, (int)gridpath[itrator].Y))
+                if (gridLocation.ToVector2() != patrolGridPath[patrolGridPath.Length - 1])
                 {
-                    Console.WriteLine("GENERAL grid vector :" + gridpath[itrator] + "enemy vector :" + gridLocation + "next location: " + gridpath[itrator + 1]);
-                    Console.WriteLine(itrator + "itrartororrr");
-                    if (gridLocation.ToVector2() != gridpath[itrator + 1])
+                    isMoving = true;
+
+                    if (gridLocation.ToVector2() == patrolGridPath[itrator])
+                    {
+
+                        if (patrolGridPath[itrator + 1].X > gridLocation.X)
+                        {
+                            direction = Movement.Right;
+                            Move(Movement.Right);
+                        }
+
+
+                        if (patrolGridPath[itrator + 1].X < gridLocation.X)
+                        {
+                            direction = Movement.Left;
+                            Move(Movement.Left);
+                        }
+
+                        if (patrolGridPath[itrator + 1].Y < gridLocation.Y)
+                        {
+                            wheel.Body.ApplyLinearImpulse(new Vector2(0, -6));
+                            isMoving = false;
+
+                        }
+
+
+
+                        itrator++;
+
+                    }
+
+                }
+                else
+                {
+                    Move(Movement.Stop);
+                    isMoving = false;
+                    patrolGridPath = findPathToPatrol();
+
+                }
+                /*
+                if (patrolGridPath[itrator].Y == gridLocation.Y && map.isPassable((int)patrolGridPath[itrator].X + 1, (int)patrolGridPath[itrator].Y))
+                {
+                   
+                    if (gridLocation.ToVector2() != patrolGridPath[itrator + 1])
                     {
                         Move(Movement.Right);
                         direction = Movement.Right;
@@ -361,12 +412,18 @@ namespace RemGame
                     if(reached)
                     {
                         itrator++;
-                        Move(Movement.Stop);
-                        isMoving = false;
+                        //Move(Movement.Stop);
+                        //isMoving = false;
 
                     }
+
+                    if (patrolGridPath[itrator + 1].Y < gridLocation.Y)
+                    {
+                        isMoving = false;
+                        wheel.Body.ApplyLinearImpulse(new Vector2(0, -6));
+                    }
                 }
-                
+                */
                 /*
                 if (gridLocation.ToVector2() != gridpath[itrator])
                 {
@@ -377,7 +434,8 @@ namespace RemGame
                 else
                 */
 
-                Console.WriteLine("grid vector :" + gridpath[itrator] + "enemy vector :" + gridLocation);
+                Console.WriteLine("grid vector :" + patrolGridPath[itrator] + "enemy vector :" + gridLocation);
+                Console.WriteLine(itrator);
             }
             /*
             else if(gridpath[itrator].Y == y && gridLocation.X == gridpath[itrator].X)
@@ -397,10 +455,6 @@ namespace RemGame
             */
 
 
-
-         
-
-
             anim = Animations[0];
             anim = Animations[(int)direction];
 
@@ -410,10 +464,6 @@ namespace RemGame
                 Anim.CurrentFrame = 1;
 
             //UpdateAI();
-
-
-
-
 
 
             /*
@@ -579,7 +629,29 @@ namespace RemGame
         }
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteFont font)
         {
+            if (patrolGridPath != null)
+            {
+                for (int i = 0; i < patrolGridPath.Length; i++)
+                {
+                    Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
+                    if (gridLocation.ToVector2() != patrolGridPath[i])
+                        spriteBatch.Draw(gridColor, gridloc, Color.Red);
+                    else
+                        spriteBatch.Draw(gridColor, gridloc, Color.Green);
+                }
+            }
 
+            if (playerGridPath != null)
+            {
+                for (int i = 0; i < playerGridPath.Length; i++)
+                {
+                    Rectangle gridloc = new Rectangle((int)playerGridPath[i].X * 64, (int)playerGridPath[i].Y * 64, 64, 64);
+                    if (gridLocation.ToVector2() != playerGridPath[i])
+                        spriteBatch.Draw(gridColor, gridloc, Color.Green);
+                    else
+                        spriteBatch.Draw(gridColor, gridloc, Color.GreenYellow);
+                }
+            }
             //torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsRectnagleObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
@@ -796,15 +868,47 @@ namespace RemGame
             }
         }
 
-        public Vector2[] findpath()
+        public Vector2[] findPathToPatrol()
         {
-            path = PathFinder.FindPath(startLocationGrid.ToVector2(), new Vector2(startLocationGrid.X + 20, startLocationGrid.Y));
-            Vector2[] arr = path.ToArray();
+            Vector2[] arr;
+            path = PathFinder.FindPath(startLocationGrid.ToVector2(), new Vector2(startLocationGrid.X + 40, startLocationGrid.Y), "Euclidain");
+            if (path == null)
+                arr = new Vector2[] { gridLocation.ToVector2() };
+            //arr[0] = gridLocation.ToVector2();
+
+            else
+                arr = path.ToArray();
             for (int i = 0; i < arr.Length; i++)
             {
-                Console.WriteLine(arr[i]);
+                //Console.WriteLine(arr[i]);
             }
             return arr;
+        }
+        public Vector2[] findPathToPlayer()
+        {
+            Vector2[] arr;
+            /*
+            if (gridLocation = startLocationGrid)
+                canFind = true;
+            if(canFind)
+            */
+            path = PathFinder.FindPath(gridLocation.ToVector2(), player.GridLocation.ToVector2(), "Manhattan");
+            if (path == null)
+                arr = new Vector2[] { gridLocation.ToVector2() };
+            //arr[0] = gridLocation.ToVector2();
+
+            else
+                arr = path.ToArray();
+            for (int i = 0; i < arr.Length; i++)
+            {
+                //Console.WriteLine(arr[i]);
+            }
+            return arr;
+        }
+
+        public void setAstarsquare(Texture2D t)
+        {
+            gridColor = t;
         }
         /*
         private float GetRandomSpeed()

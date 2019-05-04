@@ -19,10 +19,13 @@ namespace RemGame
 
         private Color _backgroundColor = Color.CornflowerBlue;
         private List<Component> _gameComponents;
-        private bool isRonAlive = true;
+
 
         World world;
+
         Kid player;
+        private bool isRonAlive = true;
+
 
         KeyboardState keyboardState;
         KeyboardState prevKeyboardState = Keyboard.GetState();
@@ -33,21 +36,24 @@ namespace RemGame
         Camera2D cam;
         Vector2 camLocation;
 
+        //both as an object and as a grid.
         Map map;
         int[,] mapGrid;
 
-        Rectangle closingWall;
+        //level feature - cahsing wall
+        Rectangle closingWallRec;
         bool debugStopWall = false;
 
-
+        //delays end of the level after death
         DateTime deathTimer;
         float deathInterval = 2.0f;
 
+        //delays end of the level after completion
         DateTime missionCompleteTimer;
         bool isMissionComplete = false;
         float missionCompleteInterval = 2.0f;
 
-
+        //Assets of level enviroment
         Texture2D backGround1;
         Texture2D backGround2;
         Texture2D backGround3;
@@ -60,16 +66,12 @@ namespace RemGame
         Rectangle backgroundREC4;
         Rectangle backgroundREC5;
 
-        Texture2D wall;
+        Texture2D closingWall;
 
-        SoundEffect hall;
-
-        Song GeneralMusic;
-
-        SoundEffectInstance hallInstance;
-
-        public bool IsRonAlive { get => isRonAlive; set => isRonAlive = value; }
-
+        SoundEffect hallEffects;
+        SoundEffectInstance hallInstance;//has more featurs
+        Song backgroundMusic;
+      
         public PlayingState(Game game)
             : base(game)
         {
@@ -87,22 +89,21 @@ namespace RemGame
             Enemy.Content = Content;
             Kid.Content = Content;
 
-            cam = new Camera2D(GraphicsDevice);
+            cam = new Camera2D(GraphicsDevice);//intialize camera
 
+            world = new World(new Vector2(0, 9.8f));//setting physics world settings
 
-            world = new World(new Vector2(0, 9.8f));
-
-            GeneralMusic = Content.Load<Song>("Sound/Music/Level1/Level_1 - Music_1");
+            backgroundMusic = Content.Load<Song>("Sound/Music/Level1/Level_1 - Music_1");
             MediaPlayer.Volume = 2.0f;
 
             if (OurGame.EnableMusic == true)
             {
-                MediaPlayer.Play(GeneralMusic);
+                MediaPlayer.Play(backgroundMusic);
                 MediaPlayer.IsRepeating = true;
             }
 
-            hall = Content.Load<SoundEffect>("Sound/FX/Level1/Hallway_Atmosphere");
-            hallInstance = hall.CreateInstance();
+            hallEffects = Content.Load<SoundEffect>("Sound/FX/Level1/Hallway_Atmosphere");
+            hallInstance = hallEffects.CreateInstance();
             hallInstance.IsLooped = true;
             hallInstance.Play();
             hallInstance.Volume = 0.05f;
@@ -150,7 +151,7 @@ namespace RemGame
                 { 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,0,0,6,6,6,0,5,5,5,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,0,0,0,7,7,0,0,0,0,0,0,0,0,0,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 { 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,6,6,6,6,6,6,6,0,5,5,5,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 { 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,6,6,0,0,0,0,0,0,5,5,5,0,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                { 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,6,6,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,2,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,6,6,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,2,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 { 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,2,0,0,0,0,2,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,6,6,6,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
                 { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,1,1,0,1,1,0,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -162,13 +163,9 @@ namespace RemGame
                    };
 
 
+            map.Generate(mapGrid, 64, font);//every digit in the grid represents an object
 
-
-
-
-            map.Generate(mapGrid, 64, font);
             player.setMap(map);
-
 
             backGround1 = Content.Load<Texture2D>("Layers/level/level_01_A");
             backGround2 = Content.Load<Texture2D>("Layers/level/level_01_B");
@@ -183,9 +180,8 @@ namespace RemGame
             backgroundREC5 = new Rectangle(3840 * 4, -700, 3840, 1984);
 
 
-            wall = Content.Load<Texture2D>("Layers/level/closingWall");
-            closingWall = new Rectangle((int)cam.Position.X, 0, 200, 600);
-
+            closingWall = Content.Load<Texture2D>("Layers/level/closingWall");
+            closingWallRec = new Rectangle((int)cam.Position.X, 0, 200, 600);
 
             _gameComponents = new List<Component>()
             {
@@ -209,8 +205,8 @@ namespace RemGame
 
             }
 
-
-            if (closingWall.X + closingWall.Width + 20 > player.Position.X)
+            //case closingWall hits player -> player done,level faild.
+            if (closingWallRec.X + closingWallRec.Width + 20 > player.Position.X)
             {
                 player.HealthBar.decrease(6);
                 if (player.IsAlive)
@@ -218,7 +214,7 @@ namespace RemGame
 
                 player.IsAlive = false;
             }
-
+            //Applying Kinesis abillities --IN MAINTAINCE---
             if ((currentMouseState.LeftButton == ButtonState.Pressed) && (currentMouseState.RightButton == ButtonState.Pressed))
             {
                 Console.WriteLine("kinesis!!!!!");
@@ -231,13 +227,12 @@ namespace RemGame
 
                 }
             }
+            //
 
             foreach (var component in _gameComponents)
                 component.Update(gameTime);
 
-
-            camLocation = player.CameraToFollow;
-            //camLocation = new Vector2(player.Position.X, player.Position.Y);
+            camLocation = player.CameraToFollow;//set following camera features by subtracting vectors
 
             cam.LookAt(camLocation);
             //cam.Rotate(0.0005f);
@@ -245,22 +240,16 @@ namespace RemGame
             map.Update(gameTime);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-
             prevKeyboardState = keyboardState;
             base.Update(gameTime);
         }
-
-
 
         private void handleInput(GameTime gameTime, bool stopWall)
         {
 
             if (player.FirstMove == true)
                 if (map.Enemies_counter == 2 && stopWall != true)
-                    closingWall.X += 4;
-
-
-
+                    closingWallRec.X += 4;
 
             if (map.Enemies_counter == 0)
             {
@@ -276,8 +265,6 @@ namespace RemGame
                     StateManager.PushState(OurGame.MissionCompleteState.Value);
                 }
             }
-
-
 
             if (player.IsAlive)
             {
@@ -324,25 +311,17 @@ namespace RemGame
             GraphicsDevice.Clear(_backgroundColor);
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
 
-            //spriteBatch.DrawString(font, cam.Position.X + "/" + cam.Position.Y, new Vector2(cam.Position.X, cam.Position.Y), Color.White);
-
-
             spriteBatch.Draw(backGround1, backgroundREC1, null, Color.White);
             spriteBatch.Draw(backGround2, backgroundREC2, null, Color.White);
             spriteBatch.Draw(backGround3, backgroundREC3, null, Color.White);
             spriteBatch.Draw(backGround4, backgroundREC4, null, Color.White);
             spriteBatch.Draw(backGround5, backgroundREC5, null, Color.White);
 
-            spriteBatch.Draw(wall, closingWall, null, Color.White);
+            spriteBatch.Draw(closingWall, closingWallRec, null, Color.White);
 
             map.DrawObstacle(gameTime, spriteBatch);
             map.DrawGrid(gameTime, mapGrid, spriteBatch, font);
-
-            map.DrawEnemies(gameTime, spriteBatch);
-
-            
-            //spriteBatch.DrawString(font, player.GridLocation.ToString(), new Vector2(player.GridLocation.X * 64 + 90, player.GridLocation.Y * 64 + 20), Color.White);
-            
+//for debbuging purpose - show x & y coordinates of the objects            
             foreach (Obstacle ob in map.ObstacleTiles)
             {
                 spriteBatch.DrawString(font, ob.GridLocation.ToString(), new Vector2(ob.GridLocation.X * 64, ob.GridLocation.Y * 64 + 20), Color.White);
@@ -353,22 +332,21 @@ namespace RemGame
                 spriteBatch.DrawString(font, en.GridLocation.ToString(), new Vector2(en.GridLocation.X * 64, en.GridLocation.Y * 64+40), Color.White);
 
             }
+//
+            map.DrawEnemies(gameTime, spriteBatch);
 
-
-
-
-            //spriteBatch.DrawString(font, "Mouse Position" + cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(GraphicsDevice.Viewport.Width / 2.0f - 120f, -GraphicsDevice.Viewport.Height + 900), Color.White);
-            //spriteBatch.DrawString(font, "Mouse Position" + cam.ScreenToWorld(new Vector2(currentMouseState.Position.X, currentMouseState.Position.Y)), new Vector2(cam.Position.X + cam.BoundingRectangle.Width / 2, -cam.Position.Y + cam.BoundingRectangle.Height / 4), Color.White);
             foreach (var component in _gameComponents)
             {
                 component.Draw(gameTime, spriteBatch);
             }
+
             player.HealthBar.Draw(spriteBatch, cam);
 
             spriteBatch.End();
             base.Draw(gameTime);
         }
 
+        public bool IsRonAlive { get => isRonAlive; set => isRonAlive = value; }
 
     }
 }

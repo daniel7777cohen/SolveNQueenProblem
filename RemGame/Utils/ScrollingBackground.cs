@@ -39,7 +39,8 @@ namespace RemGame
         {
             this.twinSc = sC;
         }
-
+        //Attach 2 exact background pictures and scroll them vertically on screen.
+        //switch theire places by movement direction
         public void Update(Camera2D cam, int direction)
         {
            

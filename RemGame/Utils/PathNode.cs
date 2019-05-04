@@ -38,7 +38,7 @@ namespace RemGame
             PathNode parentNode,
             PathNode endNode,
             Vector2 gridLocation,
-            float cost)
+            float cost,String heuristicStrategy)//0 for euclidain 1 for manhatten
         {
             ParentNode = parentNode;
             GridLocation = gridLocation;
@@ -46,7 +46,11 @@ namespace RemGame
             DirectCost = cost;
             if (!(endNode == null))
             {
-                TotalCost = DirectCost + EuclidainCost();
+                //if(heuristicStrategy == "Euclidain")
+                   TotalCost = DirectCost + EuclidainCost();
+               // else
+                    //TotalCost = DirectCost + ManhattanCost();
+
             }
         }
         #endregion
@@ -54,11 +58,25 @@ namespace RemGame
         #region Helper Methods
         public float EuclidainCost()
         {
+            if (ParentNode != null)
+                return
+                    (float)Math.Sqrt(Math.Pow((double)EndNode.GridLocation.X - ParentNode.GridLocation.X, 2)
+                    + Math.Pow((double)EndNode.GridLocation.Y - ParentNode.GridLocation.Y, 2));
 
-            return
-          (float)Math.Sqrt(Math.Pow((double)EndNode.GridLocation.X - GridLocation.X, 2) + Math.Pow((double)EndNode.GridLocation.Y - GridLocation.Y, 2));
+            else return 200;
 
         }
+
+        public float ManhattanCost()
+        {
+
+            return
+          Math.Abs(EndNode.GridLocation.X - GridLocation.X)
+          + Math.Abs(EndNode.GridLocation.Y - GridLocation.Y);
+
+        }
+
+
         #endregion
 
         #region Public Methods

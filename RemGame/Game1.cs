@@ -11,13 +11,7 @@ using XELibrary;
 
 namespace RemGame
 {
-    enum Movement
-    {
-        Left,
-        Right,
-        Jump,
-        Stop
-    }
+    
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager graphics;
@@ -28,7 +22,6 @@ namespace RemGame
         CelAnimationManager celAnimationManager;
         ScrollingBackgroundManager scrollingBackgroundManager;
         InputHandler inputHandler;
-        //SoundManager soundManager;
         GameStateManager stateManager;
 
         public ITitleIntroState TitleIntroState;
@@ -61,9 +54,6 @@ namespace RemGame
 
             scrollingBackgroundManager = new ScrollingBackgroundManager(this, "Textures\\");
             Components.Add(scrollingBackgroundManager);
-
-            // soundManager = new SoundManager(this);
-            //Components.Add(soundManager);
 
             stateManager = new GameStateManager(this);
             Components.Add(stateManager);
@@ -98,7 +88,6 @@ namespace RemGame
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            //scrollingBackgroundManager.setCamera(cam);
             base.Initialize();
         }
 
@@ -114,10 +103,7 @@ namespace RemGame
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            
-
-            //soundManager.LoadContent(musicPath, fxPath);
+           
         }
 
         protected override void Update(GameTime gameTime)

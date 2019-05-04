@@ -35,7 +35,7 @@ namespace RemGame
         SlideEnd
     }
 
-    class Kid:Component
+    class Kid : Component
     {
         private static ContentManager content;
 
@@ -53,9 +53,7 @@ namespace RemGame
         private bool firstMove = false;
         private SpriteFont f;
 
-        /// <summary>
-        /// Farseer body coordinates
-        /// </summary>
+
         PhysicsView pv1;
         PhysicsView pv2;
         PhysicsView pv3;
@@ -84,7 +82,7 @@ namespace RemGame
         private bool isRangeAttacking = false;
 
         Texture2D shootTexture;
-      
+
         private int health = 8;
         private bool isAlive = true;
 
@@ -93,7 +91,7 @@ namespace RemGame
 
 
         private float speed = SPEED;
-        private float actualMovningSpeed=0;
+        private float actualMovningSpeed = 0;
 
         private bool isMoving = false;
         private bool isJumping = false;
@@ -127,10 +125,10 @@ namespace RemGame
         private float slideTracker = 0;
         private bool slideOver = true;
 
-        private DateTime previousShoot = DateTime.Now;   
+        private DateTime previousShoot = DateTime.Now;
         private const float shootInterval = 0.3f;        // in seconds
 
-        private DateTime previousBend = DateTime.Now;   
+        private DateTime previousBend = DateTime.Now;
         private const float bendInterval = 0.1f;        // in seconds
 
         /// <summary>
@@ -153,9 +151,7 @@ namespace RemGame
         SoundEffect crouch;
         SoundEffect slide;
 
-
         bool isJumpSoundPlayed = false;
-
 
         SoundEffectInstance walkingInstance;
         SoundEffectInstance jumpingUpInstance;
@@ -174,7 +170,7 @@ namespace RemGame
 
         public AnimatedSprite Anim { get => anim; set => anim = value; }
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
-        internal Movement Direction { get => direction; set => direction = value; }
+        public Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => upBody.Position; }
         public bool IsJumping { get => isJumping; set => isJumping = value; }
         public bool IsMoving { get => isMoving; set => isMoving = value; }
@@ -192,7 +188,7 @@ namespace RemGame
         public Vector2 Position1 { get => position; set => position = value; }
         public Point GridLocation { get => gridLocation; set => gridLocation = value; }
 
-        public Kid(Camera2D cam,World world,Vector2 size, float mass, Vector2 startPosition,bool isBent,SpriteFont f)
+        public Kid(Camera2D cam, World world, Vector2 size, float mass, Vector2 startPosition, bool isBent, SpriteFont f)
         {
             this.cam = cam;
             health_bar = new HealthBar(content);
@@ -203,8 +199,8 @@ namespace RemGame
             this.f = f;
 
             IsMoving = false;
-            Vector2 torsoSize = new Vector2(size.X, size.Y-size.X/2.0f);
-            float wheelSize = size.X ;
+            Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
+            float wheelSize = size.X;
 
 
             // Create the upper body
@@ -221,15 +217,15 @@ namespace RemGame
             wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
             wheel.Position = midBody.Position + new Vector2(0, 64);
 
-            cameraToFollow = new Vector2(Position1.X+100,Position1.Y-50);
+            cameraToFollow = new Vector2(Position1.X + 100, Position1.Y - 50);
 
             upBody.Body.Friction = 1.0f;
             midBody.Body.Friction = 1.0f;
             wheel.Body.Friction = 2.0f;
 
-            
+
             // Create a joint to keep the torso upright
-            JointFactory.CreateAngleJoint(world, upBody.Body,new Body(world));
+            JointFactory.CreateAngleJoint(world, upBody.Body, new Body(world));
             JointFactory.CreateAngleJoint(world, midBody.Body, new Body(world));
 
 
@@ -245,14 +241,14 @@ namespace RemGame
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByEnemy);
 
             //direction = Movement.Right;
-            
+
             axis1 = JointFactory.CreateRevoluteJoint(world, midBody.Body, wheel.Body, Vector2.Zero);
             axis1.CollideConnected = true;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 20.0f;
             axis1.MaxMotorTorque = 3.5f;
-            
-            
+
+
 
             axis2 = JointFactory.CreateRevoluteJoint(world, upBody.Body, midBody.Body, Vector2.Zero);
 
@@ -335,7 +331,7 @@ namespace RemGame
 
             pv1 = new PhysicsView(upBody.Body, upBody.Position, upBody.Size, f);
             pv2 = new PhysicsView(midBody.Body, midBody.Position, wheel.Size, f);
-            pv3 = new PhysicsView(wheel.Body,wheel.Position, wheel.Size, f);
+            pv3 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
         }
 
         ///////////////////////////////////////////////////////////Abillities////////////////////////////////////////////////////////
@@ -343,27 +339,27 @@ namespace RemGame
         {
             axis1.MotorEnabled = true;
 
-            if (!IsBending && !isJumping )
-            speed = SPEED;
+            if (!IsBending && !isJumping)
+                speed = SPEED;
 
             if (!IsSliding && !IsJumping)
             {
                 switch (movement)
                 {
                     case Movement.Left:
-                       
+
                         lookRight = false;
                         axis1.MotorSpeed = -MathHelper.TwoPi * speed;
                         anim = animations[(int)Animation.Walk];
                         break;
 
                     case Movement.Right:
-                       
+
                         lookRight = true;
                         axis1.MotorSpeed = MathHelper.TwoPi * speed;
                         anim = animations[(int)Animation.Walk];
                         break;
-                        
+
                     case Movement.Stop:
                         axis1.MotorSpeed = 0;
                         //axis1.MotorEnabled = false;                       
@@ -372,7 +368,7 @@ namespace RemGame
                             ResetPlayerDynamics();
                         }
 
-                        if(firstMove)
+                        if (firstMove)
                             anim = animations[(int)Animation.JumpEnd];
                         else
                             anim = animations[(int)Animation.Idle];
@@ -386,14 +382,14 @@ namespace RemGame
         public void Jump()
 
         {
-            
+
             if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval && hasLanded)
             {
                 anim = animations[(int)Animation.JumpStart];
                 isJumping = true;
                 takeOffPoi = wheel.Position.Y;
                 liftOff = wheel.Position.Y;
-    
+
                 wheel.Body.ApplyLinearImpulse(jumpForce * new Vector2(0, 1));
 
                 goingDown = false;
@@ -483,24 +479,24 @@ namespace RemGame
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-               
+
             PhysicsObject tmp = null;
-            foreach(PhysicsObject p in shotList)
+            foreach (PhysicsObject p in shotList)
             {
                 if (p.Body.BodyId == fixtureA.Body.BodyId)
                     tmp = p;
             }
- 
+
             if (tmp != null)
             {
                 shotList.Remove(tmp);
                 tmp.Body.Dispose();
             }
-            
+
             return true;
-            
-            
-            
+
+
+
         }
 
         public void rangedShoot(Vector2 shootForce)
@@ -523,7 +519,7 @@ namespace RemGame
 
         bool Shoot_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-    
+
             PhysicsObject tmp = null;
             foreach (PhysicsObject p in rangedShotList)
             {
@@ -540,60 +536,51 @@ namespace RemGame
             return true;
         }
 
-        public void Kinesis(Obstacle obj,MouseState currentMouseState)
+        //---IN MAINTAINCE---
+        public void Kinesis(Obstacle obj, MouseState currentMouseState)
         {
-            
-           if( obj.KinesisOn == true)
-            if (obj.Position.Y > 0 )
-            {
-                if (currentMouseState.RightButton == ButtonState.Pressed && currentMouseState.LeftButton == ButtonState.Pressed)
-                {
-                    obj.Body.CollidesWith = Category.None; 
-                    obj.Body.BodyType = BodyType.Dynamic;
-                    //obj.Body.Mass = 0.0f;
-                    obj.Body.GravityScale = 0.1f;
-                    obj.Body.Rotation = 0.1f;
-                    obj.Body.ApplyForce(new Vector2(0, -6.0f));
 
+            if (obj.KinesisOn == true)
+                if (obj.Position.Y > 0)
+                {
+                    if (currentMouseState.RightButton == ButtonState.Pressed && currentMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        obj.Body.CollidesWith = Category.None;
+                        obj.Body.BodyType = BodyType.Dynamic;
+                        //obj.Body.Mass = 0.0f;
+                        obj.Body.GravityScale = 0.1f;
+                        obj.Body.Rotation = 0.1f;
+                        obj.Body.ApplyForce(new Vector2(0, -6.0f));
+
+                    }
+                    else
+                    {
+
+                        //obj.Body.Mass = 0;
+                        //obj.Body.ResetDynamics();
+                        //obj.Body.BodyType = BodyType.Static;
+                    }
                 }
                 else
                 {
-
-                    //obj.Body.Mass = 0;
-                    //obj.Body.ResetDynamics();
-                    //obj.Body.BodyType = BodyType.Static;
+                    obj.Body.ResetDynamics();
+                    obj.Body.GravityScale = 1;
+                    //obj.Body.Mass = 0.0f;
+                    //obj.Body.Mass = 9.8f;
+                    if (currentMouseState.RightButton == ButtonState.Pressed)
+                    {
+                        //obj.Body.BodyType = BodyType.Static;
+                        //obj.Body.ApplyForce(new Vector2(4.0f, 0));
+                        //obj.Body.BodyType = BodyType.Static;
+                    }
                 }
-            }
-            else
-            {
-                obj.Body.ResetDynamics();
-                obj.Body.GravityScale = 1;
-                //obj.Body.Mass = 0.0f;
-                //obj.Body.Mass = 9.8f;
-                if (currentMouseState.RightButton == ButtonState.Pressed)
-                {
-                    //obj.Body.BodyType = BodyType.Static;
-                    //obj.Body.ApplyForce(new Vector2(4.0f, 0));
-                    //obj.Body.BodyType = BodyType.Static;
-                }
-            }
             //obj.KinesisOn = false;
         }
-
-
-        public void Scene()
-        {
-
-            Move(Movement.Right);
-            isMoving = true;
-            direction = Movement.Right;
-
-        }
-      
+        /////
 
         bool HitByEnemy(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            
+
             if (fixtureB.CollisionCategories == Category.Cat30)
             {
                 if (HealthBar.getRectangle.Width > 0)
@@ -607,49 +594,45 @@ namespace RemGame
                     upBody.Body.Enabled = false;
                 }
             }
-        
+
             return true;
         }
 
         public override void Update(GameTime gameTime)
         {
-            walkingInstance.Volume = 0.1f;          
+            walkingInstance.Volume = 0.1f;
             if (isAlive)
             {
-               
+
                 keyboardState = Keyboard.GetState();
                 currentMouseState = Mouse.GetState();
                 actualMovningSpeed = upBody.Body.AngularVelocity;
                 //set the coordinates for camera to follow              
                 Vector2 moveTo = Position - cameraToFollow;
                 Vector2 fixedPosition;
- 
-                
+
                 if (!IsBending)
                     fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y);
                 else
-                     fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y+80);
+                    fixedPosition = new Vector2(moveTo.X + 150, moveTo.Y + 80);
 
-                cameraToFollow += fixedPosition * (float)gameTime.ElapsedGameTime.TotalSeconds*2;
+                cameraToFollow += fixedPosition * (float)gameTime.ElapsedGameTime.TotalSeconds * 2;
 
 
                 ///////////Check for falling
-                
-                if ((followingPlayerPoint.Y+1.0 < upBody.Position.Y && !isSliding || !firstMove))
+
+                if ((followingPlayerPoint.Y + 1.0 < upBody.Position.Y && !isSliding || !firstMove))
                 {
                     isFalling = true;
 
                 }
-              
-
-                else 
+                else
                     isFalling = false;
-                    
 
                 if (isFalling == true && upBody.Position.Y > 1300)
                     isAlive = false;
 
-                followingPlayerPoint = upBody.Position;
+                followingPlayerPoint = upBody.Position;//indicates falling
 
                 //////////////////////Jump Animation ///////////////////
                 if (!HasLanded && isJumping)
@@ -680,7 +663,7 @@ namespace RemGame
                         beforeLanding = wheel.Position.Y;
                         if (wheel.Position.Y > takeOffPoi - 140)
                             anim = animations[(int)Animation.JumpDown];
-                        if(wheel.Position.Y > takeOffPoi - 50)
+                        if (wheel.Position.Y > takeOffPoi - 50)
                             anim = animations[(int)Animation.JumpEnd];
                     }
                     else
@@ -693,7 +676,6 @@ namespace RemGame
                         liftOff = 0;
                         beforeLanding = 0;
                     }
-
 
                 }
 
@@ -728,9 +710,8 @@ namespace RemGame
                 else
                     wheel.Body.Friction = 2.0f;
 
-
                 IsMoving = false;
-               
+
 
                 ////////////////////////Key Mangment///////////////////////////////////////////
                 /////Movments
@@ -738,7 +719,7 @@ namespace RemGame
                 ///Move Right
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    if(direction == Movement.Right && !isJumping)
+                    if (direction == Movement.Right && !isJumping)
                         ResetPlayerDynamics();
 
                     Move(Movement.Left);
@@ -756,7 +737,7 @@ namespace RemGame
                     Move(Movement.Right);
                     direction = Movement.Right;
                     IsMoving = true;
-                    if(!firstMove)
+                    if (!firstMove)
                         firstMove = true;
 
                 }
@@ -767,25 +748,24 @@ namespace RemGame
                     Move(Movement.Stop);
                 }
 
-                if(isFalling)
+                if (isFalling)
                     Move(Movement.Stop);
 
                 ///Jump
                 if (keyboardState.IsKeyDown(Keys.Space) && (!prevKeyboardState.IsKeyDown(Keys.Space)))
                 {
-                    if(!IsSliding)
-                    Jump();                  
+                    if (!IsSliding)
+                        Jump();
                 }
                 ///Move While jump
                 ///
 
                 if (isJumping)
                 {
-                   
 
                     if (keyboardState.IsKeyDown(Keys.D))
                     {
-                        if(wheel.Body.LinearVelocity.X < 4.0f)
+                        if (wheel.Body.LinearVelocity.X < 4.0f)
                             wheel.Body.ApplyLinearImpulse(new Vector2(0.07f, 0));
                         if (wheel.Body.LinearVelocity.X < 1.0f)
                         {
@@ -798,16 +778,17 @@ namespace RemGame
                     {
                         if (wheel.Body.LinearVelocity.X > -4.0f)
                             wheel.Body.ApplyLinearImpulse(new Vector2(-0.07f, 0));
-                        if (wheel.Body.LinearVelocity.X > -1.0f) { 
+                        if (wheel.Body.LinearVelocity.X > -1.0f)
+                        {
                             axis1.MotorEnabled = false;
                             wheel.Body.ApplyForce(new Vector2(0, 1.0f));
                         }
                     }
                 }
-          
-              
 
-                
+
+
+
                 ///Slide
                 if (keyboardState.IsKeyDown(Keys.LeftShift) && (!prevKeyboardState.IsKeyDown(Keys.LeftShift)))
                 {
@@ -897,24 +878,6 @@ namespace RemGame
                 if (IsSliding)
                     slidingInstance.Play();
 
-
-
-                //////////////////////////////////////////SCENE/////////////////////////////////////////////////////////////////////////////
-                /*
-                if (Position.X < 400)
-                {
-                    wheel.Body.ApplyLinearImpulse(new Vector2(1, 0));
-                    Scene();
-                }
-                if (Position.X > 400 && Position.X < 410)
-                {
-                    showText = true;
-                }
-                else
-                    showText = false;
-                */
-
-
                 foreach (PhysicsObject s in shotList)
                 {
                     s.Update(gameTime);
@@ -936,7 +899,7 @@ namespace RemGame
 
             }
             else
-            GameOver = true;
+                GameOver = true;
         }
 
 
@@ -966,14 +929,6 @@ namespace RemGame
                     r.Draw(gameTime, spriteBatch);
                 }
 
-
-                /*
-                if (showText)
-                {
-
-                    spriteBatch.DrawString(f, "ho HEY,im ron i got schyzofrenia", new Vector2(Position.X + size.X, Position.Y), Color.White);
-                }
-                */
                 //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
                 //pv1.Draw(gameTime, spriteBatch);
@@ -988,23 +943,19 @@ namespace RemGame
                 // spriteBatch.DrawString(f, "GAME OVER!!!!!!", new Vector2(Position.X + size.X, Position.Y), Color.White);
 
             }
-            spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y+20), Color.White);
-            if(map!=null)
-            spriteBatch.DrawString(f,  "tile : "+ map.getGridObject(gridLocation.X,gridLocation.Y+3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
+            //debbuging
+            spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
+            if (map != null)
+                spriteBatch.DrawString(f, "tile : " + map.getGridObject(gridLocation.X, gridLocation.Y + 3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
 
 
         }
-
+        
         public void ResetPlayerDynamics()
         {
             wheel.Body.ResetDynamics();
             midBody.Body.ResetDynamics();
             upBody.Body.ResetDynamics();
-        }
-
-        public static void MyDelay(int seconds)
-        {
-            
         }
 
         public void setMap(Map map)
