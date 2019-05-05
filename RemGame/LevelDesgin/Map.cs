@@ -169,7 +169,7 @@ namespace RemGame
                         Enemy en = new Enemy(world,
                         new Vector2(96, 96),
                         100,
-                        new Vector2(x * 64+size/2, y * 64),startLocationGrid,10, font, rInt, this,player);
+                        new Vector2(x * 64+size/2, y * 64),startLocationGrid,10, font, rInt, this,player,5);
                         en.GridLocation = startLocationGrid;                       
                         Enemies.Add(en);
                         en.setAstarsquare(texture);
