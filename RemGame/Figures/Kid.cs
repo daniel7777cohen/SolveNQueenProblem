@@ -944,9 +944,9 @@ namespace RemGame
 
             }
             //debbuging
-            spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
-            if (map != null)
-                spriteBatch.DrawString(f, "tile : " + map.getGridObject(gridLocation.X, gridLocation.Y + 3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
+           // spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
+            //if (map != null)
+              //  spriteBatch.DrawString(f, "tile : " + map.getGridObject(gridLocation.X, gridLocation.Y + 3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
 
 
         }

@@ -14,7 +14,8 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Dynamics.Contacts;
 using Microsoft.Xna.Framework.Content;
 
-namespace RemGame { 
+namespace RemGame
+{
 
     enum Movement
     {
@@ -26,8 +27,12 @@ namespace RemGame {
     class Enemy
     {
 
+        static int x = 1;
+
         public enum Mode { Idle, Patrol, WalkToPlayer, Attack, Evade }// what mode of behavior the monster AI is using 
         private int itrator = 0;
+        private bool colorPicked = false;
+
         private static ContentManager content;
         Random random;
         private Point startLocationGrid;
@@ -78,11 +83,12 @@ namespace RemGame {
         private bool isBackToLastPos = true;
         private Movement direction = Movement.Right;
         private bool lookingRight = true;
-        private bool collideRight = false;
-        private bool collideLeft = false;
 
 
         private Mode mode;
+        private Mode previuosMode;
+
+
 
         private bool grounded;
 
@@ -97,6 +103,12 @@ namespace RemGame {
         List<Vector2> path;
         private Vector2[] patrolGridPath;
         private Vector2[] playerGridPath;
+        private Vector2[] selectedPath;
+        private int patrolDirection = 1;
+
+        private DateTime previousWander = DateTime.Now;   // time at which we previously jumped
+        private const float wanderInterval = 3.0f;
+        private bool wandered = false;
 
         Texture2D gridColor;
 
@@ -122,7 +134,7 @@ namespace RemGame {
         Texture2D shootTexture;
 
 
-        public Enemy(World world, Vector2 size, float mass, Vector2 startPosition, Point startLocationGrid, int patrolRange, SpriteFont f, int newDistance, Map map, Kid player,int playerDistanceToAttack)
+        public Enemy(World world, Vector2 size, float mass, Vector2 startPosition, Point startLocationGrid, int patrolRange, SpriteFont f, int newDistance, Map map, Kid player, int playerDistanceToAttack)
         {
 
             this.world = world;
@@ -326,7 +338,7 @@ namespace RemGame {
             bool reached = false;
 
             if (gridLocation == startLocationGrid)
-                PathFinder.SetMap(map);           
+                PathFinder.SetMap(map);
 
             UpdateAI();
 
@@ -344,21 +356,50 @@ namespace RemGame {
         {
             if (patrolGridPath != null)
             {
+                Color c = Color.Red;
+
+                if (!colorPicked)
+                {
+                    switch (x)
+                    {
+                        case 1:
+                            c = Color.Red;
+                            break;
+                        case 2:
+                            c = Color.Purple;
+                            break;
+                        case 3:
+                            c = Color.Pink;
+                            break;
+                        case 4:
+                            c = Color.Plum;
+                            break;
+                        case 5:
+                            c = Color.RosyBrown;
+                            break;
+                    }
+                    x++;
+                    if (x == 5)
+                        x = 1;
+                }
+
                 for (int i = 0; i < patrolGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
                     if (gridLocation.ToVector2() != patrolGridPath[i])
-                        spriteBatch.Draw(gridColor, gridloc, Color.Red);
+                        spriteBatch.Draw(gridColor, gridloc, c);
                     else
                         spriteBatch.Draw(gridColor, gridloc, Color.Green);
                 }
+
             }
 
             if (playerGridPath != null)
             {
+
                 for (int i = 0; i < playerGridPath.Length; i++)
                 {
-                    Rectangle gridloc = new Rectangle((int)playerGridPath[i].X * 64, (int)playerGridPath[i].Y * 64, 64, 64);
+                    Rectangle gridloc = new Rectangle((int)playerGridPath[i].X * 64, (int)playerGridPath[i].Y * 64, 40, 40);
                     if (gridLocation.ToVector2() != playerGridPath[i])
                         spriteBatch.Draw(gridColor, gridloc, Color.Green);
                     else
@@ -378,163 +419,211 @@ namespace RemGame {
                 mele.Draw(gameTime, spriteBatch);
 
             //wheel.Draw(gameTime,spriteBatch);
-
-            spriteBatch.DrawString(font, this.GridLocation.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 - 20), Color.White);
+            /*
+           spriteBatch.DrawString(font, this.GridLocation.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 - 20), Color.White);
+            if (selectedPath != null)
+                spriteBatch.DrawString(font, selectedPath[selectedPath.Length - 1].ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
             spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
-
+            */
         }
 
         public virtual void UpdateAI()
         {
-            Vector2 [] selectedPath;
-
-            if (itrator == 0)
-            {
-                patrolGridPath = findPathToPatrol(1);
-            }
+            patrolDirection *= -1;
+            if (selectedPath == null)
+                selectedPath = new Vector2[] { Vector2.Zero };
 
             if (player.GridLocation != null)
                 playerGridPath = findPathToPlayer();
 
-            if (patrolGridPath != null)
+
+
+            //condition needts to change by enemies abilities like attack up or down etc...           
+            //if (playerGridPath.Length > 2)//if player not in range do: patrol idle,else do : attack,walktoplayer,evade
+            //{
+            mode = Mode.Patrol;
+            //}
+
+
+
+
+            switch (mode)
             {
-                if (itrator == patrolGridPath.Length - 1)
-                {
-                    itrator = 0;
-                }
-
-                if (playerGridPath.Length < playerDistanceToAttack)
-                    mode = Mode.WalkToPlayer;
-                else
-                    mode = Mode.Patrol;
-
-                selectedPath = patrolGridPath;
-
-                switch (mode)
-                {
-                    case Mode.Idle:
-                        break;
-
-                    case Mode.Patrol:
-                        selectedPath = patrolGridPath;                      
-                        break;
-
-                    case Mode.WalkToPlayer:
-                        selectedPath = playerGridPath;
-                        break;
-
-                    case Mode.Attack:
-                        break;
-
-                    case Mode.Evade:
-                        break;
-                }               
-
-                if (gridLocation.ToVector2() != selectedPath[selectedPath.Length - 1])
-                {
-                    isMoving = true;
-
-                    if (gridLocation.ToVector2() == selectedPath[itrator])
-                    {
-
-                        if (selectedPath[itrator + 1].X > gridLocation.X)
-                        {
-                            direction = Movement.Right;
-                            Move(Movement.Right);
-                        }
-
-
-                        if (selectedPath[itrator + 1].X < gridLocation.X)
-                        {
-                            direction = Movement.Left;
-                            Move(Movement.Left);
-                        }
-
-                        if (selectedPath[itrator + 1].Y < gridLocation.Y)
-                        {
-                            wheel.Body.ApplyLinearImpulse(new Vector2(0, -6));
-                            isMoving = false;
-
-                        }
-
-                        itrator++;
-
-                    }
-
-                }
-                else
-                {
+                case Mode.Idle:
                     Move(Movement.Stop);
-                    isMoving = false;
-                    //patrolGridPath = findPathToPatrol(1);
+                    break;
 
-                }
+                case Mode.Patrol:
+                    if (itrator == 0 && wandered == false)
+                    {
+                        patrolGridPath = findPathToPatrol(patrolDirection*20);
+                    }
 
+                    else if (itrator == patrolGridPath.Length - 1 && patrolGridPath[patrolGridPath.Length - 1] == gridLocation.ToVector2())
+                    {
+                        
+                        if (!wandered)
+                        {
+                            if ((map.isPassable(gridLocation.X + 1, gridLocation.Y) || map.isPassable(gridLocation.X - 1, gridLocation.Y)))
+                            {
+                                wandered = true;
+                                previousWander = DateTime.Now;
+                            }
+                        }
+                        if ((DateTime.Now - previousWander).TotalSeconds >= wanderInterval)
+                        {
+                            itrator = 0;
+                            wandered = false;
+                        }
 
-                /*
-                if (patrolGridPath[itrator].Y == gridLocation.Y && map.isPassable((int)patrolGridPath[itrator].X + 1, (int)patrolGridPath[itrator].Y))
+                    }
+
+                    
+
+                    selectedPath = patrolGridPath;
+                    break;
+
+                case Mode.WalkToPlayer:
+                    /*
+                    if (itrator == 0)
+                    {
+                        playerGridPath = findPathToPlayer();
+                    }
+
+                    if (itrator == playerGridPath.Length - 1)
+                    {
+                        itrator = 0;
+                    }
+                    selectedPath = playerGridPath;
+                    */
+                    break;
+
+                case Mode.Attack:
+                    break;
+
+                case Mode.Evade:
+                    break;
+
+                default:
+                    selectedPath = new Vector2[] { gridLocation.ToVector2() };
+                    break;
+
+            }
+
+            if (gridLocation.ToVector2() != selectedPath[selectedPath.Length - 1] && !wandered)
+            {
+                isMoving = true;
+
+                if (gridLocation.ToVector2() == selectedPath[itrator])
                 {
-                   
-                    if (gridLocation.ToVector2() != patrolGridPath[itrator + 1])
+
+                    if (selectedPath[itrator + 1].X > gridLocation.X)
                     {
-                        Move(Movement.Right);
                         direction = Movement.Right;
-                        isMoving = true;
-                    }
-                    else
-                        reached = true;
-
-                    if(reached)
-                    {
-                        itrator++;
-                        //Move(Movement.Stop);
-                        //isMoving = false;
-
+                        Move(Movement.Right);
                     }
 
-                    if (patrolGridPath[itrator + 1].Y < gridLocation.Y)
+
+                    if (selectedPath[itrator + 1].X < gridLocation.X)
                     {
-                        isMoving = false;
+                        direction = Movement.Left;
+                        Move(Movement.Left);
+                    }
+
+                    if (selectedPath[itrator + 1].Y < gridLocation.Y)
+                    {
                         wheel.Body.ApplyLinearImpulse(new Vector2(0, -6));
+                        isMoving = false;
+
                     }
+
+                    itrator++;
+
                 }
-                */
-                /*
-                if (gridLocation.ToVector2() != gridpath[itrator])
+
+            }
+            else
+            {
+                Move(Movement.Stop);
+                isMoving = false;
+
+            }
+
+
+            /*
+            if (patrolGridPath[itrator].Y == gridLocation.Y && map.isPassable((int)patrolGridPath[itrator].X + 1, (int)patrolGridPath[itrator].Y))
+            {
+
+                if (gridLocation.ToVector2() != patrolGridPath[itrator + 1])
                 {
                     Move(Movement.Right);
                     direction = Movement.Right;
                     isMoving = true;
                 }
                 else
-                */
+                    reached = true;
 
-                Console.WriteLine("grid vector :" + patrolGridPath[itrator] + "enemy vector :" + gridLocation);
-                Console.WriteLine(itrator);
-            }
-            /*
-            else if(gridpath[itrator].Y == y && gridLocation.X == gridpath[itrator].X)
-            {
-                Move(Movement.Left);
-                direction = Movement.Left;
-                isMoving = true;
-            }
-            
-            else if (gridpath[itrator].Y < gridLocation.Y && gridpath[itrator].X == gridLocation.X + 1)
-            {
-                wheel.Body.ApplyLinearImpulse(new Vector2(0, -2));
-                itrator++;
-                Console.WriteLine(" WANTS TO JUMP grid vector :" + gridpath[itrator] + "enemy vector :" + gridLocation);
+                if(reached)
+                {
+                    itrator++;
+                    //Move(Movement.Stop);
+                    //isMoving = false;
 
+                }
+
+                if (patrolGridPath[itrator + 1].Y < gridLocation.Y)
+                {
+                    isMoving = false;
+                    wheel.Body.ApplyLinearImpulse(new Vector2(0, -6));
+                }
             }
             */
+            /*
+            if (gridLocation.ToVector2() != gridpath[itrator])
+            {
+                Move(Movement.Right);
+                direction = Movement.Right;
+                isMoving = true;
+            }
+            else
+            */
+
+            // Console.WriteLine("grid vector :" + patrolGridPath[itrator] + "enemy vector :" + gridLocation);
+            //Console.WriteLine(itrator);
+        }
+        /*
+        else if(gridpath[itrator].Y == y && gridLocation.X == gridpath[itrator].X)
+        {
+            Move(Movement.Left);
+            direction = Movement.Left;
+            isMoving = true;
+        }
+
+        else if (gridpath[itrator].Y < gridLocation.Y && gridpath[itrator].X == gridLocation.X + 1)
+        {
+            wheel.Body.ApplyLinearImpulse(new Vector2(0, -2));
+            itrator++;
+            Console.WriteLine(" WANTS TO JUMP grid vector :" + gridpath[itrator] + "enemy vector :" + gridLocation);
 
         }
+        */
+
+
 
         public virtual Vector2[] findPathToPatrol(int dest)
         {
+            int maxDestanationValue;
+            if (dest < 0)
+            {
+                maxDestanationValue = r.Next(5, dest * -1);
+                maxDestanationValue *= -1;
+            }
+            else
+                maxDestanationValue = r.Next(5, dest);
+
+
             Vector2[] arr;
-            path = PathFinder.FindPath(startLocationGrid.ToVector2(), new Vector2(startLocationGrid.X + 40, startLocationGrid.Y), "Euclidain");
+            path = PathFinder.FindPath(gridLocation.ToVector2(), new Vector2(gridLocation.X + maxDestanationValue, gridLocation.Y), "Euclidain");
             if (path == null)
                 arr = new Vector2[] { gridLocation.ToVector2() };
             else
@@ -559,6 +648,11 @@ namespace RemGame {
         public void setAstarsquare(Texture2D t)
         {
             gridColor = t;
+        }
+
+        private void swtichLookingDirection()
+        {
+            wheel.Body.ApplyLinearImpulse(new Vector2(0, -0.2f));
         }
         /*
         private float GetRandomSpeed()

@@ -86,14 +86,48 @@ namespace RemGame
                     CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
                 
             }
-
-
-            if ((Y > 0 ) && (pathMap.isPassable(X + 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
+            
+            //progress
+            if ((Y > 0) && (!pathMap.isPassable(X - 1, Y)))
             {
                 adjacentNodes.Add(new PathNode(
                     currentNode,
                     endNode,
-                    new Vector2(X+1 , Y + 1),
+                    new Vector2(X, Y - 1),
+                    CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
+
+            }
+
+
+
+            if ((Y > 0 ) && (pathMap.isPassable(X + 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
+            {
+                int d = 1;
+                for(int i=2; i<5; i++)
+                {
+                    if (pathMap.isPassable(X + 1, Y + i))
+                    {
+                        d++;
+                    }
+                    else
+                        break;
+
+                }
+                adjacentNodes.Add(new PathNode(
+                    currentNode,
+                    endNode,
+                    new Vector2(X+1 , Y + d),
+                    CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
+
+            }
+
+            //progress
+            if ((Y > 0) && (pathMap.isPassable(X - 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
+            {
+                adjacentNodes.Add(new PathNode(
+                    currentNode,
+                    endNode,
+                    new Vector2(X - 1, Y + 1),
                     CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
 
             }
