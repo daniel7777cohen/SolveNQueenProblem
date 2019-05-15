@@ -20,7 +20,6 @@ namespace RemGame
         private const int CostGoUpPlatform = 5;
 
 
-
         private static List<PathNode> openList = new List<PathNode>();
 
         private static Dictionary<Vector2, float> nodeCosts =
@@ -52,7 +51,100 @@ namespace RemGame
             List<PathNode> adjacentNodes = new List<PathNode>();
 
             int X = currentNode.GridX;
-            int Y = currentNode.GridY;          
+            int Y = currentNode.GridY;
+
+
+            if ((Y > 0) && (!pathMap.isPassable(X + 1, Y)))
+            {
+                int d = 1;
+                for (int i = 2; i < 5; i++)//adjust to jump force for each enemey
+                {
+                    if (!pathMap.isPassable(X + 1, Y - i))
+                    {
+                        d++;
+                    }
+                    else
+                        break;
+
+                }
+
+                adjacentNodes.Add(new PathNode(
+                    currentNode,
+                    endNode,
+                    new Vector2(X, Y - d),
+                    CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
+
+            }
+
+            //progress
+            if ((Y > 0) && (!pathMap.isPassable(X - 1, Y)))
+            {
+                int d = 1;
+                for (int i = 2; i < 5; i++)//adjust to jump force for each enemey
+                {
+                    if (!pathMap.isPassable(X - 1, Y - i))
+                    {
+                        d++;
+                    }
+                    else
+                        break;
+
+                }
+
+
+                adjacentNodes.Add(new PathNode(
+                    currentNode,
+                    endNode,
+                    new Vector2(X, Y - d),
+                    CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
+
+            }
+
+
+
+            if ((Y > 0) && (pathMap.isPassable(X + 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
+            {
+                int d = 1;
+                for (int i = 2; i < 5; i++)
+                {
+                    if (pathMap.isPassable(X + 1, Y + i))
+                    {
+                        d++;
+                    }
+                    else
+                        break;
+
+                }
+                adjacentNodes.Add(new PathNode(
+                    currentNode,
+                    endNode,
+                    new Vector2(X + 1, Y + d),
+                    CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
+                
+            }
+
+            //progress
+            if ((Y > 0) && (pathMap.isPassable(X - 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
+            {
+                int d = 1;
+                for (int i = 2; i < 5; i++)
+                {
+                    if (pathMap.isPassable(X - 1, Y + i))
+                    {
+                        d++;
+                    }
+                    else
+                        break;
+
+                }
+                adjacentNodes.Add(new PathNode(
+                    currentNode,
+                    endNode,
+                    new Vector2(X - 1, Y + d),
+                    CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
+
+            }
+
 
             if ((X > 0) && (pathMap.isPassable(X - 1, Y)))
             {
@@ -77,60 +169,7 @@ namespace RemGame
             }
             
 
-            if ((Y > 0) && (!pathMap.isPassable(X+1, Y)))
-            {
-                adjacentNodes.Add(new PathNode(
-                    currentNode,
-                    endNode,
-                    new Vector2(X, Y - 1),
-                    CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
-                
-            }
             
-            //progress
-            if ((Y > 0) && (!pathMap.isPassable(X - 1, Y)))
-            {
-                adjacentNodes.Add(new PathNode(
-                    currentNode,
-                    endNode,
-                    new Vector2(X, Y - 1),
-                    CostGoUpPlatform + currentNode.DirectCost, heuristicCalc));
-
-            }
-
-
-
-            if ((Y > 0 ) && (pathMap.isPassable(X + 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
-            {
-                int d = 1;
-                for(int i=2; i<5; i++)
-                {
-                    if (pathMap.isPassable(X + 1, Y + i))
-                    {
-                        d++;
-                    }
-                    else
-                        break;
-
-                }
-                adjacentNodes.Add(new PathNode(
-                    currentNode,
-                    endNode,
-                    new Vector2(X+1 , Y + d),
-                    CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
-
-            }
-
-            //progress
-            if ((Y > 0) && (pathMap.isPassable(X - 1, Y + 1)) && (!pathMap.isPassable(X, Y + 1)))
-            {
-                adjacentNodes.Add(new PathNode(
-                    currentNode,
-                    endNode,
-                    new Vector2(X - 1, Y + 1),
-                    CostGoDownPlatform + currentNode.DirectCost, heuristicCalc));
-
-            }
 
             return adjacentNodes;
         }

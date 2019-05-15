@@ -429,12 +429,10 @@ namespace RemGame
 
         public virtual void UpdateAI()
         {
-            patrolDirection *= -1;
-            if (selectedPath == null)
-                selectedPath = new Vector2[] { Vector2.Zero };
 
-            if (player.GridLocation != null)
-                playerGridPath = findPathToPlayer();
+
+
+           
 
 
 
