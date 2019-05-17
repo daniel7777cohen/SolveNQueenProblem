@@ -184,7 +184,8 @@ namespace RemGame
                             passableDict.Add(9, obs2.Passable);
 
                     }
-                    
+           
+
 
                     width = (x + 1) * size;
                     height = (y + 1) * size;
@@ -230,12 +231,11 @@ namespace RemGame
             {
                 for (int y = 0; y < gameMap.GetLength(0); y++)
                 {
-                    spriteBatch.DrawString(f, x + " / " + y, new Vector2(x * 64, y * 64), Color.White);
+                    //spriteBatch.DrawString(f, x + " / " + y, new Vector2(x * 64, y * 64), Color.White);
                 }
 
             }
         }
-
 
         public void DrawObstacle(GameTime gameTime, SpriteBatch spriteBatch)
         {

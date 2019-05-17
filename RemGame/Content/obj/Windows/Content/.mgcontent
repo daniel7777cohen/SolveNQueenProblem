@@ -4,6 +4,9 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Principal_Ranged_Chalk.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Principal_Stand.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Principal_Walk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Arial.spritefont</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Fonts/Font.spritefont</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/b-01_background.jpg</File>
@@ -13,7 +16,7 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grass.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-01_ground-grss.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/f-02_front.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/closingWall.jpg</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/Hands_temp.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/level_01_A.jpg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/level_01_B.jpg</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Layers/level/level_01_C.jpg</File>
@@ -65,6 +68,9 @@
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File>Layers/level/closingWall.png</File>
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
