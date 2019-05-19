@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using XELibrary;
-
 namespace RemGame
 {
     public sealed class EscapeState : BaseGameState, IEscapeState

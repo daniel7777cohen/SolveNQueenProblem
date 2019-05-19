@@ -4,12 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
-using XELibrary;
 using Microsoft.Xna.Framework.Media;
-using System.Threading;
+
 namespace RemGame
 {
 

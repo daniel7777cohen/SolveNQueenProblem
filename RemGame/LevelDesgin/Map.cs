@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-using MonoGame.Extended;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Content;

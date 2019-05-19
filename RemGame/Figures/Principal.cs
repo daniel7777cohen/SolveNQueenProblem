@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -25,31 +21,15 @@ namespace RemGame
         Stop
     }
 
-    class Boss1
+    class Principal:Enemy
     {
-
-        static int x = 1;
 
         public enum Mode { Idle, Patrol, WalkToPlayer, Attack, Evade }// what mode of behavior the monster AI is using 
         private int itrator = 0;
         private bool colorPicked = false;
 
-        private static ContentManager content;
         Random random;
-        private Point startLocationGrid;
 
-        bool pingPong = false;//***
-        bool Ghost = false;//***
-
-        private int health = 5;
-        private World world;
-        private Map map;
-        private Vector2 size;
-        private float mass;
-        private Vector2 position;
-        private Vector2 lastPosition;
-        private Point gridLocation;
-        private Kid player;
         private int playerDistanceToAttack;
 
         private int distance;
