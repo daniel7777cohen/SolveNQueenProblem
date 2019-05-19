@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace RemGame
 {
-
+    /*
     enum Movement
     {
         Left,
@@ -24,6 +24,7 @@ namespace RemGame
         Jump,
         Stop
     }
+    */
     class Enemy
     {
 
@@ -53,6 +54,10 @@ namespace RemGame
 
         private int distance;
         private int oldDistance;
+
+
+
+
 
         private PhysicsObject torso;
         private PhysicsObject wheel;
@@ -150,6 +155,15 @@ namespace RemGame
             this.patrolRange = patrolRange;
             this.playerDistanceToAttack = playerDistanceToAttack;
             mode = Mode.Idle;
+
+
+
+
+
+
+
+
+
             ////
             isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
@@ -387,7 +401,7 @@ namespace RemGame
                     if (x == 5)
                         x = 1;
                 }
-                /*DRAWS A* PATH
+                //DRAWS A* PATH
                 for (int i = 0; i < patrolGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
@@ -396,10 +410,10 @@ namespace RemGame
                     else
                         spriteBatch.Draw(gridColor, gridloc, Color.Green);
                 }
-                */
+                
             }
 
-            /*dRAWS PATH TO PLAYER
+            //dRAWS PATH TO PLAYER
             if (playerGridPath != null)
             {
 
@@ -412,7 +426,7 @@ namespace RemGame
                         spriteBatch.Draw(gridColor, gridloc, Color.GreenYellow);
                 }
             }
-            */
+            
             //torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsRectnagleObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
@@ -438,7 +452,7 @@ namespace RemGame
             */
             //spriteBatch.DrawString(font, itrator.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
 
-            //spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
+            spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
            
         }
 

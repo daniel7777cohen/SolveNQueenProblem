@@ -17,6 +17,14 @@ using Microsoft.Xna.Framework.Content;
 namespace RemGame
 {
 
+    enum Movement
+    {
+        Left,
+        Right,
+        Jump,
+        Stop
+    }
+
     class Boss1
     {
 
@@ -124,7 +132,7 @@ namespace RemGame
         private const float shootInterval = 3.0f;        // in seconds
 
         private AnimatedSprite anim;
-        private AnimatedSprite[] animations = new AnimatedSprite[2];
+        private AnimatedSprite[] animations = new AnimatedSprite[4];
 
 
         Texture2D shootTexture;
@@ -186,8 +194,9 @@ namespace RemGame
             pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
             pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
 
-            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Principal_Stand"), 2, 17, new Rectangle(0, -20, 90, 90), 0.15f);
-            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Player/playerRight"), 1, 4, new Rectangle(0, -20, 90, 90), 0.15f);
+            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle(0, -170, 250, 250), 0.05f);
+            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle(0, -170, 250, 250), 0.05f);
+            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle(0, -170, 250, 250), 0.05f);
 
             shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
 
@@ -209,7 +218,7 @@ namespace RemGame
                 case Movement.Left:
                     lookingRight = false;
                     axis1.MotorSpeed = -MathHelper.TwoPi * speed;
-                    anim = animations[0];
+                    anim = animations[1];
                     break;
 
                 case Movement.Right:
@@ -221,6 +230,7 @@ namespace RemGame
 
                 case Movement.Stop:
                     axis1.MotorSpeed = 0;
+                    anim = animations[3];
                     break;
             }
         }
@@ -338,10 +348,10 @@ namespace RemGame
 
             UpdateAI();
 
-            anim = Animations[0];
+            anim = Animations[3];
             anim = Animations[(int)direction];
 
-            if (isMoving) // apply animation
+            if (isMoving || direction == Movement.Stop) // apply animation
                 Anim.Update(gameTime);
             else //player will appear as standing with frame [1] from the atlas.
                 Anim.CurrentFrame = 1;
@@ -378,7 +388,7 @@ namespace RemGame
                     if (x == 5)
                         x = 1;
                 }
-
+                //DRAWS A* PATH
                 for (int i = 0; i < patrolGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
@@ -390,6 +400,7 @@ namespace RemGame
 
             }
 
+            //dRAWS PATH TO PLAYER
             if (playerGridPath != null)
             {
 
@@ -402,12 +413,17 @@ namespace RemGame
                         spriteBatch.Draw(gridColor, gridloc, Color.GreenYellow);
                 }
             }
+
             //torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsRectnagleObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
             //dest.Y = dest.Y + (int)wheel.Size.Y/2;
-            if (!torso.Body.IsDisposed && anim != null)
+            if (!torso.Body.IsDisposed && anim != null && direction != Movement.Left)
+                anim.Draw(spriteBatch, dest, torso.Body, true);
+            if (direction == Movement.Left)
                 anim.Draw(spriteBatch, dest, torso.Body, false);
+
+
             //pv1.Draw(gameTime, spriteBatch);
             //pv2.Draw(gameTime, spriteBatch);
 
@@ -421,7 +437,7 @@ namespace RemGame
                 spriteBatch.DrawString(font, selectedPath[selectedPath.Length - 1].ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
             
             */
-            spriteBatch.DrawString(font, itrator.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
+            //spriteBatch.DrawString(font, itrator.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
 
             spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
 
@@ -482,6 +498,7 @@ namespace RemGame
             {
                 case Mode.Idle:
                     Move(Movement.Stop);
+                    direction = Movement.Stop;
                     break;
 
                 case Mode.Patrol:

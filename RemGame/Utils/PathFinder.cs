@@ -19,7 +19,7 @@ namespace RemGame
         private const int CostGoDownPlatform = 5;
         private const int CostGoUpPlatform = 5;
 
-
+        
         private static List<PathNode> openList = new List<PathNode>();
 
         private static Dictionary<Vector2, float> nodeCosts =
@@ -148,24 +148,30 @@ namespace RemGame
 
             if ((X > 0) && (pathMap.isPassable(X - 1, Y)))
             {
-                adjacentNodes.Add(new PathNode(
+                if (!pathMap.isPassable(X - 1, Y + 1))
+                {
+                    adjacentNodes.Add(new PathNode(
                         currentNode,
                         endNode,
                         new Vector2(X - 1, Y),
                         CostStraight + currentNode.DirectCost, heuristicCalc));
+                }
             }
         
 
             if ((X > 0) && (pathMap.isPassable(X + 1, Y)))
             {
-               // if(pathMap.isPassable(X + 1, Y))
-                adjacentNodes.Add(new PathNode(
-                        currentNode,
-                        endNode,
-                        new Vector2(X + 1, Y),
-                        CostStraight + currentNode.DirectCost, heuristicCalc));
-                
+                if (!pathMap.isPassable(X + 1, Y + 1))
+                {
 
+                    // if(pathMap.isPassable(X + 1, Y))
+                    adjacentNodes.Add(new PathNode(
+                            currentNode,
+                            endNode,
+                            new Vector2(X + 1, Y),
+                            CostStraight + currentNode.DirectCost, heuristicCalc));
+                }
+                
             }
             
 
