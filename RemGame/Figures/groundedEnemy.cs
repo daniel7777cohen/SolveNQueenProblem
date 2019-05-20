@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -12,7 +16,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace RemGame
 {
-
+    /*
     enum Movement
     {
         Left,
@@ -20,16 +24,32 @@ namespace RemGame
         Jump,
         Stop
     }
-
-    class Principal:Enemy
+    */
+    class groundedEnemy
     {
+
+        static int x = 1;
 
         public enum Mode { Idle, Patrol, WalkToPlayer, Attack, Evade }// what mode of behavior the monster AI is using 
         private int itrator = 0;
         private bool colorPicked = false;
 
+        private static ContentManager content;
         Random random;
+        private Point startLocationGrid;
 
+        bool pingPong = false;//***
+        bool Ghost = false;//***
+
+        private int health = 5;
+        private World world;
+        private Map map;
+        private Vector2 size;
+        private float mass;
+        private Vector2 position;
+        private Vector2 lastPosition;
+        private Point gridLocation;
+        private Kid player;
         private int playerDistanceToAttack;
 
         private int distance;
@@ -51,10 +71,17 @@ namespace RemGame
 
         private bool playerDetected = false;
         private bool playerInAttackRange = false;
+        private bool isAttacking = false;
         private bool isMeleAttacking = false;
         private RevoluteJoint axis1;
         private int attackingrange;
 
+        private bool isPlayerAlive = true;
+
+        private const float SPEED = 0.3f;
+        private float speed = SPEED;
+        private bool isMoving = false;
+        private bool isBackToLastPos = true;
         private Movement direction = Movement.Right;
         private bool lookingRight = true;
 
@@ -64,14 +91,20 @@ namespace RemGame
 
 
 
+        private bool grounded;
 
         private int patrolRange;
-     
+        bool goBack = false;
+        private int inspectionSightRange;
 
+        private float idleInterval;
+
+        private float evasionLuck;
+
+        List<Vector2> path;
         private Vector2[] patrolGridPath;
         private Vector2[] playerGridPath;
-
-
+        private Vector2[] selectedPath;
         private int patrolDirection = 1;
 
         private DateTime previousWander = DateTime.Now;   // time at which we previously jumped
@@ -80,6 +113,8 @@ namespace RemGame
         private bool endOfPatrol = false;
 
         private bool wandered = true;
+
+        Texture2D gridColor;
 
 
         /// //////////////////////////////Working on new behavoir - Ai//////////////////////////////////////////////////////////////////////////////
@@ -103,13 +138,21 @@ namespace RemGame
         Texture2D shootTexture;
 
 
-        public Principal(World world, Map map, Kid player, int health, Vector2 size, float mass, float speed, Vector2 startPosition, Point startLocationGrid, SpriteFont f, int inspectionSightRange, float idleInterval, float evasionLuck, int patrolRange, int newDistance, int playerDistanceToAttack):base(world,map,player,health,size,mass,speed,startLocationGrid,f)
+        public groundedEnemy(World world, Vector2 size, float mass, Vector2 startPosition, Point startLocationGrid, int patrolRange, SpriteFont f, int newDistance, Map map, Kid player, int playerDistanceToAttack)
         {
+
+            this.world = world;
+            this.map = map;
+            this.size = size;
+            this.mass = mass / 2.0f;
+            this.player = player;
             ////
+            this.startLocationGrid = startLocationGrid;
             this.patrolRange = patrolRange;
             this.playerDistanceToAttack = playerDistanceToAttack;
             mode = Mode.Idle;
             ////
+            isMoving = false;
             Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
             float wheelSize = size.X;
 
@@ -117,6 +160,7 @@ namespace RemGame
             torso = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
             position = torso.Position;
+            lastPosition = position;
 
             int rInt = r.Next(192, 320);
             distance = rInt;
@@ -136,7 +180,7 @@ namespace RemGame
             axis1.CollideConnected = false;
             axis1.MotorEnabled = true;
             axis1.MotorSpeed = 0;
-            axis1.MaxMotorTorque = 2;
+            axis1.MaxMotorTorque = 10;
 
             torso.Body.CollisionCategories = Category.Cat20;
             wheel.Body.CollisionCategories = Category.Cat21;
@@ -157,14 +201,17 @@ namespace RemGame
             shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
 
         }
+        public int Health { get => health; set => health = value; }
+        public static ContentManager Content { protected get => content; set => content = value; }
+        public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
         public AnimatedSprite Anim { get => anim; set => anim = value; }
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
         public Movement Direction { get => direction; set => direction = value; }
+        public Vector2 Position { get => torso.Position; }
         public int Distance { get => distance; set => distance = value; }
-        public override Vector2 Position { get => torso.Position; }
+        public Point GridLocation { get => gridLocation; set => gridLocation = value; }
 
-
-        public void Move(Movement movement)
+        public virtual void Move(Movement movement)
         {
             switch (movement)
             {
@@ -190,12 +237,10 @@ namespace RemGame
 
         /*
                 public void Jump()
-
                 {
                     if (motion == Act.jump) return;
                     motion = Act.jump;
                     wheel.Body.ApplyLinearImpulse(jumpForce * new Vector2(0, 1));
-
                     if ((DateTime.Now - previousJump).TotalSeconds >= jumpInterval)
                     {
                         torso.Body.ApplyLinearImpulse(jumpForce);
@@ -291,7 +336,7 @@ namespace RemGame
             torso.Position = wheel.Position;
         }
 
-        public override void Update(GameTime gameTime, Vector2 playerPosition, bool PlayerAlive, int patrolbound)
+        public void Update(GameTime gameTime, Vector2 playerPosition, bool PlayerAlive, int patrolbound)
         {
 
             bool reached = false;
@@ -311,9 +356,8 @@ namespace RemGame
 
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteFont font)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteFont font)
         {
-
             if (patrolGridPath != null)
             {
                 Color c = Color.Red;
@@ -342,34 +386,31 @@ namespace RemGame
                     if (x == 5)
                         x = 1;
                 }
-                //DRAWS A* PATH
-                
+                /*DRAWS A* PATH
                 for (int i = 0; i < patrolGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
                     if (gridLocation.ToVector2() != patrolGridPath[i])
-                        spriteBatch.Draw(shootTexture, gridloc, c);
+                        spriteBatch.Draw(gridColor, gridloc, c);
                     else
-                        spriteBatch.Draw(shootTexture, gridloc, Color.Green);
+                        spriteBatch.Draw(gridColor, gridloc, Color.Green);
                 }
-                
+                */
             }
 
-            //dRAWS PATH TO PLAYER
-            
+            /*dRAWS PATH TO PLAYER
             if (playerGridPath != null)
             {
-
                 for (int i = 0; i < playerGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)playerGridPath[i].X * 64, (int)playerGridPath[i].Y * 64, 40, 40);
                     if (gridLocation.ToVector2() != playerGridPath[i])
-                        spriteBatch.Draw(shootTexture, gridloc, Color.Green);
+                        spriteBatch.Draw(gridColor, gridloc, Color.Green);
                     else
-                        spriteBatch.Draw(shootTexture, gridloc, Color.GreenYellow);
+                        spriteBatch.Draw(gridColor, gridloc, Color.GreenYellow);
                 }
             }
-            
+            */
             //torso.Draw(gameTime,spriteBatch);
             Rectangle dest = torso.physicsRectnagleObjRecToDraw();
             //dest.Height = dest.Height+(int)wheel.Size.Y/2;
@@ -380,30 +421,30 @@ namespace RemGame
                 anim.Draw(spriteBatch, dest, torso.Body, false);
 
 
-            pv1.Draw(gameTime, spriteBatch);
-            pv2.Draw(gameTime, spriteBatch);
+            //pv1.Draw(gameTime, spriteBatch);
+            //pv2.Draw(gameTime, spriteBatch);
 
             if (isMeleAttacking && !(mele.Body.IsDisposed))
                 mele.Draw(gameTime, spriteBatch);
 
             //wheel.Draw(gameTime,spriteBatch);
-            
+            /*
            spriteBatch.DrawString(font, this.GridLocation.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 - 20), Color.White);
-            //if (selectedPath != null)
-            //  spriteBatch.DrawString(font, selectedPath[selectedPath.Length - 1].ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
-
-
+            if (selectedPath != null)
+                spriteBatch.DrawString(font, selectedPath[selectedPath.Length - 1].ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
+            
+            */
             //spriteBatch.DrawString(font, itrator.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
-            spriteBatch.DrawString(font, this.position.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
 
-            spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
+            //spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
+
         }
 
-        public void UpdateAI()
+        public virtual void UpdateAI()
         {
-
             if (selectedPath == null)
                 selectedPath = new Vector2[] { Vector2.Zero };
+
 
             //Borders for chcking path to the player,to reduce calculations
             if ((player.GridLocation.X < GridLocation.X + 50 && player.GridLocation.X > GridLocation.X - 50) && (player.GridLocation.Y > 0) && player.GridLocation != null)
@@ -558,7 +599,6 @@ namespace RemGame
             /*
             if (patrolGridPath[itrator].Y == gridLocation.Y && map.isPassable((int)patrolGridPath[itrator].X + 1, (int)patrolGridPath[itrator].Y))
             {
-
                 if (gridLocation.ToVector2() != patrolGridPath[itrator + 1])
                 {
                     Move(Movement.Right);
@@ -567,15 +607,12 @@ namespace RemGame
                 }
                 else
                     reached = true;
-
                 if(reached)
                 {
                     itrator++;
                     //Move(Movement.Stop);
                     //isMoving = false;
-
                 }
-
                 if (patrolGridPath[itrator + 1].Y < gridLocation.Y)
                 {
                     isMoving = false;
@@ -603,19 +640,17 @@ namespace RemGame
             direction = Movement.Left;
             isMoving = true;
         }
-
         else if (gridpath[itrator].Y < gridLocation.Y && gridpath[itrator].X == gridLocation.X + 1)
         {
             wheel.Body.ApplyLinearImpulse(new Vector2(0, -2));
             itrator++;
             Console.WriteLine(" WANTS TO JUMP grid vector :" + gridpath[itrator] + "enemy vector :" + gridLocation);
-
         }
         */
 
 
 
-        public Vector2[] findPathToPatrol(int dest)
+        public virtual Vector2[] findPathToPatrol(int dest)
         {
             int maxDestanationValue;
             if (dest < 0)
@@ -637,7 +672,7 @@ namespace RemGame
             return arr;
         }
 
-        public override Vector2[] findPathToPlayer()
+        public virtual Vector2[] findPathToPlayer()
         {
             Vector2[] arr;
 
@@ -648,6 +683,11 @@ namespace RemGame
                 arr = path.ToArray();
 
             return arr;
+        }
+
+        public void setAstarsquare(Texture2D t)
+        {
+            gridColor = t;
         }
 
         private void swtichLookingDirection()

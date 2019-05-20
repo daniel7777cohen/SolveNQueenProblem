@@ -41,7 +41,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Figures\Boss1.cs" />
+    <Compile Include="Figures\groundedEnemy.cs" />
+    <Compile Include="Figures\Principal.cs" />
     <Compile Include="Figures\Shot.cs" />
     <Compile Include="LevelDesgin\Bag.cs" />
     <Compile Include="LevelDesgin\Chair.cs" />

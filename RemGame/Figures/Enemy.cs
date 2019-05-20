@@ -9,41 +9,43 @@ namespace RemGame
   
      class Enemy
     {
-        static int x = 1;
+        protected static int x = 1;
 
-        private static ContentManager content;
-        private Point startLocationGrid;
+        protected static ContentManager content;
+        protected Point startLocationGrid;
 
-        bool Ghost = false;//***
+        protected bool Ghost = false;//***
 
-        private World world;
-        private Map map;
-        private Kid player;
+        protected World world;
+        protected Map map;
+        protected Kid player;
 
-        private int health;
-        private Vector2 size;
-        private float mass;
-        private float speed;
+        protected int health;
+        protected Vector2 size;
+        protected float mass;
+        protected float speed;
 
-        private int inspectionSightRange;
-        private float idleInterval;
-        private float evasionLuck;
+        protected int inspectionSightRange;
+        protected float idleInterval;
+        protected float evasionLuck;
 
-        private Vector2 position;
-        private Point gridLocation;
+        protected Vector2 position;
+        protected Point gridLocation;
 
-        private bool isPlayerAlive;
-        private bool isMoving;
-        private bool isAttacking;
+        protected bool isPlayerAlive;
+        protected bool isMoving;
+        protected bool isAttacking;
 
-        List<Vector2> path;
-        private Vector2[] playerGridPath;
-        private Vector2[] selectedPath;
+        protected List<Vector2> path;///protection type needed
+       
+        protected Vector2[] selectedPath;
 
         Texture2D shootTexture;
 
+        protected Texture2D gridColor;
 
-        public Enemy(World world, Map map, Kid player,int health, Vector2 size, float mass, float speed, Point startLocationGrid, SpriteFont f,int inspectionSightRange,float idleInterval, float evasionLuck)
+
+        public Enemy(World world, Map map, Kid player,int health, Vector2 size, float mass, float speed, Point startLocationGrid, SpriteFont f)
         {
 
             this.world = world;
@@ -62,16 +64,13 @@ namespace RemGame
             isPlayerAlive = true;
             IsAttacking = false;
 
-            this.inspectionSightRange = inspectionSightRange;
-            this.idleInterval = idleInterval;
-            this.evasionLuck = evasionLuck;
-
-    }
+        }
 
         public int Health { get => health; set => health = value; }
         public static ContentManager Content { protected get => content; set => content = value; }
         public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
         public Point GridLocation { get => gridLocation; set => gridLocation = value; }
+        public virtual Vector2 Position { get => position;}
 
 
 
@@ -125,7 +124,7 @@ namespace RemGame
             */
             //spriteBatch.DrawString(font, itrator.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
 
-            //spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
+            //spriteBatch.DrawString(font, "IM HERE", new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
            
         }
 
@@ -143,9 +142,9 @@ namespace RemGame
             return arr;
         }
 
-        public void setAstarsquare(Texture2D t)
+        public virtual void setAstarsquare(Texture2D t)
         {
-            //gridColor = t;
+            gridColor = t;
         }
 
  
