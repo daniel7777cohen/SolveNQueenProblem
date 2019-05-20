@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-
-using XELibrary;
+﻿using XELibrary;
 
 namespace RemGame
 {

@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-using MonoGame.Extended;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Content;
@@ -166,13 +162,13 @@ namespace RemGame
                         Point startLocationGrid = new Point(x, y+2);
                         r = new Random();
                         int rInt = r.Next(192, 320);
-                        Enemy en = new Enemy(world,
+                        Enemy en = new Principal(world,this,player,5,
                         new Vector2(96, 96),
-                        100,
-                        new Vector2(x * 64+size/2, y * 64),startLocationGrid,10, font, rInt, this,player,5);
+                        100,0.3f,
+                        new Vector2(x * 64 + size/2, y * 64),startLocationGrid,font,10, rInt, 5,5,5,5);
+                        en.setAstarsquare(texture);
                         en.GridLocation = startLocationGrid;                       
                         Enemies.Add(en);
-                        en.setAstarsquare(texture);
                     }
                     else if (number == 9)
                     {
@@ -231,7 +227,7 @@ namespace RemGame
             {
                 for (int y = 0; y < gameMap.GetLength(0); y++)
                 {
-                    //spriteBatch.DrawString(f, x + " / " + y, new Vector2(x * 64, y * 64), Color.White);
+                    spriteBatch.DrawString(f, x + " / " + y, new Vector2(x * 64, y * 64), Color.White);
                 }
 
             }
