@@ -464,6 +464,7 @@ namespace RemGame
                         patrolGridPath = findPathToPatrol(patrolDirection * 20);
                         selectedPath = patrolGridPath;
                         endOfPatrol = false;
+                        
                     }
 
                     else if (itrator == selectedPath.Length - 1 && selectedPath[selectedPath.Length - 1] == gridLocation.ToVector2())

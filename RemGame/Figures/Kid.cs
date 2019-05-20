@@ -926,7 +926,7 @@ namespace RemGame
 
                 //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
-                pv1.Draw(gameTime, spriteBatch);
+                //pv1.Draw(gameTime, spriteBatch);
                 pv2.Draw(gameTime, spriteBatch);
                 pv3.Draw(gameTime, spriteBatch);
 
