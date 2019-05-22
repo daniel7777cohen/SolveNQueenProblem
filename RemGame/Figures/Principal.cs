@@ -38,6 +38,13 @@ namespace RemGame
         private PhysicsObject torso;
         private PhysicsObject wheel;
 
+        /////////////////////////
+        private PhysicsObject midBody;
+        private PhysicsObject tail1;
+        private PhysicsObject tail2;
+
+        /////////////////////////
+
         private PhysicsObject mele;
 
 
@@ -48,11 +55,20 @@ namespace RemGame
 
         private PhysicsView pv1;
         private PhysicsView pv2;
+        private PhysicsView pv3;
+        private PhysicsView pv4;
+        private PhysicsView pv5;
+
 
         private bool playerDetected = false;
         private bool playerInAttackRange = false;
         private bool isMeleAttacking = false;
+
         private RevoluteJoint axis1;
+        private RevoluteJoint axis2;
+        private RevoluteJoint axis3;
+        private RevoluteJoint axis4;
+
         private int attackingrange;
 
         private Movement direction = Movement.Right;
@@ -110,49 +126,91 @@ namespace RemGame
             this.playerDistanceToAttack = playerDistanceToAttack;
             mode = Mode.Idle;
             ////
-            Vector2 torsoSize = new Vector2(size.X, size.Y - size.X / 2.0f);
-            float wheelSize = size.X;
+            Vector2 torsoSize = new Vector2(size.X, size.Y);
 
             // Create the torso
             torso = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
             torso.Position = startPosition;
-            position = torso.Position;
+            
 
             int rInt = r.Next(192, 320);
             distance = rInt;
             oldDistance = distance;
+            
+            ///////////////////////
+            midBody = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
+            midBody.Position = torso.Position + new Vector2(0, size.Y);
+            ///////////////////////
+            
 
             // Create the feet of the body
-            wheel = new PhysicsObject(world, null, wheelSize, mass / 2.0f);
-            wheel.Position = torso.Position + new Vector2(0, torsoSize.X / 2);
+            wheel = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
+            wheel.Position = midBody.Position + new Vector2(0, size.Y);
+            
+            ///////////////////////
+            tail1 = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
+            tail1.Position = midBody.Position + new Vector2(size.X*1.5f, size.Y);
+
+
+            tail2 = new PhysicsObject(world, null, torsoSize.X, mass / 2.0f);
+            tail2.Position = midBody.Position + new Vector2(-size.X * 1.5f, size.Y);
+            ///////////////////////
 
             wheel.Body.Friction = 16.0f;
 
             // Create a joint to keep the torso upright
             JointFactory.CreateAngleJoint(world, torso.Body, new Body(world));
+            JointFactory.CreateAngleJoint(world, midBody.Body, new Body(world));
+            JointFactory.CreateAngleJoint(world, tail1.Body, new Body(world));
+            JointFactory.CreateAngleJoint(world, tail2.Body, new Body(world));
+
+
+
+            axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, midBody.Body, Vector2.Zero);
+            axis1.MotorEnabled = false;
+
 
             // Connect the feet to the torso
-            axis1 = JointFactory.CreateRevoluteJoint(world, torso.Body, wheel.Body, Vector2.Zero);
-            axis1.CollideConnected = false;
-            axis1.MotorEnabled = true;
-            axis1.MotorSpeed = 0;
-            axis1.MaxMotorTorque = 2;
+            axis2 = JointFactory.CreateRevoluteJoint(world, midBody.Body, wheel.Body, Vector2.Zero);
+            axis2.CollideConnected = false;
+            axis2.MotorEnabled = true;
+            axis2.MotorSpeed = 0;
+            axis2.MaxMotorTorque = 2;
+
+            axis3 = JointFactory.CreateRevoluteJoint(world, midBody.Body, tail1.Body, Vector2.Zero);
+            axis4 = JointFactory.CreateRevoluteJoint(world, midBody.Body, tail2.Body, Vector2.Zero);
+
 
             torso.Body.CollisionCategories = Category.Cat20;
+            midBody.Body.CollisionCategories = Category.Cat20;
             wheel.Body.CollisionCategories = Category.Cat21;
+            tail1.Body.CollisionCategories = Category.Cat21;
+            tail2.Body.CollisionCategories = Category.Cat21;
+
 
             torso.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
             wheel.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+            midBody.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+            tail1.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+            tail2.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+
+
 
             torso.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
             wheel.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
+            midBody.Body.OnCollision += new OnCollisionEventHandler(HitByPlayer);
+
 
             pv1 = new PhysicsView(torso.Body, torso.Position, torso.Size, f);
-            pv2 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
+            pv2 = new PhysicsView(midBody.Body, midBody.Position, torso.Size, f);
+            pv3 = new PhysicsView(wheel.Body, wheel.Position, wheel.Size, f);
+            pv4 = new PhysicsView(tail1.Body, tail1.Position, wheel.Size, f);
+            pv5 = new PhysicsView(tail2.Body, tail2.Position, wheel.Size, f);
 
-            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle(0, -170, 250, 250), 0.05f);
-            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle(0, -170, 250, 250), 0.05f);
-            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle(0, -170, 250, 250), 0.05f);
+
+            Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X/2, (int)(-size.Y*1.5), 250, 250), 0.05f);
+            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X / 2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle((int)-size.X / 2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
 
             shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
 
@@ -170,19 +228,19 @@ namespace RemGame
             {
                 case Movement.Left:
                     lookingRight = false;
-                    axis1.MotorSpeed = -MathHelper.TwoPi * speed;
+                    axis2.MotorSpeed = -MathHelper.TwoPi * speed;
                     anim = animations[1];
                     break;
 
                 case Movement.Right:
                     lookingRight = true;
-                    axis1.MotorSpeed = MathHelper.TwoPi * speed;
+                    axis2.MotorSpeed = MathHelper.TwoPi * speed;
                     anim = animations[1];
 
                     break;
 
                 case Movement.Stop:
-                    axis1.MotorSpeed = 0;
+                    axis2.MotorSpeed = 0;
                     anim = animations[3];
                     break;
             }
@@ -309,6 +367,19 @@ namespace RemGame
             else //player will appear as standing with frame [1] from the atlas.
                 Anim.CurrentFrame = 1;
 
+            if (direction == Movement.Right)
+            {
+                tail2.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+                tail1.Body.CollidesWith = Category.None;
+            }
+
+            else 
+            {
+                tail1.Body.CollidesWith = Category.Cat1 | Category.Cat28 | Category.Cat7;
+                tail2.Body.CollidesWith = Category.None;
+            }
+
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteFont font)
@@ -343,7 +414,7 @@ namespace RemGame
                         x = 1;
                 }
                 //DRAWS A* PATH
-                
+                /*
                 for (int i = 0; i < patrolGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
@@ -352,14 +423,14 @@ namespace RemGame
                     else
                         spriteBatch.Draw(shootTexture, gridloc, Color.Green);
                 }
-                
+                */
             }
 
             //dRAWS PATH TO PLAYER
             
             if (playerGridPath != null)
             {
-
+                /*
                 for (int i = 0; i < playerGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)playerGridPath[i].X * 64, (int)playerGridPath[i].Y * 64, 40, 40);
@@ -368,6 +439,7 @@ namespace RemGame
                     else
                         spriteBatch.Draw(shootTexture, gridloc, Color.GreenYellow);
                 }
+                */
             }
             
             //torso.Draw(gameTime,spriteBatch);
@@ -382,21 +454,26 @@ namespace RemGame
 
             pv1.Draw(gameTime, spriteBatch);
             pv2.Draw(gameTime, spriteBatch);
+            pv3.Draw(gameTime, spriteBatch);
+            pv4.Draw(gameTime, spriteBatch);
+            pv5.Draw(gameTime, spriteBatch);
+
+
 
             if (isMeleAttacking && !(mele.Body.IsDisposed))
                 mele.Draw(gameTime, spriteBatch);
 
             //wheel.Draw(gameTime,spriteBatch);
             
-           spriteBatch.DrawString(font, this.GridLocation.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 - 20), Color.White);
+           //spriteBatch.DrawString(font, this.GridLocation.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 - 20), Color.White);
             //if (selectedPath != null)
             //  spriteBatch.DrawString(font, selectedPath[selectedPath.Length - 1].ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
 
 
             //spriteBatch.DrawString(font, itrator.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
-            spriteBatch.DrawString(font, this.position.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
+            //spriteBatch.DrawString(font, this.position.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 20), Color.White);
 
-            spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
+            //spriteBatch.DrawString(font, this.mode.ToString(), new Vector2(this.GridLocation.X * 64 + 90, this.GridLocation.Y * 64 + 40), Color.White);
         }
 
         public void UpdateAI()

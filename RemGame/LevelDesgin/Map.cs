@@ -163,8 +163,8 @@ namespace RemGame
                         r = new Random();
                         int rInt = r.Next(192, 320);
                         Enemy en = new Principal(world,this,player,5,
-                        new Vector2(96, 96),
-                        100,0.3f,
+                        new Vector2(60, 60),
+                        100,0.5f,
                         new Vector2(x * 64 + size/2, y * 64),startLocationGrid,font,10, rInt, 5,5,5,5);
                         en.setAstarsquare(texture);
                         en.GridLocation = startLocationGrid;                       
