@@ -4,6 +4,7 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Chalk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Principal_Ranged_Chalk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Principal_Stand.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Figures/Level1/Principal/Anim/Principal_Walk.png</File>
@@ -58,6 +59,7 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Tiles/HUD.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
