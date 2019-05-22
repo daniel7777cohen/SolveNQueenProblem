@@ -209,8 +209,8 @@ namespace RemGame
 
 
             Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X/2, (int)(-size.Y*1.5), 250, 250), 0.05f);
-            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X / 2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
-            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle((int)-size.X / 2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+            Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X*2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle((int)-size.X*2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
 
             shootTexture = shootTexture = Content.Load<Texture2D>("Player/bullet");
 
@@ -229,7 +229,7 @@ namespace RemGame
                 case Movement.Left:
                     lookingRight = false;
                     axis2.MotorSpeed = -MathHelper.TwoPi * speed;
-                    anim = animations[1];
+                    anim = animations[0];
                     break;
 
                 case Movement.Right:
