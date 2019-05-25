@@ -69,6 +69,15 @@ namespace RemGame
             MediaPlayer.Play(GeneralMusic);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Tile.Content = Content;
+            Map.Content = Content;
+            Enemy.Content = Content;
+            Kid.Content = Content;
+
+            font = Content.Load<SpriteFont>("Fonts/Font");
+
+
             cam = new Camera2D(GraphicsDevice);
             world = new World(new Vector2(0, 9.8f));
 
@@ -79,11 +88,7 @@ namespace RemGame
 
             map = new Map(world,player);
 
-            font = Content.Load<SpriteFont>("Fonts/Font");
-            Tile.Content = Content;
-            Map.Content = Content;
-            Enemy.Content = Content;
-            Kid.Content = Content;
+            
       
             map.Generate(new int[,]
             {

@@ -415,7 +415,7 @@ namespace RemGame
                         x = 1;
                 }
                 //DRAWS A* PATH
-                
+                /*
                 for (int i = 0; i < patrolGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)patrolGridPath[i].X * 64, (int)patrolGridPath[i].Y * 64, 64, 64);
@@ -424,14 +424,14 @@ namespace RemGame
                     else
                         spriteBatch.Draw(shootTexture, gridloc, Color.Green);
                 }
-                
+                */
             }
 
             //dRAWS PATH TO PLAYER
             
             if (playerGridPath != null)
             {
-                
+                /*
                 for (int i = 0; i < playerGridPath.Length; i++)
                 {
                     Rectangle gridloc = new Rectangle((int)playerGridPath[i].X * 64, (int)playerGridPath[i].Y * 64, 40, 40);
@@ -440,7 +440,7 @@ namespace RemGame
                     else
                         spriteBatch.Draw(shootTexture, gridloc, Color.GreenYellow);
                 }
-                
+                */
             }
             
             //torso.Draw(gameTime,spriteBatch);
@@ -454,11 +454,11 @@ namespace RemGame
             
 
 
-            pv1.Draw(gameTime, spriteBatch);
-            pv2.Draw(gameTime, spriteBatch);
-            pv3.Draw(gameTime, spriteBatch);
-            pv4.Draw(gameTime, spriteBatch);
-            pv5.Draw(gameTime, spriteBatch);
+            //pv1.Draw(gameTime, spriteBatch);
+            //pv2.Draw(gameTime, spriteBatch);
+            //pv3.Draw(gameTime, spriteBatch);
+            //pv4.Draw(gameTime, spriteBatch);
+            //pv5.Draw(gameTime, spriteBatch);
 
 
 

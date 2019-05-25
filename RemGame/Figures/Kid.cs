@@ -962,10 +962,11 @@ namespace RemGame
                         Anim.Draw(spriteBatch, dest, upBody.Body, true);
 
                 }
+
                 if (shot != null && !shot.Body.IsDisposed)
                 {
-                    shot.Draw(gameTime, spriteBatch);
                     int ropeLength = Math.Abs((int)(shot.Position.X - Position.X - size.X));
+
                     if (lookRight)
                     {
                         for (int i = ropeLength; i > 30; i--)
@@ -982,14 +983,17 @@ namespace RemGame
 
                         }
                     }
+
+                    shot.Draw(gameTime, spriteBatch);
+
                 }
-                
+
                 foreach (PhysicsObject r in rangedShotList)
                 {
                     r.Draw(gameTime, spriteBatch);
                 }
 
-                spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
+                //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
@@ -1004,7 +1008,7 @@ namespace RemGame
 
             }
             //debbuging
-            spriteBatch.DrawString(f, lookRight.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
+            //spriteBatch.DrawString(f, lookRight.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
             //if (map != null)
               //  spriteBatch.DrawString(f, "tile : " + map.getGridObject(gridLocation.X, gridLocation.Y + 3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
 
