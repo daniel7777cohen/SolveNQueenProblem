@@ -993,7 +993,7 @@ namespace RemGame
                     r.Draw(gameTime, spriteBatch);
                 }
 
-                //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
+                spriteBatch.DrawString(f, gridLocation.ToString(), new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
@@ -1022,6 +1022,9 @@ namespace RemGame
             upBody.Body.ResetDynamics();
         }
 
+        
+
+
         public void setMap(Map map)
         {
             this.map = map;
@@ -1029,7 +1032,7 @@ namespace RemGame
 
         public void checkForFalling()
         {
-            if (!isJumping && !isSliding && map.getGridObject(gridLocation.X, gridLocation.Y + 4) == 0)
+            if (!isJumping && !isSliding && map.isPassable(gridLocation.X, gridLocation.Y + 1))
             {
                 isFalling = true;
             }
