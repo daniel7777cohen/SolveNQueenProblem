@@ -232,9 +232,32 @@ namespace RemGame
 
             camLocation = player.CameraToFollow;//set following camera features by subtracting vectors
 
-            cam.LookAt(camLocation);
-            //cam.Rotate(0.0005f);
-            //cam.ZoomOut(0.0001f);
+            //cam.LookAt(camLocation);
+            //cam.Rotate(0.0015f);
+            if (cam.Zoom == 1)
+            {
+                cam.ZoomOut(8.0f);
+                cam.Position = new Vector2(10000, 0);
+            }
+            else
+            {
+                if (cam.Position.X > player.Position.X-150)
+                {
+                    cam.ZoomIn(0.002f);
+                    cam.Move(new Vector2(-19, 0));
+                    //cam.Rotate(0.0015f);
+                }
+                else if (cam.Rotation < 6.2f && cam.Rotation >0)
+                {
+                        cam.Rotate(0.5f);
+                    //Console.WriteLine(cam.Rotation);
+                }
+                else
+                {
+                    cam.LookAt(camLocation);
+                    cam.Rotation = 0;
+                }
+            }
             map.Update(gameTime);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
