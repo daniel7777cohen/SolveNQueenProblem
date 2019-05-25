@@ -31,12 +31,13 @@
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Jump/Ron_Jump_05_end.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Crouch_Walk.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Melee_Yoyo.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Stand.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Ron_Walk.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_01_start.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_02_slide.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Slide/Ron_Slide_03_end.png</File>
-    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/bullet.png</File>
+    <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/Anim/Yoyo.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerLeft.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/Player/playerRight.png</File>
     <File>C:/Users/ben11/source/repos/RemGame/RemGame/Content/ScreenDisplay/cave_walk.png</File>
@@ -73,6 +74,7 @@
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File>Layers/level/closingWall.png</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

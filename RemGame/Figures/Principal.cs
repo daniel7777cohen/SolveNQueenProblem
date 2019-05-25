@@ -111,7 +111,7 @@ namespace RemGame
         private const float shootInterval = 3.0f;        // in seconds
 
         private AnimatedSprite anim;
-        private AnimatedSprite[] animations = new AnimatedSprite[4];
+        private AnimatedSprite[] animations = new AnimatedSprite[6];
 
 
         Texture2D shootTexture;
@@ -209,7 +209,10 @@ namespace RemGame
             Animations[0] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X/2, (int)(-size.Y*1.5), 250, 250), 0.05f);
             Animations[1] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Walk"), 2, 8, new Rectangle((int)-size.X*2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
             Animations[2] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Ranged_Chalk"), 4, 8, new Rectangle((int)-size.X * 2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
-            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle((int)-size.X*2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+            Animations[3] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Ranged_Chalk"), 4, 8, new Rectangle((int)-size.X/2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+            Animations[4] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle((int)-size.X*2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+            Animations[5] = new AnimatedSprite(Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Principal_Stand"), 2, 17, new Rectangle((int)-size.X/2, (int)(-size.Y * 1.5), 250, 250), 0.05f);
+
 
             shootTexture = shootTexture = Content.Load<Texture2D>("Figures/Level1/Principal/Anim/Chalk");
 
@@ -240,8 +243,13 @@ namespace RemGame
 
                 case Movement.Stop:
                     axis2.MotorSpeed = 0;
-                    if(!isMeleAttacking)
-                        anim = animations[3];
+                    if (!isMeleAttacking)
+                    {
+                        if (lookingRight)
+                            anim = animations[4];
+                        else
+                            anim = animations[5];
+                    }
                     break;
             }
         }
@@ -271,7 +279,12 @@ namespace RemGame
             if ((DateTime.Now - previousShoot).TotalSeconds >= randomInterval)
             {
                 isMeleAttacking = true;
-                anim = Animations[2];
+
+                if (lookingRight)
+                    anim = Animations[2];
+                else
+                    anim = animations[3];
+
                 mele = new PhysicsObject(world, shootTexture, 5, 1);
                 mele.Body.CollisionCategories = Category.Cat30;
                 mele.Body.CollidesWith = Category.Cat10 | Category.Cat11 | Category.Cat1;
@@ -280,15 +293,18 @@ namespace RemGame
                 mele.Body.IgnoreGravity = true;
                 mele.Position = new Vector2(torso.Position.X + torso.Size.X / 2, torso.Position.Y);
                 int dir;
+
                 if (lookingRight)
                     dir = 1;
                 else
                     dir = -1;
+
                 mele.Body.ApplyLinearImpulse(new Vector2(10 * dir, 0));
+
                 if (isPlayerAlive)
                     mele.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
                 previousShoot = DateTime.Now;
-
+                
             }
             else
                 isAttacking = false;

@@ -27,7 +27,8 @@ namespace RemGame
         JumpEnd,
         SlideStart,
         SlideIn,
-        SlideEnd
+        SlideEnd,
+        MeleeAttack
     }
 
     class Kid : Component
@@ -40,7 +41,6 @@ namespace RemGame
         private Map map;
         private Vector2 size;
         private float mass;
-        private Vector2 position;
         private Point gridLocation;
 
         private Vector2 followingPlayerPoint;
@@ -76,13 +76,12 @@ namespace RemGame
         private bool isMeleAttacking = false;
         private bool isRangeAttacking = false;
 
-        Texture2D shootTexture;
+        Texture2D yoyoTexture;
 
         private int health = 8;
         private bool isAlive = true;
 
         private const float SPEED = 2.0f;
-        private float walkTracker = 0;
 
 
         private float speed = SPEED;
@@ -130,12 +129,15 @@ namespace RemGame
         /// /////////////////////////////Art Assignment
         /// </summary>
         private AnimatedSprite anim = null;
-        private AnimatedSprite[] animations = new AnimatedSprite[12];
+        private AnimatedSprite[] animations = new AnimatedSprite[13];
+
+
         private Camera2D cam;
         Texture2D playerCrouch;
         Texture2D playerCrouchWalk;
         Texture2D playerStand;
         Texture2D playerWalk;
+        Texture2D playerMeleAttack;
         Texture2D[] jumpSetAnim = new Texture2D[5];
         Texture2D[] slideSetAnim = new Texture2D[3];
 
@@ -164,6 +166,7 @@ namespace RemGame
 
 
         public AnimatedSprite Anim { get => anim; set => anim = value; }
+
         public AnimatedSprite[] Animations { get => animations; set => animations = value; }
         public Movement Direction { get => direction; set => direction = value; }
         public Vector2 Position { get => upBody.Position; }
@@ -248,12 +251,14 @@ namespace RemGame
             axis2.CollideConnected = true;
 
             ////Art Init
-            shootTexture = Content.Load<Texture2D>("Player/bullet");
-
+            yoyoTexture = Content.Load<Texture2D>("Player/Anim/Yoyo");
+        
             playerCrouch = Content.Load<Texture2D>("Player/Anim/Ron_Crouch");
             playerCrouchWalk = Content.Load<Texture2D>("Player/Anim/Ron_Crouch_Walk");
             playerStand = Content.Load<Texture2D>("Player/Anim/Ron_Stand");
             playerWalk = Content.Load<Texture2D>("Player/Anim/Ron_Walk");
+
+            playerMeleAttack = Content.Load<Texture2D>("Player/Anim/Ron_Melee_Yoyo");
 
             footstep = Content.Load<SoundEffect>("Sound/FX/Player/Ron_Footsteps");
             walkingInstance = footstep.CreateInstance();
@@ -320,6 +325,8 @@ namespace RemGame
             Animations[(int)Animation.SlideStart] = new AnimatedSprite(slideSetAnim[0], 1, 4, anim3, 0.4f);
             Animations[(int)Animation.SlideIn] = new AnimatedSprite(slideSetAnim[1], 1, 6, anim3, 0.3f);
             Animations[(int)Animation.SlideEnd] = new AnimatedSprite(slideSetAnim[2], 1, 4, anim3, 0.4f);
+
+            Animations[(int)Animation.MeleeAttack] = new AnimatedSprite(playerMeleAttack, 3, 10, anim3, 0.05f);
 
 
             pv1 = new PhysicsView(upBody.Body, upBody.Position, upBody.Size, f);
@@ -450,13 +457,15 @@ namespace RemGame
             {
 
                 isMeleAttacking = true;
-                shot = new PhysicsObject(world, shootTexture, 15, 1);
+
+                shot = new PhysicsObject(world, yoyoTexture, 17, 1);
                 shot.Body.CollisionCategories = Category.Cat28;
                 shot.Body.CollidesWith = Category.Cat20 | Category.Cat21 | Category.Cat1;
                 shot.Body.Mass = 2.0f;
                 shot.Body.IgnoreGravity = true;
                 shot.Position = new Vector2(upBody.Position.X + upBody.Size.X / 2, upBody.Position.Y + upBody.Size.Y / 2);
                 int shootingDirection;
+                
                 if (lookRight)
                     shootingDirection = 1;
                 else
@@ -468,24 +477,26 @@ namespace RemGame
                 previousShoot = DateTime.Now;
 
             }
+            
+
         }
 
         bool Mele_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+          
+                PhysicsObject tmp = null;
+                foreach (PhysicsObject p in shotList)
+                {
+                    if (p.Body.BodyId == fixtureA.Body.BodyId)
+                        tmp = p;
+                }
 
-            PhysicsObject tmp = null;
-            foreach (PhysicsObject p in shotList)
-            {
-                if (p.Body.BodyId == fixtureA.Body.BodyId)
-                    tmp = p;
-            }
-
-            if (tmp != null)
-            {
-                shotList.Remove(tmp);
-                tmp.Body.Dispose();
-            }
-
+                if (tmp != null)
+                {
+                    shotList.Remove(tmp);
+                    tmp.Body.Dispose();
+                }
+            
             return true;
 
 
@@ -495,7 +506,7 @@ namespace RemGame
         public void rangedShoot(Vector2 shootForce)
         {
             isRangeAttacking = true;
-            rangedShot = new PhysicsObject(world, shootTexture, 20, 1);
+            rangedShot = new PhysicsObject(world, yoyoTexture, 20, 1);
             rangedShot.Body.CollisionCategories = Category.Cat28;
             rangedShot.Body.CollidesWith = Category.Cat20 | Category.Cat21 | Category.Cat1;
             rangedShot.Body.IgnoreCollisionWith(upBody.Body);
@@ -593,6 +604,9 @@ namespace RemGame
 
         public override void Update(GameTime gameTime)
         {
+            if ((DateTime.Now - previousShoot).TotalSeconds > 1.0f)
+                isMeleAttacking = false;
+
             walkingInstance.Volume = 0.1f;
             if (isAlive)
             {
@@ -873,7 +887,33 @@ namespace RemGame
 
                 foreach (PhysicsObject s in shotList)
                 {
-                    s.Update(gameTime);
+                    bool reachedDest = false;
+                    s.Body.Rotation += 0.5f;
+                    if (s.Position.X > Position.X+size.X + 300)
+                    {
+                        s.Body.ApplyLinearImpulse(new Vector2(15 * -1, 0));                       
+                    }
+
+                    if (s.Position.X < Position.X - 300)
+                    {
+                        s.Body.ApplyLinearImpulse(new Vector2(15 * 1, 0));
+                        reachedDest = true;
+                    }
+                    Console.WriteLine("yoyo:" + s.Position.X);
+                    Console.WriteLine("kid:" + Position.X);
+
+                    if ((s.Position.X < Position.X+1&&lookRight) || (s.Position.X > Position.X - 10 && reachedDest && !lookRight))
+                    {
+                        s.Body.OnCollision -= new OnCollisionEventHandler(Mele_OnCollision);
+                        s.Body.Dispose();
+                        shotList.Remove(s);
+                        break;
+                    }
+                    
+                    else
+                    {
+                        s.Update(gameTime);
+                    }
                 }
 
                 foreach (PhysicsObject r in rangedShotList)
@@ -884,6 +924,12 @@ namespace RemGame
 
                 if (!isMoving && !IsBending && !isJumping && !IsSliding && !isFalling)
                     anim = animations[(int)Animation.Idle];
+
+                if (isMeleAttacking)
+                {
+                    anim = animations[(int)Animation.MeleeAttack];
+                }
+
 
                 Anim.Update(gameTime);
 
@@ -915,8 +961,13 @@ namespace RemGame
                 foreach (PhysicsObject s in shotList)
                 {
                     s.Draw(gameTime, spriteBatch);
-                }
+                    int ropeLength =(int)(s.Position.X - Position.X - size.X);
+                    for (int i = ropeLength; i > 30; i--)
+                    {
+                        spriteBatch.DrawString(f, "*", new Vector2(s.Position.X - i, s.Position.Y+s.Size.X*4+10), Color.White);
+                    }
 
+                }
                 foreach (PhysicsObject r in rangedShotList)
                 {
                     r.Draw(gameTime, spriteBatch);
