@@ -65,6 +65,7 @@ namespace RemGame
         /// <tmp>
         private PhysicsObject shot;
         private List<PhysicsObject> shotList = new List<PhysicsObject>();
+        bool reachedDest;
 
         private PhysicsObject rangedShot;
         private List<PhysicsObject> rangedShotList = new List<PhysicsObject>();
@@ -457,22 +458,27 @@ namespace RemGame
             {
 
                 isMeleAttacking = true;
-
+                reachedDest = false;//check for keft direction
                 shot = new PhysicsObject(world, yoyoTexture, 17, 1);
                 shot.Body.CollisionCategories = Category.Cat28;
                 shot.Body.CollidesWith = Category.Cat20 | Category.Cat21 | Category.Cat1;
                 shot.Body.Mass = 2.0f;
                 shot.Body.IgnoreGravity = true;
-                shot.Position = new Vector2(upBody.Position.X + upBody.Size.X / 2, upBody.Position.Y + upBody.Size.Y / 2);
                 int shootingDirection;
-                
+
                 if (lookRight)
+                {
+                    shot.Position = new Vector2(upBody.Position.X + upBody.Size.X/2, upBody.Position.Y + upBody.Size.Y / 2);
                     shootingDirection = 1;
+                }
                 else
+                {
+                    shot.Position = new Vector2(upBody.Position.X, upBody.Position.Y + upBody.Size.Y / 2);
                     shootingDirection = -1;
+
+                }
                 shot.Body.ApplyLinearImpulse(new Vector2(15 * shootingDirection, 0));
                 shot.Body.OnCollision += new OnCollisionEventHandler(Mele_OnCollision);
-                shotList.Add(shot);
 
                 previousShoot = DateTime.Now;
 
@@ -485,22 +491,18 @@ namespace RemGame
         {
           
                 PhysicsObject tmp = null;
-                foreach (PhysicsObject p in shotList)
-                {
-                    if (p.Body.BodyId == fixtureA.Body.BodyId)
-                        tmp = p;
-                }
+                
+                    if (shot.Body.BodyId == fixtureA.Body.BodyId)
+                        tmp = shot;
+                
 
                 if (tmp != null)
                 {
-                    shotList.Remove(tmp);
+                    
                     tmp.Body.Dispose();
                 }
             
             return true;
-
-
-
         }
 
         public void rangedShoot(Vector2 shootForce)
@@ -724,37 +726,39 @@ namespace RemGame
                 /////Movments
                 ///
                 ///Move Right
-                if (keyboardState.IsKeyDown(Keys.A))
+                if (!isMeleAttacking)
                 {
-                    if (direction == Movement.Right && !isJumping)
-                        ResetPlayerDynamics();
+                    if (keyboardState.IsKeyDown(Keys.A))
+                    {
+                        if (direction == Movement.Right && !isJumping)
+                            ResetPlayerDynamics();
 
-                    Move(Movement.Left);
-                    direction = Movement.Left;
-                    IsMoving = true;
+                        Move(Movement.Left);
+                        direction = Movement.Left;
+                        IsMoving = true;
 
+                    }
+
+                    ///Move Left
+                    else if (keyboardState.IsKeyDown(Keys.D))
+                    {
+                        if (direction == Movement.Left && !isJumping)
+                            ResetPlayerDynamics();
+
+                        Move(Movement.Right);
+                        direction = Movement.Right;
+                        IsMoving = true;
+                        if (!firstMove)
+                            firstMove = true;
+
+                    }
+                    ///No Moving
+                    else
+                    {
+                        IsMoving = false;
+                        Move(Movement.Stop);
+                    }
                 }
-
-                ///Move Left
-                else if (keyboardState.IsKeyDown(Keys.D))
-                {
-                    if (direction == Movement.Left && !isJumping)
-                        ResetPlayerDynamics();
-
-                    Move(Movement.Right);
-                    direction = Movement.Right;
-                    IsMoving = true;
-                    if (!firstMove)
-                        firstMove = true;
-
-                }
-                ///No Moving
-                else
-                {
-                    IsMoving = false;
-                    Move(Movement.Stop);
-                }
-
                 if (isFalling)
                     Move(Movement.Stop);
 
@@ -885,34 +889,34 @@ namespace RemGame
                 if (IsSliding)
                     slidingInstance.Play();
 
-                foreach (PhysicsObject s in shotList)
+
+                if (shot != null && !shot.Body.IsDisposed)
                 {
-                    bool reachedDest = false;
-                    s.Body.Rotation += 0.5f;
-                    if (s.Position.X > Position.X+size.X + 300)
+                    shot.Body.Rotation += 0.5f;
+
+                    if (shot.Position.X > Position.X + size.X + 300)
                     {
-                        s.Body.ApplyLinearImpulse(new Vector2(15 * -1, 0));                       
+                        shot.Body.ApplyLinearImpulse(new Vector2(15 * -1, 0));
                     }
 
-                    if (s.Position.X < Position.X - 300)
+                    if (shot.Position.X < Position.X - 300)
                     {
-                        s.Body.ApplyLinearImpulse(new Vector2(15 * 1, 0));
+                        shot.Body.ApplyLinearImpulse(new Vector2(15 * 1, 0));
                         reachedDest = true;
                     }
-                    Console.WriteLine("yoyo:" + s.Position.X);
+
+                    Console.WriteLine("yoyo:" + shot.Position.X);
                     Console.WriteLine("kid:" + Position.X);
 
-                    if ((s.Position.X < Position.X+1&&lookRight) || (s.Position.X > Position.X - 10 && reachedDest && !lookRight))
+                    if ((shot.Position.X < Position.X + 30 && lookRight && !reachedDest) || (shot.Position.X > Position.X && reachedDest && !lookRight))
                     {
-                        s.Body.OnCollision -= new OnCollisionEventHandler(Mele_OnCollision);
-                        s.Body.Dispose();
-                        shotList.Remove(s);
-                        break;
+                        shot.Body.OnCollision -= new OnCollisionEventHandler(Mele_OnCollision);
+                        shot.Body.Dispose();
                     }
-                    
+
                     else
                     {
-                        s.Update(gameTime);
+                        shot.Update(gameTime);
                     }
                 }
 
@@ -958,22 +962,34 @@ namespace RemGame
                         Anim.Draw(spriteBatch, dest, upBody.Body, true);
 
                 }
-                foreach (PhysicsObject s in shotList)
+                if (shot != null && !shot.Body.IsDisposed)
                 {
-                    s.Draw(gameTime, spriteBatch);
-                    int ropeLength =(int)(s.Position.X - Position.X - size.X);
-                    for (int i = ropeLength; i > 30; i--)
+                    shot.Draw(gameTime, spriteBatch);
+                    int ropeLength = Math.Abs((int)(shot.Position.X - Position.X - size.X));
+                    if (lookRight)
                     {
-                        spriteBatch.DrawString(f, "*", new Vector2(s.Position.X - i, s.Position.Y+s.Size.X*4+10), Color.White);
-                    }
+                        for (int i = ropeLength; i > 30; i--)
+                        {
+                            spriteBatch.DrawString(f, "*", new Vector2(shot.Position.X + 30 - i, shot.Position.Y + shot.Size.X * 4 + 10), Color.White);
 
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < ropeLength - 60; i++)
+                        {
+                            spriteBatch.DrawString(f, "*", new Vector2(shot.Position.X + 30 + i, shot.Position.Y + shot.Size.X * 4 + 10), Color.White);
+
+                        }
+                    }
                 }
+                
                 foreach (PhysicsObject r in rangedShotList)
                 {
                     r.Draw(gameTime, spriteBatch);
                 }
 
-                //spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
+                spriteBatch.DrawString(f, Position.X +" /"+Position.Y, new Vector2(Position.X + size.X, Position.Y+30), Color.White);
 
                 //pv1.Draw(gameTime, spriteBatch);
                 //pv2.Draw(gameTime, spriteBatch);
@@ -988,7 +1004,7 @@ namespace RemGame
 
             }
             //debbuging
-           // spriteBatch.DrawString(f, isFalling.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
+            spriteBatch.DrawString(f, lookRight.ToString(), new Vector2(Position.X + size.X, Position.Y + 20), Color.White);
             //if (map != null)
               //  spriteBatch.DrawString(f, "tile : " + map.getGridObject(gridLocation.X, gridLocation.Y + 3), new Vector2(Position.X + size.X, Position.Y + 40), Color.White);
 

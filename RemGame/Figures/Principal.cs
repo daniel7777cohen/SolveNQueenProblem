@@ -601,7 +601,7 @@ namespace RemGame
 
                 case Mode.Evade:
                     Vector2 newPosition = new Vector2(Position.X + 200, Position.Y);
-                    torso.Body.SetTransformIgnoreContacts(ref newPosition, 0);
+                    //torso.Body.SetTransformIgnoreContacts(ref newPosition, 0);
                     break;
 
                 default:
